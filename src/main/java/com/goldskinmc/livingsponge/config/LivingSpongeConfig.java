@@ -177,7 +177,6 @@ public final class LivingSpongeConfig {
         BUILDER.pop();
 
         SPEC = BUILDER.build();
-        bake();
     }
 
     private LivingSpongeConfig() {

@@ -13,12 +13,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
+
 public final class LivingSpongeBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, LivingSpongeMod.MOD_ID);
 
     public static final RegistryObject<Block> LIVING_SPONGE = register(
             "living_sponge",
-            new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
+            () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GRAY)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
@@ -27,7 +29,7 @@ public final class LivingSpongeBlocks {
 
     public static final RegistryObject<Block> CREATIVE_LIVING_SPONGE = register(
             "creative_living_sponge",
-            new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
+            () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_BLUE)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
@@ -45,8 +47,8 @@ public final class LivingSpongeBlocks {
         return block == LIVING_SPONGE.get() || block == CREATIVE_LIVING_SPONGE.get();
     }
 
-    private static RegistryObject<Block> register(final String name, final Block block) {
-        final RegistryObject<Block> registered = BLOCKS.register(name, () -> block);
+    private static RegistryObject<Block> register(final String name, final Supplier<? extends Block> blockSupplier) {
+        final RegistryObject<Block> registered = BLOCKS.register(name, blockSupplier);
         LivingSpongeItems.ITEMS.register(name, () -> new BlockItem(registered.get(), new Item.Properties()));
         return registered;
     }
