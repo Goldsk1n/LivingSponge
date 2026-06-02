@@ -18,7 +18,11 @@ public final class LivingSpongeBlockEntities {
                     () -> BlockEntityType.Builder.of(
                             LivingSpongeBlockEntity::new,
                             LivingSpongeBlocks.LIVING_SPONGE.get(),
-                            LivingSpongeBlocks.CREATIVE_LIVING_SPONGE.get()
+                            LivingSpongeBlocks.MATURE_LIVING_SPONGE.get(),
+                            LivingSpongeBlocks.OLD_LIVING_SPONGE.get(),
+                            LivingSpongeBlocks.CREATIVE_LIVING_SPONGE.get(),
+                            LivingSpongeBlocks.CREATIVE_MATURE_LIVING_SPONGE.get(),
+                            LivingSpongeBlocks.CREATIVE_OLD_LIVING_SPONGE.get()
                     ).build(null)
             );
 

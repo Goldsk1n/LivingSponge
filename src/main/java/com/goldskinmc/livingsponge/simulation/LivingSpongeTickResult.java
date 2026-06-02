@@ -6,11 +6,8 @@ import java.util.Optional;
 
 public record LivingSpongeTickResult(
         LivingSpongeLifecycleStage stage,
-        int absorbedWaterBlocks,
-        int fruitDrops,
         Optional<BlockPos> reproductionTarget,
-        boolean shouldDie,
-        int energyAfterTick
+        boolean shouldDie
 ) {
     public LivingSpongeTickResult {
         reproductionTarget = reproductionTarget == null ? Optional.empty() : reproductionTarget;

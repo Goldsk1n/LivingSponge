@@ -13,23 +13,20 @@ public final class LivingSpongeNodeState {
     private final boolean creativeVariant;
 
     private int ageTicks;
-    private int energy;
-    private int fruitProgress;
     private int reproductionCooldownTicks;
-    private int absorbedWaterLifetime;
 
     private LivingSpongeNodeState(
             final UUID colonyId,
             final BlockPos rootPos,
             final int generation,
             final boolean creativeVariant,
-            final int energy
+            final int reproductionCooldownTicks
     ) {
         this.colonyId = colonyId;
         this.rootPos = rootPos.asLong();
         this.generation = generation;
         this.creativeVariant = creativeVariant;
-        this.energy = Math.max(0, energy);
+        this.reproductionCooldownTicks = Math.max(0, reproductionCooldownTicks);
     }
 
     public static LivingSpongeNodeState createRoot(
@@ -42,7 +39,7 @@ public final class LivingSpongeNodeState {
                 rootPos,
                 0,
                 creativeVariant,
-                values.energy().baseCapacity()
+                initialReproductionCooldown(creativeVariant, values.spread().reproductionCooldownTicks())
         );
     }
 
@@ -55,7 +52,7 @@ public final class LivingSpongeNodeState {
                 parent.rootPos(),
                 parent.generation + 1,
                 parent.creativeVariant,
-                values.energy().baseCapacity()
+                initialReproductionCooldown(parent.creativeVariant, values.spread().reproductionCooldownTicks())
         );
     }
 
@@ -65,12 +62,9 @@ public final class LivingSpongeNodeState {
                 BlockPos.of(tag.getLong("RootPos")),
                 tag.getInt("Generation"),
                 tag.getBoolean("CreativeVariant"),
-                tag.getInt("Energy")
+                tag.getInt("ReproductionCooldownTicks")
         );
         state.ageTicks = tag.getInt("AgeTicks");
-        state.fruitProgress = tag.getInt("FruitProgress");
-        state.reproductionCooldownTicks = tag.getInt("ReproductionCooldownTicks");
-        state.absorbedWaterLifetime = tag.getInt("AbsorbedWaterLifetime");
         return state;
     }
 
@@ -81,10 +75,7 @@ public final class LivingSpongeNodeState {
         tag.putInt("Generation", generation);
         tag.putBoolean("CreativeVariant", creativeVariant);
         tag.putInt("AgeTicks", ageTicks);
-        tag.putInt("Energy", energy);
-        tag.putInt("FruitProgress", fruitProgress);
         tag.putInt("ReproductionCooldownTicks", reproductionCooldownTicks);
-        tag.putInt("AbsorbedWaterLifetime", absorbedWaterLifetime);
         return tag;
     }
 
@@ -108,76 +99,48 @@ public final class LivingSpongeNodeState {
         return ageTicks;
     }
 
-    public int energy() {
-        return energy;
-    }
-
-    public int fruitProgress() {
-        return fruitProgress;
-    }
-
     public int reproductionCooldownTicks() {
         return reproductionCooldownTicks;
     }
 
-    public int absorbedWaterLifetime() {
-        return absorbedWaterLifetime;
+    public void tickAge(final int elapsedTicks) {
+        ageTicks += Math.max(0, elapsedTicks);
     }
 
-    public void tickAge() {
-        ageTicks++;
-    }
-
-    public void tickReproductionCooldown() {
-        if (reproductionCooldownTicks > 0) {
-            reproductionCooldownTicks--;
-        }
+    public void tickReproductionCooldown(final int elapsedTicks) {
+        reproductionCooldownTicks = Math.max(0, reproductionCooldownTicks - Math.max(0, elapsedTicks));
     }
 
     public void setReproductionCooldownTicks(final int ticks) {
         reproductionCooldownTicks = Math.max(0, ticks);
     }
 
-    public void addAbsorbedWaterLifetime(final int absorbed) {
-        if (absorbed > 0) {
-            absorbedWaterLifetime += absorbed;
-        }
+    public LivingSpongeLifecycleStage stage(final LivingSpongeConfig.Lifecycle lifecycle, final boolean creativeVariant) {
+        return LivingSpongeLifecycleStage.fromAgeTicks(ageTicks, adjustedLifecycle(lifecycle, creativeVariant));
     }
 
-    public void addFruitProgress(final int progress) {
-        if (progress > 0) {
-            fruitProgress += progress;
+    private static LivingSpongeConfig.Lifecycle adjustedLifecycle(
+            final LivingSpongeConfig.Lifecycle lifecycle,
+            final boolean creativeVariant
+    ) {
+        if (!creativeVariant) {
+            return lifecycle;
         }
+
+        return new LivingSpongeConfig.Lifecycle(
+                halveTicks(lifecycle.youngDurationTicks()),
+                halveTicks(lifecycle.matureDurationTicks()),
+                halveTicks(lifecycle.oldDurationTicks()),
+                lifecycle.frontierRemainsChance(),
+                lifecycle.nonFrontierHydroBlockChance()
+        );
     }
 
-    public int consumeFruitProgress(final int threshold) {
-        if (threshold <= 0) {
-            return 0;
-        }
-
-        int produced = 0;
-        while (fruitProgress >= threshold) {
-            fruitProgress -= threshold;
-            produced++;
-        }
-        return produced;
+    private static int initialReproductionCooldown(final boolean creativeVariant, final int baseCooldown) {
+        return creativeVariant ? halveTicks(baseCooldown) : baseCooldown;
     }
 
-    public void addEnergy(final int amount, final int capacity) {
-        if (amount <= 0) {
-            return;
-        }
-        energy = Math.min(Math.max(1, capacity), energy + amount);
-    }
-
-    public void drainEnergy(final int amount) {
-        if (amount <= 0) {
-            return;
-        }
-        energy = Math.max(0, energy - amount);
-    }
-
-    public LivingSpongeLifecycleStage stage(final LivingSpongeConfig.Lifecycle lifecycle) {
-        return LivingSpongeLifecycleStage.fromAgeTicks(ageTicks, lifecycle);
+    private static int halveTicks(final int ticks) {
+        return Math.max(1, ticks / 2);
     }
 }

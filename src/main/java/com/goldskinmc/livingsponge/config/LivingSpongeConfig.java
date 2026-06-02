@@ -13,7 +13,6 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue SPREAD_UPDATE_INTERVAL_TICKS;
     private static final ForgeConfigSpec.IntValue SPREAD_ABSORB_RADIUS;
     private static final ForgeConfigSpec.IntValue SPREAD_MAX_ABSORBS_PER_UPDATE;
-    private static final ForgeConfigSpec.IntValue SPREAD_MAX_CHILDREN_PER_COLONY;
     private static final ForgeConfigSpec.IntValue SPREAD_MAX_COLONY_RADIUS;
     private static final ForgeConfigSpec.IntValue SPREAD_REPRODUCTION_COOLDOWN_TICKS;
     private static final ForgeConfigSpec.DoubleValue SPREAD_REPRODUCTION_BASE_CHANCE;
@@ -29,11 +28,9 @@ public final class LivingSpongeConfig {
 
     private static final ForgeConfigSpec.IntValue LIFECYCLE_YOUNG_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
-    private static final ForgeConfigSpec.IntValue LIFECYCLE_SENESCENT_DURATION_TICKS;
-    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_YOUNG_REPRODUCTION_MULTIPLIER;
-    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_MATURE_REPRODUCTION_MULTIPLIER;
-    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_SENESCENT_REPRODUCTION_MULTIPLIER;
-    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_SENESCENT_ABSORB_MULTIPLIER;
+    private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
+    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_FRONTIER_REMAINS_CHANCE;
+    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_NON_FRONTIER_HYDRO_BLOCK_CHANCE;
 
     private static final ForgeConfigSpec.IntValue FRUIT_PROGRESS_PER_WATER_ABSORBED;
     private static final ForgeConfigSpec.IntValue FRUIT_PROGRESS_NEEDED;
@@ -75,8 +72,6 @@ public final class LivingSpongeConfig {
                 .defineInRange("absorb_radius", LivingSpongeBalanceDefaults.Spread.ABSORB_RADIUS, 0, 8);
         SPREAD_MAX_ABSORBS_PER_UPDATE = BUILDER.comment("Maximum water blocks absorbed per update.")
                 .defineInRange("max_absorbs_per_update", LivingSpongeBalanceDefaults.Spread.MAX_ABSORBS_PER_UPDATE, 0, 64);
-        SPREAD_MAX_CHILDREN_PER_COLONY = BUILDER.comment("Maximum descendants per colony root.")
-                .defineInRange("max_children_per_colony", LivingSpongeBalanceDefaults.Spread.MAX_CHILDREN_PER_COLONY, 0, 256);
         SPREAD_MAX_COLONY_RADIUS = BUILDER.comment("Maximum distance from colony root for growth.")
                 .defineInRange("max_colony_radius", LivingSpongeBalanceDefaults.Spread.MAX_COLONY_RADIUS, 1, 256);
         SPREAD_REPRODUCTION_COOLDOWN_TICKS = BUILDER.comment("Delay between reproduction attempts.")
@@ -109,16 +104,12 @@ public final class LivingSpongeConfig {
                 .defineInRange("young_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.YOUNG_DURATION_TICKS, 1, Integer.MAX_VALUE);
         LIFECYCLE_MATURE_DURATION_TICKS = BUILDER.comment("Mature stage duration in ticks.")
                 .defineInRange("mature_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS, 1, Integer.MAX_VALUE);
-        LIFECYCLE_SENESCENT_DURATION_TICKS = BUILDER.comment("Senescent stage duration in ticks before death.")
-                .defineInRange("senescent_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.SENESCENT_DURATION_TICKS, 1, Integer.MAX_VALUE);
-        LIFECYCLE_YOUNG_REPRODUCTION_MULTIPLIER = BUILDER.comment("Reproduction multiplier while young.")
-                .defineInRange("young_reproduction_multiplier", LivingSpongeBalanceDefaults.Lifecycle.YOUNG_REPRODUCTION_MULTIPLIER, 0.0D, 10.0D);
-        LIFECYCLE_MATURE_REPRODUCTION_MULTIPLIER = BUILDER.comment("Reproduction multiplier while mature.")
-                .defineInRange("mature_reproduction_multiplier", LivingSpongeBalanceDefaults.Lifecycle.MATURE_REPRODUCTION_MULTIPLIER, 0.0D, 10.0D);
-        LIFECYCLE_SENESCENT_REPRODUCTION_MULTIPLIER = BUILDER.comment("Reproduction multiplier while senescent.")
-                .defineInRange("senescent_reproduction_multiplier", LivingSpongeBalanceDefaults.Lifecycle.SENESCENT_REPRODUCTION_MULTIPLIER, 0.0D, 10.0D);
-        LIFECYCLE_SENESCENT_ABSORB_MULTIPLIER = BUILDER.comment("Absorption multiplier while senescent.")
-                .defineInRange("senescent_absorb_multiplier", LivingSpongeBalanceDefaults.Lifecycle.SENESCENT_ABSORB_MULTIPLIER, 0.0D, 10.0D);
+        LIFECYCLE_OLD_DURATION_TICKS = BUILDER.comment("Old stage duration in ticks before death.")
+                .defineInRange("old_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS, 1, Integer.MAX_VALUE);
+        LIFECYCLE_FRONTIER_REMAINS_CHANCE = BUILDER.comment("Chance for an old sponge on the colony frontier to become sponge remains.")
+                .defineInRange("frontier_remains_chance", LivingSpongeBalanceDefaults.Lifecycle.FRONTIER_REMAINS_CHANCE, 0.0D, 1.0D);
+        LIFECYCLE_NON_FRONTIER_HYDRO_BLOCK_CHANCE = BUILDER.comment("Chance for an old sponge away from the frontier to leave a hydro-block.")
+                .defineInRange("non_frontier_hydro_block_chance", LivingSpongeBalanceDefaults.Lifecycle.NON_FRONTIER_HYDRO_BLOCK_CHANCE, 0.0D, 1.0D);
         BUILDER.pop();
 
         BUILDER.push("fruit");
@@ -206,7 +197,6 @@ public final class LivingSpongeConfig {
                         SPREAD_UPDATE_INTERVAL_TICKS.get(),
                         SPREAD_ABSORB_RADIUS.get(),
                         SPREAD_MAX_ABSORBS_PER_UPDATE.get(),
-                        SPREAD_MAX_CHILDREN_PER_COLONY.get(),
                         SPREAD_MAX_COLONY_RADIUS.get(),
                         SPREAD_REPRODUCTION_COOLDOWN_TICKS.get(),
                         SPREAD_REPRODUCTION_BASE_CHANCE.get(),
@@ -224,11 +214,9 @@ public final class LivingSpongeConfig {
                 new Lifecycle(
                         LIFECYCLE_YOUNG_DURATION_TICKS.get(),
                         LIFECYCLE_MATURE_DURATION_TICKS.get(),
-                        LIFECYCLE_SENESCENT_DURATION_TICKS.get(),
-                        LIFECYCLE_YOUNG_REPRODUCTION_MULTIPLIER.get(),
-                        LIFECYCLE_MATURE_REPRODUCTION_MULTIPLIER.get(),
-                        LIFECYCLE_SENESCENT_REPRODUCTION_MULTIPLIER.get(),
-                        LIFECYCLE_SENESCENT_ABSORB_MULTIPLIER.get()
+                        LIFECYCLE_OLD_DURATION_TICKS.get(),
+                        LIFECYCLE_FRONTIER_REMAINS_CHANCE.get(),
+                        LIFECYCLE_NON_FRONTIER_HYDRO_BLOCK_CHANCE.get()
                 ),
                 new Fruit(
                         FRUIT_PROGRESS_PER_WATER_ABSORBED.get(),
@@ -268,7 +256,6 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Spread.UPDATE_INTERVAL_TICKS,
                         LivingSpongeBalanceDefaults.Spread.ABSORB_RADIUS,
                         LivingSpongeBalanceDefaults.Spread.MAX_ABSORBS_PER_UPDATE,
-                        LivingSpongeBalanceDefaults.Spread.MAX_CHILDREN_PER_COLONY,
                         LivingSpongeBalanceDefaults.Spread.MAX_COLONY_RADIUS,
                         LivingSpongeBalanceDefaults.Spread.REPRODUCTION_COOLDOWN_TICKS,
                         LivingSpongeBalanceDefaults.Spread.REPRODUCTION_BASE_CHANCE,
@@ -286,11 +273,9 @@ public final class LivingSpongeConfig {
                 new Lifecycle(
                         LivingSpongeBalanceDefaults.Lifecycle.YOUNG_DURATION_TICKS,
                         LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS,
-                        LivingSpongeBalanceDefaults.Lifecycle.SENESCENT_DURATION_TICKS,
-                        LivingSpongeBalanceDefaults.Lifecycle.YOUNG_REPRODUCTION_MULTIPLIER,
-                        LivingSpongeBalanceDefaults.Lifecycle.MATURE_REPRODUCTION_MULTIPLIER,
-                        LivingSpongeBalanceDefaults.Lifecycle.SENESCENT_REPRODUCTION_MULTIPLIER,
-                        LivingSpongeBalanceDefaults.Lifecycle.SENESCENT_ABSORB_MULTIPLIER
+                        LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS,
+                        LivingSpongeBalanceDefaults.Lifecycle.FRONTIER_REMAINS_CHANCE,
+                        LivingSpongeBalanceDefaults.Lifecycle.NON_FRONTIER_HYDRO_BLOCK_CHANCE
                 ),
                 new Fruit(
                         LivingSpongeBalanceDefaults.Fruit.PROGRESS_PER_WATER_ABSORBED,
@@ -338,7 +323,6 @@ public final class LivingSpongeConfig {
             int updateIntervalTicks,
             int absorbRadius,
             int maxAbsorbsPerUpdate,
-            int maxChildrenPerColony,
             int maxColonyRadius,
             int reproductionCooldownTicks,
             double reproductionBaseChance,
@@ -360,11 +344,9 @@ public final class LivingSpongeConfig {
     public record Lifecycle(
             int youngDurationTicks,
             int matureDurationTicks,
-            int senescentDurationTicks,
-            double youngReproductionMultiplier,
-            double matureReproductionMultiplier,
-            double senescentReproductionMultiplier,
-            double senescentAbsorbMultiplier
+            int oldDurationTicks,
+            double frontierRemainsChance,
+            double nonFrontierHydroBlockChance
     ) {
     }
 

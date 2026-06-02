@@ -8,9 +8,8 @@ public final class LivingSpongeBalanceDefaults {
         public static final int UPDATE_INTERVAL_TICKS = 20;
         public static final int ABSORB_RADIUS = 2;
         public static final int MAX_ABSORBS_PER_UPDATE = 3;
-        public static final int MAX_CHILDREN_PER_COLONY = 6;
         public static final int MAX_COLONY_RADIUS = 8;
-        public static final int REPRODUCTION_COOLDOWN_TICKS = 200;
+        public static final int REPRODUCTION_COOLDOWN_TICKS = 100;
         public static final double REPRODUCTION_BASE_CHANCE = 0.12D;
         public static final double REPRODUCTION_ENERGY_BONUS_PER_POINT = 0.0015D;
         public static final double REPRODUCTION_ENERGY_BONUS_CAP = 0.18D;
@@ -32,13 +31,11 @@ public final class LivingSpongeBalanceDefaults {
     }
 
     public static final class Lifecycle {
-        public static final int YOUNG_DURATION_TICKS = 2400;
-        public static final int MATURE_DURATION_TICKS = 9600;
-        public static final int SENESCENT_DURATION_TICKS = 4800;
-        public static final double YOUNG_REPRODUCTION_MULTIPLIER = 0.0D;
-        public static final double MATURE_REPRODUCTION_MULTIPLIER = 1.0D;
-        public static final double SENESCENT_REPRODUCTION_MULTIPLIER = 0.25D;
-        public static final double SENESCENT_ABSORB_MULTIPLIER = 0.5D;
+        public static final int YOUNG_DURATION_TICKS = 100;
+        public static final int MATURE_DURATION_TICKS = 400;
+        public static final int OLD_DURATION_TICKS = 100;
+        public static final double FRONTIER_REMAINS_CHANCE = 1.0D;
+        public static final double NON_FRONTIER_HYDRO_BLOCK_CHANCE = 0.05D;
 
         private Lifecycle() {
         }
@@ -71,7 +68,7 @@ public final class LivingSpongeBalanceDefaults {
 
     public static final class Containment {
         public static final boolean LAVA_INSTANT_KILL = true;
-        public static final int FIRE_ENERGY_DRAIN_PER_UPDATE = 12;
+        public static final int FIRE_ENERGY_DRAIN_PER_UPDATE = 0;
         public static final boolean SALTED_BLOCK_PREVENTS_REPRODUCTION = true;
 
         private Containment() {

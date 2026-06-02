@@ -10,91 +10,43 @@ public final class LivingSpongeSimulationService {
     public LivingSpongeTickResult tickNode(
             final LivingSpongeNodeState state,
             final LivingSpongeTickContext context,
-            final RandomSource random
+            final RandomSource random,
+            final int elapsedTicks
     ) {
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
-        final LivingSpongeConfig.Energy energyConfig = values.energy();
         final LivingSpongeConfig.Spread spreadConfig = values.spread();
         final LivingSpongeConfig.Lifecycle lifecycleConfig = values.lifecycle();
+        final int reproductionCooldownTicks = state.creativeVariant()
+                ? halveTicks(spreadConfig.reproductionCooldownTicks())
+                : spreadConfig.reproductionCooldownTicks();
 
-        final boolean ignoreAge = state.creativeVariant() && values.creative().ignoresAge();
-        final boolean ignoreEnergy = state.creativeVariant() && values.creative().ignoresEnergy();
-        final boolean ignoreSpreadLimits = state.creativeVariant() && values.creative().ignoresSpreadLimits();
-        final boolean creativeDropsEnabled = !state.creativeVariant() || values.creative().dropsEnabled();
+        state.tickAge(elapsedTicks);
+        state.tickReproductionCooldown(elapsedTicks);
 
-        state.tickAge();
-        state.tickReproductionCooldown();
-
-        LivingSpongeLifecycleStage stage = state.stage(lifecycleConfig);
+        LivingSpongeLifecycleStage stage = state.stage(lifecycleConfig, state.creativeVariant());
 
         if (!context.canStayActive()) {
-            return new LivingSpongeTickResult(stage, 0, 0, Optional.empty(), true, state.energy());
+            return new LivingSpongeTickResult(stage, Optional.empty(), true);
         }
 
-        if (values.containment().lavaInstantKill() && context.hasLavaContact()) {
-            return new LivingSpongeTickResult(stage, 0, 0, Optional.empty(), true, state.energy());
-        }
-
-        final int cappedAbsorbed = Math.min(
-                Math.max(0, context.absorbedWaterBlocks()),
-                spreadConfig.maxAbsorbsPerUpdate()
-        );
-        final double absorbMultiplier = stage == LivingSpongeLifecycleStage.SENESCENT
-                ? lifecycleConfig.senescentAbsorbMultiplier()
-                : 1.0D;
-        final int effectiveAbsorbed = (int) Math.floor(cappedAbsorbed * absorbMultiplier);
-
-        if (!ignoreEnergy) {
-            state.addEnergy(effectiveAbsorbed * energyConfig.gainPerWaterAbsorbed(), energyConfig.baseCapacity());
-        }
-
-        state.addAbsorbedWaterLifetime(effectiveAbsorbed);
-        state.addFruitProgress(effectiveAbsorbed * values.fruit().progressPerWaterAbsorbed());
-
-        if (!ignoreEnergy) {
-            state.drainEnergy(energyConfig.idleDecayPerUpdate());
-            if (context.hasFireContact()) {
-                state.drainEnergy(values.containment().fireEnergyDrainPerUpdate());
-            }
-        }
-
-        int fruitDrops = state.consumeFruitProgress(values.fruit().progressNeeded());
-        if (fruitDrops > 0 && values.fruit().bonusDropChance() > 0.0D) {
-            for (int i = 0; i < fruitDrops; i++) {
-                if (random.nextDouble() < values.fruit().bonusDropChance()) {
-                    fruitDrops++;
-                }
-            }
-        }
-        if (!creativeDropsEnabled) {
-            fruitDrops = 0;
+        if ((values.containment().lavaInstantKill() && context.hasLavaContact()) || context.hasFireContact()) {
+            return new LivingSpongeTickResult(stage, Optional.empty(), true);
         }
 
         Optional<BlockPos> reproductionTarget = Optional.empty();
-        if (canAttemptReproduction(state, context, values, stage, ignoreEnergy, ignoreSpreadLimits)) {
-            final double chance = reproductionChance(state, values, stage);
-            if (chance > 0.0D && random.nextDouble() < chance && !context.reproductionTargets().isEmpty()) {
-                final int targetIndex = random.nextInt(context.reproductionTargets().size());
-                reproductionTarget = Optional.of(context.reproductionTargets().get(targetIndex));
-                state.setReproductionCooldownTicks(spreadConfig.reproductionCooldownTicks());
-                if (!ignoreEnergy) {
-                    state.drainEnergy(energyConfig.reproductionCost());
-                }
-            }
+        if (canAttemptReproduction(state, context, values, stage)) {
+            final int targetIndex = random.nextInt(context.reproductionTargets().size());
+            reproductionTarget = Optional.of(context.reproductionTargets().get(targetIndex));
+            state.setReproductionCooldownTicks(reproductionCooldownTicks);
         }
 
-        stage = state.stage(lifecycleConfig);
-        final boolean deadFromAge = !ignoreAge && stage == LivingSpongeLifecycleStage.DEAD;
-        final boolean deadFromEnergy = !ignoreEnergy && state.energy() <= 0;
-        final boolean shouldDie = deadFromAge || deadFromEnergy;
+        stage = state.stage(lifecycleConfig, state.creativeVariant());
+        final boolean shouldDie = stage == LivingSpongeLifecycleStage.DEAD;
 
         return new LivingSpongeTickResult(
                 stage,
-                effectiveAbsorbed,
-                fruitDrops,
                 reproductionTarget,
-                shouldDie,
-                state.energy()
+                shouldDie
         );
     }
 
@@ -102,11 +54,9 @@ public final class LivingSpongeSimulationService {
             final LivingSpongeNodeState state,
             final LivingSpongeTickContext context,
             final LivingSpongeConfig.BalanceValues values,
-            final LivingSpongeLifecycleStage stage,
-            final boolean ignoreEnergy,
-            final boolean ignoreSpreadLimits
+            final LivingSpongeLifecycleStage stage
     ) {
-        if (stage == LivingSpongeLifecycleStage.DEAD) {
+        if (stage == LivingSpongeLifecycleStage.DEAD || stage == LivingSpongeLifecycleStage.OLD) {
             return false;
         }
         if (state.reproductionCooldownTicks() > 0) {
@@ -115,40 +65,16 @@ public final class LivingSpongeSimulationService {
         if (context.reproductionTargets().isEmpty()) {
             return false;
         }
-
-        if (!ignoreSpreadLimits) {
-            if (context.colonyChildren() >= values.spread().maxChildrenPerColony()) {
-                return false;
-            }
-            if (context.distanceFromRoot() > values.spread().maxColonyRadius()) {
-                return false;
-            }
+        if (context.absorbedWaterBlocks() <= 0) {
+            return false;
         }
-
-        return ignoreEnergy || state.energy() >= values.energy().minToReproduce();
+        if (context.distanceFromRoot() > values.spread().maxColonyRadius()) {
+            return false;
+        }
+        return true;
     }
 
-    private static double reproductionChance(
-            final LivingSpongeNodeState state,
-            final LivingSpongeConfig.BalanceValues values,
-            final LivingSpongeLifecycleStage stage
-    ) {
-        final LivingSpongeConfig.Spread spread = values.spread();
-        final LivingSpongeConfig.Energy energy = values.energy();
-        final int surplus = Math.max(0, state.energy() - energy.minToReproduce());
-        final double bonus = Math.min(
-                spread.reproductionEnergyBonusCap(),
-                surplus * spread.reproductionEnergyBonusPerPoint()
-        );
-
-        final double stageMultiplier = switch (stage) {
-            case YOUNG -> values.lifecycle().youngReproductionMultiplier();
-            case MATURE -> values.lifecycle().matureReproductionMultiplier();
-            case SENESCENT -> values.lifecycle().senescentReproductionMultiplier();
-            case DEAD -> 0.0D;
-        };
-
-        final double base = (spread.reproductionBaseChance() + bonus) * stageMultiplier;
-        return Math.min(spread.reproductionChanceCap(), Math.max(0.0D, base));
+    private static int halveTicks(final int ticks) {
+        return Math.max(1, ticks / 2);
     }
 }

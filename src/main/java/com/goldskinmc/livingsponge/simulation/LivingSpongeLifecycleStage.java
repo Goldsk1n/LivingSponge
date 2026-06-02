@@ -1,11 +1,12 @@
 package com.goldskinmc.livingsponge.simulation;
 
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
+import net.minecraft.util.StringRepresentable;
 
-public enum LivingSpongeLifecycleStage {
+public enum LivingSpongeLifecycleStage implements StringRepresentable {
     YOUNG,
     MATURE,
-    SENESCENT,
+    OLD,
     DEAD;
 
     public static LivingSpongeLifecycleStage fromAgeTicks(final int ageTicks, final LivingSpongeConfig.Lifecycle lifecycle) {
@@ -19,9 +20,9 @@ public enum LivingSpongeLifecycleStage {
             return MATURE;
         }
 
-        final int senescentEnd = matureEnd + lifecycle.senescentDurationTicks();
-        if (ageTicks < senescentEnd) {
-            return SENESCENT;
+        final int oldEnd = matureEnd + lifecycle.oldDurationTicks();
+        if (ageTicks < oldEnd) {
+            return OLD;
         }
 
         return DEAD;
@@ -29,5 +30,10 @@ public enum LivingSpongeLifecycleStage {
 
     public boolean isAlive() {
         return this != DEAD;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase();
     }
 }

@@ -1,12 +1,15 @@
 package com.goldskinmc.livingsponge.world.level.block.entity;
 
+import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.content.LivingSpongeBlockEntities;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeNodeState;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeRuntime;
+import com.goldskinmc.livingsponge.world.level.block.LivingSpongeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -52,14 +55,26 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-        if (nodeState != null && level instanceof ServerLevel serverLevel) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        if (nodeState != null) {
             LivingSpongeRuntime.instance().registerNode(serverLevel, worldPosition, nodeState);
+            return;
+        }
+
+        final Block block = getBlockState().getBlock();
+        if (block instanceof LivingSpongeBlock livingSpongeBlock) {
+            initializeRoot(livingSpongeBlock.creativeVariant());
         }
     }
 
     @Override
     public void setRemoved() {
-        if (nodeState != null && level instanceof ServerLevel serverLevel) {
+        if (nodeState != null
+                && level instanceof ServerLevel serverLevel
+                && !LivingSpongeBlocks.isLivingSponge(serverLevel.getBlockState(worldPosition).getBlock())) {
             LivingSpongeRuntime.instance().unregisterNode(serverLevel, worldPosition);
         }
         super.setRemoved();

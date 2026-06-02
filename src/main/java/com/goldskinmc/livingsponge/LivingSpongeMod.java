@@ -32,6 +32,8 @@ public final class LivingSpongeMod {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(LivingSpongeBlocks.LIVING_SPONGE.get());
             event.accept(LivingSpongeBlocks.CREATIVE_LIVING_SPONGE.get());
+            event.accept(LivingSpongeBlocks.HYDRO_BLOCK.get());
+            event.accept(LivingSpongeBlocks.SPONGE_REMAINS.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {

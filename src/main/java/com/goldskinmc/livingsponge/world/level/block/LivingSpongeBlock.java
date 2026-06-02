@@ -1,5 +1,6 @@
 package com.goldskinmc.livingsponge.world.level.block;
 
+import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.world.level.block.entity.LivingSpongeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -51,7 +52,7 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
 
     @Override
     public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState newState, final boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
+        if (!state.is(newState.getBlock()) && !LivingSpongeBlocks.isLivingSponge(newState.getBlock())) {
             final BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
                 livingSpongeBlockEntity.beforeBlockRemoved();

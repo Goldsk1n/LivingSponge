@@ -1,7 +1,6 @@
 package com.goldskinmc.livingsponge.simulation;
 
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
-import com.goldskinmc.livingsponge.content.LivingSpongeItems;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.world.level.block.entity.LivingSpongeBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -10,11 +9,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +76,6 @@ public final class LivingSpongeRuntime {
         }
 
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
-        final Map<UUID, Integer> colonySizes = buildColonySizes(levelNodes);
         final List<PendingChild> pendingChildren = new ArrayList<>();
         final long gameTime = level.getGameTime();
 
@@ -99,18 +97,22 @@ public final class LivingSpongeRuntime {
                 continue;
             }
 
-            final int colonyChildren = Math.max(0, colonySizes.getOrDefault(state.colonyId(), 1) - 1);
-            final SampledContext sampledContext = sampleContext(level, pos, state, colonyChildren);
-            final LivingSpongeTickResult result = simulationService.tickNode(state, sampledContext.tickContext(), level.getRandom());
+            final SampledContext sampledContext = sampleContext(level, pos, state);
+            final LivingSpongeTickResult result = simulationService.tickNode(
+                    state,
+                    sampledContext.tickContext(),
+                    level.getRandom(),
+                    updateInterval
+            );
 
             if (result.shouldDie()) {
                 iterator.remove();
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                final BlockState replacementState = deathReplacementState(level, pos, state, sampledContext.tickContext(), result);
+                level.setBlock(pos, replacementState, Block.UPDATE_ALL);
                 continue;
             }
 
-            consumeWaterSources(level, sampledContext.waterSourceTargets(), result.absorbedWaterBlocks());
-            dropHydroFruit(level, pos, result.fruitDrops());
+            syncPhase(level, pos, state, result.stage());
 
             result.reproductionTarget().ifPresent(target -> {
                 final LivingSpongeNodeState child = LivingSpongeNodeState.createChild(state, LivingSpongeConfig.values());
@@ -144,8 +146,7 @@ public final class LivingSpongeRuntime {
     private SampledContext sampleContext(
             final ServerLevel level,
             final BlockPos pos,
-            final LivingSpongeNodeState state,
-            final int colonyChildren
+            final LivingSpongeNodeState state
     ) {
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
         final List<BlockPos> waterSources = findNearbyWaterSources(
@@ -167,19 +168,11 @@ public final class LivingSpongeRuntime {
                         hasLavaContact,
                         hasFireContact,
                         reproductionTargets,
-                        colonyChildren,
+                        0,
                         distanceFromRoot
                 ),
                 waterSources
         );
-    }
-
-    private static Map<UUID, Integer> buildColonySizes(final Map<BlockPos, LivingSpongeNodeState> nodes) {
-        final Map<UUID, Integer> sizes = new HashMap<>();
-        for (LivingSpongeNodeState state : nodes.values()) {
-            sizes.merge(state.colonyId(), 1, Integer::sum);
-        }
-        return sizes;
     }
 
     private static List<BlockPos> findNearbyWaterSources(
@@ -254,37 +247,15 @@ public final class LivingSpongeRuntime {
         return blockEntity instanceof LivingSpongeBlockEntity;
     }
 
-    private static void consumeWaterSources(final ServerLevel level, final List<BlockPos> waterSources, final int amount) {
-        for (int i = 0; i < amount && i < waterSources.size(); i++) {
-            final BlockPos sourcePos = waterSources.get(i);
-            if (level.getBlockState(sourcePos).is(Blocks.WATER) && level.getFluidState(sourcePos).isSource()) {
-                level.setBlock(sourcePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-            }
-        }
-    }
-
-    private static void dropHydroFruit(final ServerLevel level, final BlockPos pos, final int amount) {
-        if (amount <= 0) {
-            return;
-        }
-
-        int remaining = amount;
-        final int stackLimit = LivingSpongeItems.HYDRO_FRUIT.get().getMaxStackSize();
-        while (remaining > 0) {
-            final int stackSize = Math.min(remaining, stackLimit);
-            Block.popResource(level, pos.below(), new ItemStack(LivingSpongeItems.HYDRO_FRUIT.get(), stackSize));
-            remaining -= stackSize;
-        }
-    }
-
     private void placeChild(final ServerLevel level, final BlockPos pos, final LivingSpongeNodeState state) {
         if (!canHostChild(level, pos)) {
             return;
         }
 
-        final Block block = state.creativeVariant()
-                ? LivingSpongeBlocks.CREATIVE_LIVING_SPONGE.get()
-                : LivingSpongeBlocks.LIVING_SPONGE.get();
+        final Block block = LivingSpongeBlocks.spongeBlockFor(
+                state.stage(LivingSpongeConfig.values().lifecycle(), state.creativeVariant()),
+                state.creativeVariant()
+        );
         if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
             return;
         }
@@ -296,8 +267,72 @@ public final class LivingSpongeRuntime {
     }
 
     private static boolean canHostChild(final ServerLevel level, final BlockPos pos) {
-        final BlockStateData data = new BlockStateData(level.getBlockState(pos).canBeReplaced(), level.getBlockState(pos).is(Blocks.WATER));
-        return data.replaceable() || data.waterSource();
+        final BlockState state = level.getBlockState(pos);
+        final boolean waterFilled = level.getFluidState(pos).is(FluidTags.WATER);
+        return waterFilled && (state.canBeReplaced() || state.is(Blocks.WATER));
+    }
+
+    private static BlockState deathReplacementState(
+            final ServerLevel level,
+            final BlockPos pos,
+            final LivingSpongeNodeState state,
+            final LivingSpongeTickContext context,
+            final LivingSpongeTickResult result
+    ) {
+        if (result.stage() != LivingSpongeLifecycleStage.DEAD) {
+            return Blocks.AIR.defaultBlockState();
+        }
+
+        final LivingSpongeConfig.Lifecycle lifecycle = LivingSpongeConfig.values().lifecycle();
+        if (isFrontierDeath(pos, state, context)) {
+            return level.getRandom().nextDouble() < lifecycle.frontierRemainsChance()
+                    ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
+                    : Blocks.AIR.defaultBlockState();
+        }
+
+        if (level.getRandom().nextDouble() < lifecycle.nonFrontierHydroBlockChance()) {
+            return LivingSpongeBlocks.HYDRO_BLOCK.get().defaultBlockState();
+        }
+
+        return Blocks.AIR.defaultBlockState();
+    }
+
+    private static boolean isFrontierDeath(
+            final BlockPos pos,
+            final LivingSpongeNodeState state,
+            final LivingSpongeTickContext context
+    ) {
+        final int currentDistance = chebyshevDistance(pos, state.rootPos());
+        for (BlockPos target : context.reproductionTargets()) {
+            if (chebyshevDistance(target, state.rootPos()) >= currentDistance) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void syncPhase(
+            final ServerLevel level,
+            final BlockPos pos,
+            final LivingSpongeNodeState state,
+            final LivingSpongeLifecycleStage stage
+    ) {
+        if (stage == LivingSpongeLifecycleStage.DEAD) {
+            return;
+        }
+
+        final BlockState currentState = level.getBlockState(pos);
+        final Block targetBlock = LivingSpongeBlocks.spongeBlockFor(stage, state.creativeVariant());
+        if (currentState.is(targetBlock)) {
+            return;
+        }
+
+        if (level.setBlock(pos, targetBlock.defaultBlockState(), Block.UPDATE_ALL)) {
+            final BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
+                livingSpongeBlockEntity.initializeFromState(state);
+            }
+        }
     }
 
     private static int chebyshevDistance(final BlockPos a, final BlockPos b) {
@@ -315,8 +350,5 @@ public final class LivingSpongeRuntime {
     }
 
     private record SampledContext(LivingSpongeTickContext tickContext, List<BlockPos> waterSourceTargets) {
-    }
-
-    private record BlockStateData(boolean replaceable, boolean waterSource) {
     }
 }
