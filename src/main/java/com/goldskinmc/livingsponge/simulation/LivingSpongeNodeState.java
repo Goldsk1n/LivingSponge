@@ -2,6 +2,7 @@ package com.goldskinmc.livingsponge.simulation;
 
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
 
@@ -56,6 +57,35 @@ public final class LivingSpongeNodeState {
                 parent.creativeVariant,
                 values.energy().baseCapacity()
         );
+    }
+
+    public static LivingSpongeNodeState load(final CompoundTag tag) {
+        final LivingSpongeNodeState state = new LivingSpongeNodeState(
+                tag.getUUID("ColonyId"),
+                BlockPos.of(tag.getLong("RootPos")),
+                tag.getInt("Generation"),
+                tag.getBoolean("CreativeVariant"),
+                tag.getInt("Energy")
+        );
+        state.ageTicks = tag.getInt("AgeTicks");
+        state.fruitProgress = tag.getInt("FruitProgress");
+        state.reproductionCooldownTicks = tag.getInt("ReproductionCooldownTicks");
+        state.absorbedWaterLifetime = tag.getInt("AbsorbedWaterLifetime");
+        return state;
+    }
+
+    public CompoundTag save() {
+        final CompoundTag tag = new CompoundTag();
+        tag.putUUID("ColonyId", colonyId);
+        tag.putLong("RootPos", rootPos);
+        tag.putInt("Generation", generation);
+        tag.putBoolean("CreativeVariant", creativeVariant);
+        tag.putInt("AgeTicks", ageTicks);
+        tag.putInt("Energy", energy);
+        tag.putInt("FruitProgress", fruitProgress);
+        tag.putInt("ReproductionCooldownTicks", reproductionCooldownTicks);
+        tag.putInt("AbsorbedWaterLifetime", absorbedWaterLifetime);
+        return tag;
     }
 
     public UUID colonyId() {
