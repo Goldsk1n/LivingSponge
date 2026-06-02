@@ -239,7 +239,7 @@ public final class LivingSpongeRuntime {
         final List<BlockPos> targets = new ArrayList<>(6);
         for (Direction direction : Direction.values()) {
             final BlockPos target = pos.relative(direction);
-            if (level.getBlockState(target).canBeReplaced() && level.getFluidState(target).isEmpty()) {
+            if (canHostChild(level, target)) {
                 targets.add(target.immutable());
             }
         }
@@ -278,7 +278,7 @@ public final class LivingSpongeRuntime {
     }
 
     private void placeChild(final ServerLevel level, final BlockPos pos, final LivingSpongeNodeState state) {
-        if (!level.getBlockState(pos).canBeReplaced() || !level.getFluidState(pos).isEmpty()) {
+        if (!canHostChild(level, pos)) {
             return;
         }
 
@@ -293,6 +293,11 @@ public final class LivingSpongeRuntime {
         if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
             livingSpongeBlockEntity.initializeFromState(state);
         }
+    }
+
+    private static boolean canHostChild(final ServerLevel level, final BlockPos pos) {
+        final BlockStateData data = new BlockStateData(level.getBlockState(pos).canBeReplaced(), level.getBlockState(pos).is(Blocks.WATER));
+        return data.replaceable() || data.waterSource();
     }
 
     private static int chebyshevDistance(final BlockPos a, final BlockPos b) {
@@ -310,5 +315,8 @@ public final class LivingSpongeRuntime {
     }
 
     private record SampledContext(LivingSpongeTickContext tickContext, List<BlockPos> waterSourceTargets) {
+    }
+
+    private record BlockStateData(boolean replaceable, boolean waterSource) {
     }
 }
