@@ -1,0 +1,16 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "misc",
+    "ingredients":  [
+                        {
+                            "item":  "livingsponge:vast_living_sponge"
+                        },
+                        {
+                            "item":  "minecraft:lily_pad"
+                        }
+                    ],
+    "result":  {
+                   "item":  "livingsponge:vast_surface_living_sponge",
+                   "count":  1
+               }
+}

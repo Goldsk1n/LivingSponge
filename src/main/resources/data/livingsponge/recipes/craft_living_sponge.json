@@ -1,0 +1,19 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "misc",
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:sponge"
+                        },
+                        {
+                            "item":  "minecraft:seagrass"
+                        },
+                        {
+                            "item":  "minecraft:kelp"
+                        }
+                    ],
+    "result":  {
+                   "item":  "livingsponge:living_sponge",
+                   "count":  1
+               }
+}
