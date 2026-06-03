@@ -40,7 +40,7 @@ public final class LivingSpongeSimulationService {
 
         Optional<BlockPos> fruitTarget = Optional.empty();
         if (canProduceFruit(profile, stage, context)) {
-            state.addFruitProgress(context.nearbyMediumBlocks() * values.fruit().progressPerWaterAbsorbed());
+            state.addFruitProgress(context.nearbyMediumBlocks() * values.fruit().progressPerNearbyMediumBlock());
             if (state.fruitProgress() >= values.fruit().progressNeeded()) {
                 final int targetIndex = random.nextInt(context.fruitTargets().size());
                 fruitTarget = Optional.of(context.fruitTargets().get(targetIndex));

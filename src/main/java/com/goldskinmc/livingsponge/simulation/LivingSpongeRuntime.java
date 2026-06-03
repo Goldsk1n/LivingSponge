@@ -169,8 +169,8 @@ public final class LivingSpongeRuntime {
                 level,
                 pos,
                 profile,
-                values.spread().absorbRadius(),
-                values.spread().maxAbsorbsPerUpdate()
+                values.spread().mediumScanRadius(),
+                values.spread().maxMediumSamplesPerUpdate()
         );
         final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
         final boolean hasFireContact = hasFireContact(level, pos);
