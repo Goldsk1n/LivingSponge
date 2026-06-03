@@ -1,6 +1,7 @@
 package com.goldskinmc.livingsponge.world.level.block;
 
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
+import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import com.goldskinmc.livingsponge.world.level.block.entity.LivingSpongeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -15,15 +16,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBlock {
-    private final boolean creativeVariant;
+    private final boolean creativeOverrides;
 
-    public LivingSpongeBlock(final boolean creativeVariant, final Properties properties) {
+    public LivingSpongeBlock(final boolean creativeOverrides, final Properties properties) {
         super(properties);
-        this.creativeVariant = creativeVariant;
+        this.creativeOverrides = creativeOverrides;
     }
 
-    public boolean creativeVariant() {
-        return creativeVariant;
+    public boolean creativeOverrides() {
+        return creativeOverrides;
     }
 
     @Override
@@ -46,7 +47,7 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
 
         final BlockEntity blockEntity = serverLevel.getBlockEntity(pos);
         if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity && !livingSpongeBlockEntity.hasNodeState()) {
-            livingSpongeBlockEntity.initializeRoot(creativeVariant);
+            livingSpongeBlockEntity.initializeRoot(SpongeTraits.DEFAULT, creativeOverrides);
         }
     }
 

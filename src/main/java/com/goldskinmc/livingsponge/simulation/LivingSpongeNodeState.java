@@ -1,6 +1,8 @@
 package com.goldskinmc.livingsponge.simulation;
 
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
+import com.goldskinmc.livingsponge.simulation.profile.ResolvedSpongeProfile;
+import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 
@@ -10,7 +12,8 @@ public final class LivingSpongeNodeState {
     private final UUID colonyId;
     private final long rootPos;
     private final int generation;
-    private final boolean creativeVariant;
+    private final SpongeTraits traits;
+    private final boolean creativeOverrides;
 
     private int ageTicks;
     private int reproductionCooldownTicks;
@@ -19,27 +22,32 @@ public final class LivingSpongeNodeState {
             final UUID colonyId,
             final BlockPos rootPos,
             final int generation,
-            final boolean creativeVariant,
+            final SpongeTraits traits,
+            final boolean creativeOverrides,
             final int reproductionCooldownTicks
     ) {
         this.colonyId = colonyId;
         this.rootPos = rootPos.asLong();
         this.generation = generation;
-        this.creativeVariant = creativeVariant;
+        this.traits = traits;
+        this.creativeOverrides = creativeOverrides;
         this.reproductionCooldownTicks = Math.max(0, reproductionCooldownTicks);
     }
 
     public static LivingSpongeNodeState createRoot(
             final BlockPos rootPos,
-            final boolean creativeVariant,
+            final SpongeTraits traits,
+            final boolean creativeOverrides,
             final LivingSpongeConfig.BalanceValues values
     ) {
+        final ResolvedSpongeProfile profile = new ResolvedSpongeProfile(traits, creativeOverrides);
         return new LivingSpongeNodeState(
                 UUID.randomUUID(),
                 rootPos,
                 0,
-                creativeVariant,
-                initialReproductionCooldown(creativeVariant, values.spread().reproductionCooldownTicks())
+                traits,
+                creativeOverrides,
+                profile.reproductionCooldownTicks(values)
         );
     }
 
@@ -47,21 +55,27 @@ public final class LivingSpongeNodeState {
             final LivingSpongeNodeState parent,
             final LivingSpongeConfig.BalanceValues values
     ) {
+        final ResolvedSpongeProfile profile = parent.resolveProfile();
         return new LivingSpongeNodeState(
                 parent.colonyId,
                 parent.rootPos(),
                 parent.generation + 1,
-                parent.creativeVariant,
-                initialReproductionCooldown(parent.creativeVariant, values.spread().reproductionCooldownTicks())
+                parent.traits,
+                parent.creativeOverrides,
+                profile.reproductionCooldownTicks(values)
         );
     }
 
     public static LivingSpongeNodeState load(final CompoundTag tag) {
+        final SpongeTraits loadedTraits = tag.contains("Traits")
+                ? SpongeTraits.load(tag.getCompound("Traits"))
+                : SpongeTraits.DEFAULT;
         final LivingSpongeNodeState state = new LivingSpongeNodeState(
                 tag.getUUID("ColonyId"),
                 BlockPos.of(tag.getLong("RootPos")),
                 tag.getInt("Generation"),
-                tag.getBoolean("CreativeVariant"),
+                loadedTraits,
+                tag.contains("CreativeOverrides") ? tag.getBoolean("CreativeOverrides") : tag.getBoolean("CreativeVariant"),
                 tag.getInt("ReproductionCooldownTicks")
         );
         state.ageTicks = tag.getInt("AgeTicks");
@@ -73,7 +87,8 @@ public final class LivingSpongeNodeState {
         tag.putUUID("ColonyId", colonyId);
         tag.putLong("RootPos", rootPos);
         tag.putInt("Generation", generation);
-        tag.putBoolean("CreativeVariant", creativeVariant);
+        tag.put("Traits", traits.save());
+        tag.putBoolean("CreativeOverrides", creativeOverrides);
         tag.putInt("AgeTicks", ageTicks);
         tag.putInt("ReproductionCooldownTicks", reproductionCooldownTicks);
         return tag;
@@ -91,8 +106,12 @@ public final class LivingSpongeNodeState {
         return generation;
     }
 
-    public boolean creativeVariant() {
-        return creativeVariant;
+    public SpongeTraits traits() {
+        return traits;
+    }
+
+    public boolean creativeOverrides() {
+        return creativeOverrides;
     }
 
     public int ageTicks() {
@@ -115,32 +134,11 @@ public final class LivingSpongeNodeState {
         reproductionCooldownTicks = Math.max(0, ticks);
     }
 
-    public LivingSpongeLifecycleStage stage(final LivingSpongeConfig.Lifecycle lifecycle, final boolean creativeVariant) {
-        return LivingSpongeLifecycleStage.fromAgeTicks(ageTicks, adjustedLifecycle(lifecycle, creativeVariant));
+    public ResolvedSpongeProfile resolveProfile() {
+        return new ResolvedSpongeProfile(traits, creativeOverrides);
     }
 
-    private static LivingSpongeConfig.Lifecycle adjustedLifecycle(
-            final LivingSpongeConfig.Lifecycle lifecycle,
-            final boolean creativeVariant
-    ) {
-        if (!creativeVariant) {
-            return lifecycle;
-        }
-
-        return new LivingSpongeConfig.Lifecycle(
-                halveTicks(lifecycle.youngDurationTicks()),
-                halveTicks(lifecycle.matureDurationTicks()),
-                halveTicks(lifecycle.oldDurationTicks()),
-                lifecycle.frontierRemainsChance(),
-                lifecycle.nonFrontierHydroBlockChance()
-        );
-    }
-
-    private static int initialReproductionCooldown(final boolean creativeVariant, final int baseCooldown) {
-        return creativeVariant ? halveTicks(baseCooldown) : baseCooldown;
-    }
-
-    private static int halveTicks(final int ticks) {
-        return Math.max(1, ticks / 2);
+    public LivingSpongeLifecycleStage stage(final LivingSpongeConfig.BalanceValues values) {
+        return LivingSpongeLifecycleStage.fromAgeTicks(ageTicks, resolveProfile().lifecycle(values));
     }
 }

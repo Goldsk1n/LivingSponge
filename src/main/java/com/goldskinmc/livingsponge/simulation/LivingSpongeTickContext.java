@@ -6,8 +6,8 @@ import java.util.List;
 
 public record LivingSpongeTickContext(
         boolean canStayActive,
-        int absorbedWaterBlocks,
-        boolean hasLavaContact,
+        int nearbyMediumBlocks,
+        boolean hasOpposingFluidContact,
         boolean hasFireContact,
         List<BlockPos> reproductionTargets,
         int colonyChildren,

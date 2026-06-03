@@ -106,11 +106,11 @@ public final class LivingSpongeBlocks {
                 || block == CREATIVE_OLD_LIVING_SPONGE.get();
     }
 
-    public static Block spongeBlockFor(final LivingSpongeLifecycleStage stage, final boolean creativeVariant) {
+    public static Block spongeBlockFor(final LivingSpongeLifecycleStage stage, final boolean creativeOverrides) {
         return switch (stage) {
-            case YOUNG -> creativeVariant ? CREATIVE_LIVING_SPONGE.get() : LIVING_SPONGE.get();
-            case MATURE -> creativeVariant ? CREATIVE_MATURE_LIVING_SPONGE.get() : MATURE_LIVING_SPONGE.get();
-            case OLD -> creativeVariant ? CREATIVE_OLD_LIVING_SPONGE.get() : OLD_LIVING_SPONGE.get();
+            case YOUNG -> creativeOverrides ? CREATIVE_LIVING_SPONGE.get() : LIVING_SPONGE.get();
+            case MATURE -> creativeOverrides ? CREATIVE_MATURE_LIVING_SPONGE.get() : MATURE_LIVING_SPONGE.get();
+            case OLD -> creativeOverrides ? CREATIVE_OLD_LIVING_SPONGE.get() : OLD_LIVING_SPONGE.get();
             case DEAD -> throw new IllegalArgumentException("Dead sponges do not have a block state");
         };
     }
