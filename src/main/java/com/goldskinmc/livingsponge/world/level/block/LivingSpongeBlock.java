@@ -53,7 +53,7 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
         }
 
         final BlockEntity blockEntity = serverLevel.getBlockEntity(pos);
-        if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity && !livingSpongeBlockEntity.hasNodeState()) {
+        if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
             final SpongeTraits traits = stack.getItem() instanceof LivingSpongePlacementItem placementItem
                     ? placementItem.traits()
                     : SpongeTraits.DEFAULT;
