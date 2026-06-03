@@ -129,12 +129,16 @@ This is intentionally a local frontier rule based on live colony geometry, not a
 
 - `Magma + Volume + Neutral`
   - lava-clearing colony
+- `Magma + Volume + Fruiting`
+  - lava fruit colony
 - `Magma + Volume + Wall-Forming`
   - lava shell maker
 - `Magma + Volume + Solidifying`
   - lava crust mass
 - `Magma + Surface + Neutral`
   - lava skimmer
+- `Magma + Surface + Fruiting`
+  - lava surface orchard
 - `Magma + Surface + Wall-Forming`
   - lava perimeter ring
 - `Magma + Surface + Solidifying`

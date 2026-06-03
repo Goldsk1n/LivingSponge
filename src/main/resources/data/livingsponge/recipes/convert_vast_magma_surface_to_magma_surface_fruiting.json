@@ -1,0 +1,16 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "misc",
+    "ingredients":  [
+                        {
+                            "item":  "livingsponge:vast_magma_surface_living_sponge"
+                        },
+                        {
+                            "item":  "livingsponge:hydro_fruit"
+                        }
+                    ],
+    "result":  {
+                   "item":  "livingsponge:vast_magma_surface_fruiting_living_sponge",
+                   "count":  1
+               }
+}

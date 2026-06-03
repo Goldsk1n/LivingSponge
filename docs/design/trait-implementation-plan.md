@@ -391,26 +391,20 @@ Success criteria:
 - config matches actual runtime behavior
 - dead legacy knobs are gone
 
-## Migration Strategy
+## Save Compatibility
 
-Old worlds need a deterministic migration path.
+The mod is still in active development, so legacy sponge save compatibility is not guaranteed.
 
-### Save Migration
+Current policy:
 
-- If a saved node has no traits, assign:
-  - `Water + Volume + Wall-Forming + Standard`
-- If a saved node only has the old creative flag:
-  - preserve it as `creativeOverrides = true`
+- current-format traitful sponge saves are supported
+- legacy traitless or pre-trait sponge states are not migrated
+- broken sponge block entities are not auto-healed on load
 
-### Runtime Migration
+Registry safety still matters:
 
-- do not rely on users replacing old blocks manually
-- block entities should self-heal missing trait data on load
-
-### Registry Safety
-
-- avoid renaming existing sponge phase block ids during the trait migration
-- trait identity should live in data first, not in registry ids
+- avoid renaming existing sponge phase block ids casually
+- keep trait identity in block entity data rather than exploding block registries
 
 ## Testing Plan
 
@@ -425,10 +419,10 @@ Each implementation phase should end with a focused verification pass.
 
 At minimum test:
 
-- baseline migrated sponge from old world
-- new `Water + Volume + Neutral + Standard`
+- freshly placed `Water + Volume + Neutral + Standard`
 - `Water + Surface + Wall-Forming + Standard`
 - `Water + Surface + Fruiting + Standard`
+- `Magma + Volume + Fruiting + Standard`
 - `Magma + Surface + Solidifying + Standard`
 - `Magma + Surface + Solidifying + Expanded`
 - one `Vast` profile to confirm cap and performance behavior
