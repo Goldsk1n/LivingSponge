@@ -17,7 +17,7 @@ The important information is the sponge's traits, not its raw registry name.
 
 Every player-facing sponge item should communicate:
 
-- `Medium`
+- `Growth Medium`
 - `Spread`
 - `Output`
 - `Radius`
@@ -51,7 +51,7 @@ The tooltip should behave like a compact trait card, comparable to firework meta
 Recommended tooltip layout:
 
 ```text
-Medium: Water
+Growth Medium: Water
 Spread: Surface
 Output: Fruiting
 Radius: Expanded (16)
@@ -70,9 +70,9 @@ Formatting rules:
 Recommended behavior summary text by trait:
 
 - `Water`
-  - `Lives in water. Dies on lava contact.`
+  - `Grows in water. Dies on lava contact.`
 - `Magma`
-  - `Lives in lava. Dies on water contact.`
+  - `Grows in lava. Dies on water contact.`
 - `Volume`
   - `Spreads through the body of the fluid.`
 - `Surface`
@@ -111,34 +111,68 @@ The creative tab should be grouped by behavior, not by raw registration order.
 
 Recommended order:
 
-1. Utility / default water variants
+1. Neutral water variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-2. Surface variants
+2. Neutral surface variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-3. Fruiting variants
+3. Wall-forming variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-4. Solidifying variants
+4. Fruiting variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-5. Magma variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-6. Support items and blocks
+5. Solidifying variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+    - `Living Sponge`
+    - `Living Sponge`
+    - `Living Sponge`
+6. Magma neutral variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+7. Magma wall-forming variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+8. Magma fruiting variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+9. Magma solidifying variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+    - `Living Sponge`
+    - `Living Sponge`
+    - `Living Sponge`
+10. Support items and blocks
    - `Hydro Fruit`
    - `Hydro Block`
    - `Sponge Remains`
-7. Creative-only utility
+11. Creative-only utility
    - `Creative Living Sponge`
 
 This order matches how a player is likely to evaluate the items.
@@ -199,14 +233,16 @@ Until then, a workstation is extra complexity without enough payoff.
 
 ## Recommended Immediate UX Changes
 
-Implement these next, in order:
+Implemented baseline UX changes:
 
-1. Add structured tooltips to all sponge items.
-2. Apply the unified `Living Sponge` display name to all survival variants.
-3. Reorder the creative tab by behavior groups.
-4. Keep current recipes, but ensure JEI and recipe outputs display the improved names and tooltips.
+1. Structured tooltips on all sponge items.
+2. Unified `Living Sponge` display name on survival variants.
+3. Recipe outputs and JEI-facing items inherit the same tooltip identity.
 
-These changes will solve most of the present confusion without changing gameplay mechanics.
+Still recommended:
+
+1. keep refining creative-tab grouping as the exposed matrix grows
+2. add stronger in-world visual differentiation beyond tooltips
 
 ## Examples
 
@@ -219,7 +255,7 @@ Display name:
 Tooltip:
 
 ```text
-Medium: Water
+Growth Medium: Water
 Spread: Surface
 Output: Fruiting
 Radius: Expanded (16)
@@ -237,7 +273,7 @@ Display name:
 Tooltip:
 
 ```text
-Medium: Water
+Growth Medium: Water
 Spread: Volume
 Output: Neutral
 Radius: Standard (8)
@@ -255,12 +291,12 @@ Display name:
 Tooltip:
 
 ```text
-Medium: Magma
+Growth Medium: Lava
 Spread: Surface
 Output: Solidifying
 Radius: Vast (512)
 
-Lives in lava. Dies on water contact.
+Grows in lava. Dies on water contact.
 All old-age deaths leave remains.
 ```
 

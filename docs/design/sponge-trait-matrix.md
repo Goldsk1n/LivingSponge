@@ -1,6 +1,6 @@
 # Sponge Trait Matrix
 
-This document defines the planned composable trait system for Living Sponge variants.
+This document defines the composable trait system used by Living Sponge variants.
 
 ## Trait Slots
 
@@ -52,12 +52,12 @@ Examples:
 
 ### `Water`
 
-- Lives in water.
+- Grows in water.
 - Dies on lava contact.
 
 ### `Magma`
 
-- Lives in lava.
+- Grows in lava.
 - Dies on water contact.
 
 ## Spread Rules
@@ -150,21 +150,24 @@ Each valid combination can use any radius tier:
 - `Expanded`
 - `Vast`
 
-## Naming Rule
+## Player-Facing Identity
 
-Player-facing naming should follow this order:
+All survival variants use the display name:
 
-- `Radius + Medium + Spread + Output + Living Sponge`
+- `Living Sponge`
 
-Examples:
+Trait identity is communicated through the tooltip, not the display name.
 
-- `Standard Water Volume Living Sponge`
-- `Expanded Water Surface Fruiting Living Sponge`
-- `Expanded Magma Surface Solidifying Living Sponge`
+The tooltip shows:
 
-UI-friendly short forms are allowed as long as the underlying trait identity remains the same.
+- `Growth Medium`
+- `Spread`
+- `Output`
+- `Radius`
 
-## Recommended Internal Model
+`Creative Living Sponge` remains the only named exception.
+
+## Internal Model
 
 Use explicit enums plus a resolved profile:
 
@@ -183,9 +186,31 @@ Resolved profile fields should cover:
 - fruit mode
 - frontier behavior
 
-## Recommended Implementation Order
+## Current Exposure
 
-1. Add `RadiusTrait`.
-2. Move current radius logic into resolved profile handling.
-3. Add `OutputTrait.Solidifying`.
-4. Add `Medium` and `Spread` specialization.
+The full supported matrix is currently exposed for gameplay:
+
+- `Water + Volume + Neutral`
+- `Water + Surface + Neutral`
+- `Water + Volume + Fruiting`
+- `Water + Surface + Fruiting`
+- `Water + Volume + Wall-Forming`
+- `Water + Surface + Wall-Forming`
+- `Water + Volume + Solidifying`
+- `Water + Surface + Solidifying`
+- `Magma + Volume + Neutral`
+- `Magma + Surface + Neutral`
+- `Magma + Volume + Fruiting`
+- `Magma + Surface + Fruiting`
+- `Magma + Volume + Wall-Forming`
+- `Magma + Surface + Wall-Forming`
+- `Magma + Volume + Solidifying`
+- `Magma + Surface + Solidifying`
+
+Each of those combinations supports:
+
+- `Standard`
+- `Expanded`
+- `Vast`
+
+The base `Living Sponge` item family is neutral by default.
