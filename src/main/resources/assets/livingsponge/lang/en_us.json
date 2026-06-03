@@ -8,9 +8,17 @@
   "block.livingsponge.hydro_block": "Hydro-Block",
   "block.livingsponge.sponge_remains": "Sponge Remains",
   "item.livingsponge.living_sponge": "Wall-Forming Living Sponge",
+  "item.livingsponge.expanded_living_sponge": "Expanded Wall-Forming Living Sponge",
+  "item.livingsponge.vast_living_sponge": "Vast Wall-Forming Living Sponge",
   "item.livingsponge.surface_living_sponge": "Surface Wall-Forming Living Sponge",
+  "item.livingsponge.expanded_surface_living_sponge": "Expanded Surface Wall-Forming Living Sponge",
+  "item.livingsponge.vast_surface_living_sponge": "Vast Surface Wall-Forming Living Sponge",
   "item.livingsponge.solidifying_living_sponge": "Solidifying Living Sponge",
+  "item.livingsponge.expanded_solidifying_living_sponge": "Expanded Solidifying Living Sponge",
+  "item.livingsponge.vast_solidifying_living_sponge": "Vast Solidifying Living Sponge",
   "item.livingsponge.magma_surface_solidifying_living_sponge": "Magma Surface Solidifying Living Sponge",
+  "item.livingsponge.expanded_magma_surface_solidifying_living_sponge": "Expanded Magma Surface Solidifying Living Sponge",
+  "item.livingsponge.vast_magma_surface_solidifying_living_sponge": "Vast Magma Surface Solidifying Living Sponge",
   "item.livingsponge.creative_living_sponge": "Creative Living Sponge",
   "item.livingsponge.hydro_fruit": "Hydro-Fruit"
 }
