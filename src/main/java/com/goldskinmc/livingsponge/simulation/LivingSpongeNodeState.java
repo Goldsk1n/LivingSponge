@@ -5,6 +5,7 @@ import com.goldskinmc.livingsponge.simulation.profile.ResolvedSpongeProfile;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -67,16 +68,17 @@ public final class LivingSpongeNodeState {
         );
     }
 
-    public static LivingSpongeNodeState load(final CompoundTag tag) {
-        final SpongeTraits loadedTraits = tag.contains("Traits")
-                ? SpongeTraits.load(tag.getCompound("Traits"))
-                : SpongeTraits.DEFAULT;
+    public static @Nullable LivingSpongeNodeState load(final CompoundTag tag) {
+        if (!tag.contains("Traits") || !tag.contains("CreativeOverrides")) {
+            return null;
+        }
+
         final LivingSpongeNodeState state = new LivingSpongeNodeState(
                 tag.getUUID("ColonyId"),
                 BlockPos.of(tag.getLong("RootPos")),
                 tag.getInt("Generation"),
-                loadedTraits,
-                tag.contains("CreativeOverrides") ? tag.getBoolean("CreativeOverrides") : tag.getBoolean("CreativeVariant"),
+                SpongeTraits.load(tag.getCompound("Traits")),
+                tag.getBoolean("CreativeOverrides"),
                 tag.getInt("ReproductionCooldownTicks")
         );
         state.ageTicks = tag.getInt("AgeTicks");

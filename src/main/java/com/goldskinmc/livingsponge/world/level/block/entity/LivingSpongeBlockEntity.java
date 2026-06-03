@@ -6,11 +6,9 @@ import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeNodeState;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeRuntime;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
-import com.goldskinmc.livingsponge.world.level.block.LivingSpongeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -62,12 +60,6 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
 
         if (nodeState != null) {
             LivingSpongeRuntime.instance().registerNode(serverLevel, worldPosition, nodeState);
-            return;
-        }
-
-        final Block block = getBlockState().getBlock();
-        if (block instanceof LivingSpongeBlock livingSpongeBlock) {
-            initializeRoot(SpongeTraits.DEFAULT, livingSpongeBlock.creativeOverrides());
         }
     }
 
@@ -94,6 +86,8 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
         super.load(tag);
         if (tag.contains("LivingSpongeState")) {
             nodeState = LivingSpongeNodeState.load(tag.getCompound("LivingSpongeState"));
+        } else {
+            nodeState = null;
         }
     }
 }
