@@ -34,8 +34,6 @@ public final class LivingSpongeBalanceDefaults {
         public static final int YOUNG_DURATION_TICKS = 100;
         public static final int MATURE_DURATION_TICKS = 400;
         public static final int OLD_DURATION_TICKS = 100;
-        public static final double FRONTIER_REMAINS_CHANCE = 1.0D;
-        public static final double NON_FRONTIER_HYDRO_BLOCK_CHANCE = 0.05D;
 
         private Lifecycle() {
         }

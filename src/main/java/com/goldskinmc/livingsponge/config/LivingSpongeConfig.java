@@ -29,8 +29,6 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue LIFECYCLE_YOUNG_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
-    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_FRONTIER_REMAINS_CHANCE;
-    private static final ForgeConfigSpec.DoubleValue LIFECYCLE_NON_FRONTIER_HYDRO_BLOCK_CHANCE;
 
     private static final ForgeConfigSpec.IntValue FRUIT_PROGRESS_PER_WATER_ABSORBED;
     private static final ForgeConfigSpec.IntValue FRUIT_PROGRESS_NEEDED;
@@ -106,10 +104,6 @@ public final class LivingSpongeConfig {
                 .defineInRange("mature_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS, 1, Integer.MAX_VALUE);
         LIFECYCLE_OLD_DURATION_TICKS = BUILDER.comment("Old stage duration in ticks before death.")
                 .defineInRange("old_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS, 1, Integer.MAX_VALUE);
-        LIFECYCLE_FRONTIER_REMAINS_CHANCE = BUILDER.comment("Chance for an old sponge on the colony frontier to become sponge remains.")
-                .defineInRange("frontier_remains_chance", LivingSpongeBalanceDefaults.Lifecycle.FRONTIER_REMAINS_CHANCE, 0.0D, 1.0D);
-        LIFECYCLE_NON_FRONTIER_HYDRO_BLOCK_CHANCE = BUILDER.comment("Chance for an old sponge away from the frontier to leave a hydro-block.")
-                .defineInRange("non_frontier_hydro_block_chance", LivingSpongeBalanceDefaults.Lifecycle.NON_FRONTIER_HYDRO_BLOCK_CHANCE, 0.0D, 1.0D);
         BUILDER.pop();
 
         BUILDER.push("fruit");
@@ -214,9 +208,7 @@ public final class LivingSpongeConfig {
                 new Lifecycle(
                         LIFECYCLE_YOUNG_DURATION_TICKS.get(),
                         LIFECYCLE_MATURE_DURATION_TICKS.get(),
-                        LIFECYCLE_OLD_DURATION_TICKS.get(),
-                        LIFECYCLE_FRONTIER_REMAINS_CHANCE.get(),
-                        LIFECYCLE_NON_FRONTIER_HYDRO_BLOCK_CHANCE.get()
+                        LIFECYCLE_OLD_DURATION_TICKS.get()
                 ),
                 new Fruit(
                         FRUIT_PROGRESS_PER_WATER_ABSORBED.get(),
@@ -273,9 +265,7 @@ public final class LivingSpongeConfig {
                 new Lifecycle(
                         LivingSpongeBalanceDefaults.Lifecycle.YOUNG_DURATION_TICKS,
                         LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS,
-                        LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS,
-                        LivingSpongeBalanceDefaults.Lifecycle.FRONTIER_REMAINS_CHANCE,
-                        LivingSpongeBalanceDefaults.Lifecycle.NON_FRONTIER_HYDRO_BLOCK_CHANCE
+                        LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS
                 ),
                 new Fruit(
                         LivingSpongeBalanceDefaults.Fruit.PROGRESS_PER_WATER_ABSORBED,
@@ -344,9 +334,7 @@ public final class LivingSpongeConfig {
     public record Lifecycle(
             int youngDurationTicks,
             int matureDurationTicks,
-            int oldDurationTicks,
-            double frontierRemainsChance,
-            double nonFrontierHydroBlockChance
+            int oldDurationTicks
     ) {
     }
 

@@ -305,21 +305,14 @@ public final class LivingSpongeRuntime {
             return Blocks.AIR.defaultBlockState();
         }
 
-        final LivingSpongeConfig.Lifecycle lifecycle = LivingSpongeConfig.values().lifecycle();
         if (profile.isSolidifyingOutput()) {
             return LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState();
         }
 
         if (profile.isWallFormingOutput()) {
-            if (isFrontierDeath(pos, state, context)) {
-                return level.getRandom().nextDouble() < lifecycle.frontierRemainsChance()
-                        ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
-                        : Blocks.AIR.defaultBlockState();
-            }
-
-            if (level.getRandom().nextDouble() < lifecycle.nonFrontierHydroBlockChance()) {
-                return LivingSpongeBlocks.HYDRO_BLOCK.get().defaultBlockState();
-            }
+            return isFrontierDeath(pos, state, context)
+                    ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
+                    : Blocks.AIR.defaultBlockState();
         }
 
         return Blocks.AIR.defaultBlockState();

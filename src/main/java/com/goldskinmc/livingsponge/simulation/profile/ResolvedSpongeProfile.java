@@ -31,9 +31,7 @@ public record ResolvedSpongeProfile(
         return new LivingSpongeConfig.Lifecycle(
                 halveTicks(lifecycle.youngDurationTicks()),
                 halveTicks(lifecycle.matureDurationTicks()),
-                halveTicks(lifecycle.oldDurationTicks()),
-                lifecycle.frontierRemainsChance(),
-                lifecycle.nonFrontierHydroBlockChance()
+                halveTicks(lifecycle.oldDurationTicks())
         );
     }
 
