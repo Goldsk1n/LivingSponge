@@ -24,11 +24,11 @@ public final class LivingSpongeSimulationService {
         LivingSpongeLifecycleStage stage = state.stage(values);
 
         if (!context.canStayActive()) {
-            return new LivingSpongeTickResult(stage, Optional.empty(), true, LivingSpongeDeathReason.INVALID_STATE);
+            return new LivingSpongeTickResult(stage, Optional.empty(), Optional.empty(), true, LivingSpongeDeathReason.INVALID_STATE);
         }
 
         if (context.hasOpposingFluidContact() || context.hasFireContact()) {
-            return new LivingSpongeTickResult(stage, Optional.empty(), true, LivingSpongeDeathReason.ENVIRONMENT);
+            return new LivingSpongeTickResult(stage, Optional.empty(), Optional.empty(), true, LivingSpongeDeathReason.ENVIRONMENT);
         }
 
         Optional<BlockPos> reproductionTarget = Optional.empty();
@@ -38,12 +38,23 @@ public final class LivingSpongeSimulationService {
             state.setReproductionCooldownTicks(reproductionCooldownTicks);
         }
 
+        Optional<BlockPos> fruitTarget = Optional.empty();
+        if (canProduceFruit(profile, stage, context)) {
+            state.addFruitProgress(context.nearbyMediumBlocks() * values.fruit().progressPerWaterAbsorbed());
+            if (state.fruitProgress() >= values.fruit().progressNeeded()) {
+                final int targetIndex = random.nextInt(context.fruitTargets().size());
+                fruitTarget = Optional.of(context.fruitTargets().get(targetIndex));
+                state.consumeFruitProgress(values.fruit().progressNeeded());
+            }
+        }
+
         stage = state.stage(values);
         final boolean shouldDie = stage == LivingSpongeLifecycleStage.DEAD;
 
         return new LivingSpongeTickResult(
                 stage,
                 reproductionTarget,
+                fruitTarget,
                 shouldDie,
                 shouldDie ? LivingSpongeDeathReason.AGING : LivingSpongeDeathReason.NONE
         );
@@ -72,5 +83,22 @@ public final class LivingSpongeSimulationService {
             return false;
         }
         return true;
+    }
+
+    private static boolean canProduceFruit(
+            final ResolvedSpongeProfile profile,
+            final LivingSpongeLifecycleStage stage,
+            final LivingSpongeTickContext context
+    ) {
+        if (!profile.isFruitingOutput()) {
+            return false;
+        }
+        if (stage != LivingSpongeLifecycleStage.MATURE && stage != LivingSpongeLifecycleStage.OLD) {
+            return false;
+        }
+        if (context.nearbyMediumBlocks() <= 0) {
+            return false;
+        }
+        return !context.fruitTargets().isEmpty();
     }
 }

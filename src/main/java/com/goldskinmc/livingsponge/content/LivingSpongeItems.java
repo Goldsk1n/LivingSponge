@@ -46,6 +46,12 @@ public final class LivingSpongeItems {
     );
     public static final SpongeTraits EXPANDED_SOLIDIFYING_TRAITS = solidifyingTraits(RadiusTrait.EXPANDED);
     public static final SpongeTraits VAST_SOLIDIFYING_TRAITS = solidifyingTraits(RadiusTrait.VAST);
+    public static final SpongeTraits FRUITING_TRAITS = fruitingTraits(RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_FRUITING_TRAITS = fruitingTraits(RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_FRUITING_TRAITS = fruitingTraits(RadiusTrait.VAST);
+    public static final SpongeTraits SURFACE_FRUITING_TRAITS = surfaceFruitingTraits(RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_SURFACE_FRUITING_TRAITS = surfaceFruitingTraits(RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_SURFACE_FRUITING_TRAITS = surfaceFruitingTraits(RadiusTrait.VAST);
     public static final SpongeTraits MAGMA_SURFACE_SOLIDIFYING_TRAITS = new SpongeTraits(
             MediumTrait.MAGMA,
             SpreadTrait.SURFACE,
@@ -75,6 +81,20 @@ public final class LivingSpongeItems {
             registerPlacementItem("expanded_solidifying_living_sponge", EXPANDED_SOLIDIFYING_TRAITS, false);
     public static final RegistryObject<Item> VAST_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("vast_solidifying_living_sponge", VAST_SOLIDIFYING_TRAITS, false);
+
+    public static final RegistryObject<Item> FRUITING_LIVING_SPONGE =
+            registerPlacementItem("fruiting_living_sponge", FRUITING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_FRUITING_LIVING_SPONGE =
+            registerPlacementItem("expanded_fruiting_living_sponge", EXPANDED_FRUITING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_FRUITING_LIVING_SPONGE =
+            registerPlacementItem("vast_fruiting_living_sponge", VAST_FRUITING_TRAITS, false);
+
+    public static final RegistryObject<Item> SURFACE_FRUITING_LIVING_SPONGE =
+            registerPlacementItem("surface_fruiting_living_sponge", SURFACE_FRUITING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_SURFACE_FRUITING_LIVING_SPONGE =
+            registerPlacementItem("expanded_surface_fruiting_living_sponge", EXPANDED_SURFACE_FRUITING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_SURFACE_FRUITING_LIVING_SPONGE =
+            registerPlacementItem("vast_surface_fruiting_living_sponge", VAST_SURFACE_FRUITING_TRAITS, false);
 
     public static final RegistryObject<Item> MAGMA_SURFACE_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("magma_surface_solidifying_living_sponge", MAGMA_SURFACE_SOLIDIFYING_TRAITS, false);
@@ -131,6 +151,14 @@ public final class LivingSpongeItems {
 
     private static SpongeTraits solidifyingTraits(final RadiusTrait radius) {
         return new SpongeTraits(MediumTrait.WATER, SpreadTrait.VOLUME, OutputTrait.SOLIDIFYING, radius);
+    }
+
+    private static SpongeTraits fruitingTraits(final RadiusTrait radius) {
+        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.VOLUME, OutputTrait.FRUITING, radius);
+    }
+
+    private static SpongeTraits surfaceFruitingTraits(final RadiusTrait radius) {
+        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.SURFACE, OutputTrait.FRUITING, radius);
     }
 
     private static SpongeTraits magmaSurfaceSolidifyingTraits(final RadiusTrait radius) {

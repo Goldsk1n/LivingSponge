@@ -17,6 +17,7 @@ public final class LivingSpongeNodeState {
 
     private int ageTicks;
     private int reproductionCooldownTicks;
+    private int fruitProgress;
 
     private LivingSpongeNodeState(
             final UUID colonyId,
@@ -79,6 +80,7 @@ public final class LivingSpongeNodeState {
                 tag.getInt("ReproductionCooldownTicks")
         );
         state.ageTicks = tag.getInt("AgeTicks");
+        state.fruitProgress = tag.getInt("FruitProgress");
         return state;
     }
 
@@ -90,6 +92,7 @@ public final class LivingSpongeNodeState {
         tag.put("Traits", traits.save());
         tag.putBoolean("CreativeOverrides", creativeOverrides);
         tag.putInt("AgeTicks", ageTicks);
+        tag.putInt("FruitProgress", fruitProgress);
         tag.putInt("ReproductionCooldownTicks", reproductionCooldownTicks);
         return tag;
     }
@@ -122,6 +125,10 @@ public final class LivingSpongeNodeState {
         return reproductionCooldownTicks;
     }
 
+    public int fruitProgress() {
+        return fruitProgress;
+    }
+
     public void tickAge(final int elapsedTicks) {
         ageTicks += Math.max(0, elapsedTicks);
     }
@@ -132,6 +139,14 @@ public final class LivingSpongeNodeState {
 
     public void setReproductionCooldownTicks(final int ticks) {
         reproductionCooldownTicks = Math.max(0, ticks);
+    }
+
+    public void addFruitProgress(final int progress) {
+        fruitProgress += Math.max(0, progress);
+    }
+
+    public void consumeFruitProgress(final int progress) {
+        fruitProgress = Math.max(0, fruitProgress - Math.max(0, progress));
     }
 
     public ResolvedSpongeProfile resolveProfile() {

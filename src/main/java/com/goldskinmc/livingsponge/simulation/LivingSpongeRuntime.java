@@ -74,6 +74,7 @@ public final class LivingSpongeRuntime {
 
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
         final List<PendingChild> pendingChildren = new ArrayList<>();
+        final List<BlockPos> pendingFruitTargets = new ArrayList<>();
         final long gameTime = level.getGameTime();
 
         final Iterator<Map.Entry<BlockPos, LivingSpongeNodeState>> iterator = levelNodes.entrySet().iterator();
@@ -112,10 +113,16 @@ public final class LivingSpongeRuntime {
 
             syncPhase(level, pos, state, profile, result.stage());
 
+            result.fruitTarget().ifPresent(target -> pendingFruitTargets.add(target.immutable()));
+
             result.reproductionTarget().ifPresent(target -> {
                 final LivingSpongeNodeState child = LivingSpongeNodeState.createChild(state, LivingSpongeConfig.values());
                 pendingChildren.add(new PendingChild(target.immutable(), child));
             });
+        }
+
+        for (BlockPos fruitTarget : pendingFruitTargets) {
+            placeFruitNode(level, fruitTarget);
         }
 
         for (PendingChild childEntry : pendingChildren) {
@@ -168,6 +175,7 @@ public final class LivingSpongeRuntime {
                         hasOpposingFluidContact,
                         hasFireContact,
                         reproductionTargets,
+                        findFruitTargets(level, pos, profile),
                         0,
                         distanceFromRoot
                 ),
@@ -246,6 +254,30 @@ public final class LivingSpongeRuntime {
         return targets;
     }
 
+    private static List<BlockPos> findFruitTargets(
+            final ServerLevel level,
+            final BlockPos pos,
+            final ResolvedSpongeProfile profile
+    ) {
+        final List<BlockPos> targets = new ArrayList<>(6);
+        if (profile.isSurfaceSpread()) {
+            addFruitTargetIfValid(level, pos.above(), targets);
+            addFruitTargetIfValid(level, pos.north(), targets);
+            addFruitTargetIfValid(level, pos.south(), targets);
+            addFruitTargetIfValid(level, pos.east(), targets);
+            addFruitTargetIfValid(level, pos.west(), targets);
+            return targets;
+        }
+
+        addFruitTargetIfValid(level, pos.below(), targets);
+        addFruitTargetIfValid(level, pos.north(), targets);
+        addFruitTargetIfValid(level, pos.south(), targets);
+        addFruitTargetIfValid(level, pos.east(), targets);
+        addFruitTargetIfValid(level, pos.west(), targets);
+        addFruitTargetIfValid(level, pos.above(), targets);
+        return targets;
+    }
+
     private static boolean isManagedLivingSponge(final ServerLevel level, final BlockPos pos) {
         if (!LivingSpongeBlocks.isLivingSponge(level.getBlockState(pos).getBlock())) {
             return false;
@@ -274,6 +306,14 @@ public final class LivingSpongeRuntime {
         }
     }
 
+    private static void placeFruitNode(final ServerLevel level, final BlockPos pos) {
+        if (!canHostFruit(level, pos)) {
+            return;
+        }
+
+        level.setBlock(pos, LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get().defaultBlockState(), Block.UPDATE_ALL);
+    }
+
     private static boolean canHostChild(
             final ServerLevel level,
             final BlockPos pos,
@@ -291,6 +331,13 @@ public final class LivingSpongeRuntime {
 
         final Block mediumBlock = profile.usesWaterMedium() ? Blocks.WATER : Blocks.LAVA;
         return state.canBeReplaced() || state.is(mediumBlock);
+    }
+
+    private static boolean canHostFruit(final ServerLevel level, final BlockPos pos) {
+        final BlockState state = level.getBlockState(pos);
+        return !LivingSpongeBlocks.isLivingSponge(state.getBlock())
+                && !state.is(LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get())
+                && (state.canBeReplaced() || level.getFluidState(pos).is(FluidTags.WATER));
     }
 
     private static BlockState deathReplacementState(
@@ -366,6 +413,16 @@ public final class LivingSpongeRuntime {
 
     private Map<BlockPos, LivingSpongeNodeState> nodes(final ServerLevel level) {
         return nodesByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
+    }
+
+    private static void addFruitTargetIfValid(
+            final ServerLevel level,
+            final BlockPos pos,
+            final List<BlockPos> targets
+    ) {
+        if (canHostFruit(level, pos)) {
+            targets.add(pos.immutable());
+        }
     }
 
     private static boolean matchesMediumSource(

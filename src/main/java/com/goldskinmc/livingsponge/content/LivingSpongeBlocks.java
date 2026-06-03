@@ -90,6 +90,15 @@ public final class LivingSpongeBlocks {
                     .sound(SoundType.WOOL))
     );
 
+    public static final RegistryObject<Block> HYDRO_FRUIT_CLUSTER = register(
+            "hydro_fruit_cluster",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .strength(0.2F)
+                    .sound(SoundType.WET_GRASS)
+                    .noOcclusion())
+    );
+
     private LivingSpongeBlocks() {
     }
 
