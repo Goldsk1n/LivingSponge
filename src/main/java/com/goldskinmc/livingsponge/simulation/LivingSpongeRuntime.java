@@ -26,6 +26,16 @@ import java.util.UUID;
 
 public final class LivingSpongeRuntime {
     private static final LivingSpongeRuntime INSTANCE = new LivingSpongeRuntime();
+    private static final int[][] SURFACE_OFFSETS = {
+            {1, 0},
+            {-1, 0},
+            {0, 1},
+            {0, -1},
+            {1, 1},
+            {1, -1},
+            {-1, 1},
+            {-1, -1}
+    };
 
     private final LivingSpongeSimulationService simulationService = new LivingSpongeSimulationService();
     private final Map<ResourceKey<Level>, Map<BlockPos, LivingSpongeNodeState>> nodesByLevel = new HashMap<>();
@@ -164,7 +174,8 @@ public final class LivingSpongeRuntime {
         );
         final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
         final boolean hasFireContact = hasFireContact(level, pos);
-        final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, profile);
+        final int radiusCap = profile.radiusCap(values);
+        final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, state.rootPos(), profile, radiusCap);
         final int distanceFromRoot = chebyshevDistance(pos, state.rootPos());
         final boolean canStayActive = level.hasChunkAt(pos) && isManagedLivingSponge(level, pos);
 
@@ -242,12 +253,25 @@ public final class LivingSpongeRuntime {
     private static List<BlockPos> findReproductionTargets(
             final ServerLevel level,
             final BlockPos pos,
-            final ResolvedSpongeProfile profile
+            final BlockPos rootPos,
+            final ResolvedSpongeProfile profile,
+            final int radiusCap
     ) {
-        final List<BlockPos> targets = new ArrayList<>(6);
+        final List<BlockPos> targets = new ArrayList<>(profile.isSurfaceSpread() ? SURFACE_OFFSETS.length : 6);
+
+        if (profile.isSurfaceSpread()) {
+            for (int[] offset : SURFACE_OFFSETS) {
+                final BlockPos target = pos.offset(offset[0], 0, offset[1]);
+                if (isWithinRadius(rootPos, target, radiusCap) && canHostChild(level, target, profile)) {
+                    targets.add(target.immutable());
+                }
+            }
+            return targets;
+        }
+
         for (Direction direction : Direction.values()) {
             final BlockPos target = pos.relative(direction);
-            if (canHostChild(level, target, profile)) {
+            if (isWithinRadius(rootPos, target, radiusCap) && canHostChild(level, target, profile)) {
                 targets.add(target.immutable());
             }
         }
@@ -409,6 +433,10 @@ public final class LivingSpongeRuntime {
         final int dy = Math.abs(a.getY() - b.getY());
         final int dz = Math.abs(a.getZ() - b.getZ());
         return Math.max(dx, Math.max(dy, dz));
+    }
+
+    private static boolean isWithinRadius(final BlockPos rootPos, final BlockPos targetPos, final int radiusCap) {
+        return chebyshevDistance(targetPos, rootPos) <= radiusCap;
     }
 
     private Map<BlockPos, LivingSpongeNodeState> nodes(final ServerLevel level) {
