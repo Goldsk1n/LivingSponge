@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 public final class LivingSpongeBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, LivingSpongeMod.MOD_ID);
 
-    public static final RegistryObject<Block> LIVING_SPONGE = registerWithItem(
+    public static final RegistryObject<Block> LIVING_SPONGE = register(
             "living_sponge",
             () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)
@@ -47,7 +47,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> CREATIVE_LIVING_SPONGE = registerWithItem(
+    public static final RegistryObject<Block> CREATIVE_LIVING_SPONGE = register(
             "creative_living_sponge",
             () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)

@@ -30,8 +30,11 @@ public final class LivingSpongeMod {
 
     private void addCreativeTabContents(final BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(LivingSpongeBlocks.LIVING_SPONGE.get());
-            event.accept(LivingSpongeBlocks.CREATIVE_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.SURFACE_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.SOLIDIFYING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.MAGMA_SURFACE_SOLIDIFYING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.CREATIVE_LIVING_SPONGE.get());
             event.accept(LivingSpongeBlocks.HYDRO_BLOCK.get());
             event.accept(LivingSpongeBlocks.SPONGE_REMAINS.get());
         }
