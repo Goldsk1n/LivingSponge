@@ -1,0 +1,16 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "misc",
+    "ingredients":  [
+                        {
+                            "item":  "livingsponge:expanded_surface_living_sponge"
+                        },
+                        {
+                            "item":  "minecraft:magma_cream"
+                        }
+                    ],
+    "result":  {
+                   "item":  "livingsponge:expanded_magma_surface_living_sponge",
+                   "count":  1
+               }
+}
