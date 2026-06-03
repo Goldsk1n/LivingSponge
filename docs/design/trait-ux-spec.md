@@ -1,0 +1,275 @@
+# Sponge Trait UX Spec
+
+This document defines the player-facing UX for trait-driven Living Sponge variants.
+
+The current behavior system is workable, but the item and recipe presentation is too opaque. This spec fixes that by making trait identity explicit in item names, tooltips, and creative inventory organization.
+
+## Goals
+
+- Let a player identify a sponge's behavior before placing it.
+- Make recipe outcomes predictable without memorizing every item id.
+- Keep the current supported trait matrix understandable as it grows.
+- Avoid committing to a custom workstation until the simpler UX path is proven insufficient.
+
+## Core Principle
+
+The important information is the sponge's traits, not its raw registry name.
+
+Every player-facing sponge item should communicate:
+
+- `Medium`
+- `Spread`
+- `Output`
+- `Radius`
+
+This information should be visible in the tooltip every time. The item display name can be shorter and cleaner.
+
+## Naming Scheme
+
+All non-creative sponge variants should use the same display name:
+
+- `Living Sponge`
+
+Trait identity should not be encoded in the display name. It should be encoded entirely in tooltip data, similar to how fireworks carry behavior information in their tooltip instead of their item name.
+
+This keeps the item list clean and prevents long generated names from becoming the primary UX.
+
+Recommended naming rules:
+
+- All survival variants use `Living Sponge`.
+- The creative-only override item can keep `Creative Living Sponge`.
+- Trait and radius differences are shown only in tooltips.
+
+This means the player reads the tooltip to understand the sponge, not the registry-facing variant name.
+
+## Tooltip Format
+
+Every sponge item should have a structured tooltip in a fixed order.
+
+The tooltip should behave like a compact trait card, comparable to firework metadata presentation: the item name stays simple, while the tooltip carries the meaningful variant data.
+
+Recommended tooltip layout:
+
+```text
+Medium: Water
+Spread: Surface
+Output: Fruiting
+Radius: Expanded (16)
+
+Produces hydro-fruit clusters.
+Fruit attaches to sides and top.
+```
+
+Formatting rules:
+
+- First four lines are always trait lines.
+- Fifth line onward is a concise behavior summary.
+- Keep behavior summary to one or two short lines.
+- Use the same field order on every sponge item.
+
+Recommended behavior summary text by trait:
+
+- `Water`
+  - `Lives in water. Dies on lava contact.`
+- `Magma`
+  - `Lives in lava. Dies on water contact.`
+- `Volume`
+  - `Spreads through the body of the fluid.`
+- `Surface`
+  - `Spreads only across exposed fluid surfaces.`
+- `Neutral`
+  - `Leaves no special byproduct on old age death.`
+- `Fruiting`
+  - `Produces hydro-fruit clusters.`
+- `Surface + Fruiting`
+  - `Fruit attaches to sides and top.`
+- `Wall-Forming`
+  - `Only frontier old-age deaths leave remains.`
+- `Solidifying`
+  - `All old-age deaths leave remains.`
+
+Recommended radius text:
+
+- `Standard (8)`
+- `Expanded (16)`
+- `Vast (512)`
+
+## Tooltip Priorities
+
+The tooltip should solve these questions immediately:
+
+1. Where does this sponge live.
+2. How does it spread.
+3. What does it leave behind or produce.
+4. How large can the colony become.
+
+If the tooltip does not answer those four questions, it is incomplete.
+
+## Creative Tab Organization
+
+The creative tab should be grouped by behavior, not by raw registration order.
+
+Recommended order:
+
+1. Utility / default water variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+2. Surface variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+3. Fruiting variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+4. Solidifying variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+5. Magma variants
+   - `Living Sponge`
+   - `Living Sponge`
+   - `Living Sponge`
+6. Support items and blocks
+   - `Hydro Fruit`
+   - `Hydro Block`
+   - `Sponge Remains`
+7. Creative-only utility
+   - `Creative Living Sponge`
+
+This order matches how a player is likely to evaluate the items.
+
+Because the names are intentionally unified, ordering and tooltip clarity become more important. The player should discover differences by hovering, not by parsing long names.
+
+## Recipe UX Direction
+
+The current shapeless recipes are acceptable as a first usable step, but they are not the long-term ideal.
+
+### Short-Term Recommendation
+
+Keep direct crafting recipes, but make the trait meaning legible through tooltips and JEI.
+
+Ingredient mapping should remain simple and mnemonic:
+
+- `Lily Pad` -> `Surface`
+- `Hydro Fruit` -> `Fruiting`
+- `Calcite` -> `Solidifying`
+- `Magma Cream` -> `Magma`
+- `Prismarine Crystals` -> `Expanded`
+- `Heart of the Sea` -> `Vast`
+
+This is already a reasonable visual language.
+
+### Mid-Term Recommendation
+
+Move toward a trait-component model:
+
+- base sponge item
+- trait modifiers or cores
+- radius upgrade items
+
+Example conceptual items:
+
+- `Surface Membrane`
+- `Fruiting Core`
+- `Solidifying Core`
+- `Magma Core`
+- `Expanded Radius Core`
+- `Vast Radius Core`
+
+Benefits:
+
+- the player thinks in traits directly
+- recipes become more self-explanatory
+- future combinator growth is easier to manage
+
+### Long-Term Recommendation
+
+Only add a custom workstation if one of these becomes true:
+
+- recipe count becomes hard to navigate in JEI
+- incompatibility handling becomes confusing
+- players need to inspect or modify an existing sponge before placement
+
+Until then, a workstation is extra complexity without enough payoff.
+
+## Recommended Immediate UX Changes
+
+Implement these next, in order:
+
+1. Add structured tooltips to all sponge items.
+2. Apply the unified `Living Sponge` display name to all survival variants.
+3. Reorder the creative tab by behavior groups.
+4. Keep current recipes, but ensure JEI and recipe outputs display the improved names and tooltips.
+
+These changes will solve most of the present confusion without changing gameplay mechanics.
+
+## Examples
+
+### Water Surface Fruiting Expanded
+
+Display name:
+
+- `Living Sponge`
+
+Tooltip:
+
+```text
+Medium: Water
+Spread: Surface
+Output: Fruiting
+Radius: Expanded (16)
+
+Produces hydro-fruit clusters.
+Fruit attaches to sides and top.
+```
+
+### Water Volume Neutral Standard
+
+Display name:
+
+- `Living Sponge`
+
+Tooltip:
+
+```text
+Medium: Water
+Spread: Volume
+Output: Neutral
+Radius: Standard (8)
+
+Spreads through the body of the fluid.
+Leaves no special byproduct on old age death.
+```
+
+### Magma Surface Solidifying Vast
+
+Display name:
+
+- `Living Sponge`
+
+Tooltip:
+
+```text
+Medium: Magma
+Spread: Surface
+Output: Solidifying
+Radius: Vast (512)
+
+Lives in lava. Dies on water contact.
+All old-age deaths leave remains.
+```
+
+## Decision
+
+Use this approach for the next implementation pass:
+
+- unified item names
+- explicit trait tooltips
+- grouped creative tab
+- keep current direct recipes for now
+- defer trait-component items and workstation UX until the current system is fully proven
