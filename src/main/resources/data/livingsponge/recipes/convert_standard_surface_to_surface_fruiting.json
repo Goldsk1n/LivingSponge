@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_solidifying_living_sponge"
+                            "item":  "livingsponge:surface_living_sponge"
                         },
                         {
-                            "item":  "minecraft:magma_cream"
+                            "item":  "livingsponge:hydro_fruit"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_magma_volume_solidifying_living_sponge",
+                   "item":  "livingsponge:surface_fruiting_living_sponge",
                    "count":  1
                }
 }

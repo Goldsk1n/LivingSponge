@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:magma_surface_wall_forming_living_sponge"
+                            "item":  "livingsponge:expanded_surface_living_sponge"
                         },
                         {
-                            "item":  "minecraft:prismarine_crystals"
+                            "item":  "livingsponge:hydro_fruit"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:expanded_magma_surface_wall_forming_living_sponge",
+                   "item":  "livingsponge:expanded_surface_fruiting_living_sponge",
                    "count":  1
                }
 }

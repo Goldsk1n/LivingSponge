@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_fruiting_living_sponge"
+                            "item":  "livingsponge:vast_surface_living_sponge"
                         },
                         {
-                            "item":  "minecraft:lily_pad"
+                            "item":  "minecraft:calcite"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_surface_fruiting_living_sponge",
+                   "item":  "livingsponge:vast_surface_solidifying_living_sponge",
                    "count":  1
                }
 }

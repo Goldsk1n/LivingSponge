@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:expanded_solidifying_living_sponge"
+                            "item":  "livingsponge:surface_living_sponge"
                         },
                         {
-                            "item":  "minecraft:lily_pad"
+                            "item":  "minecraft:calcite"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:expanded_surface_solidifying_living_sponge",
+                   "item":  "livingsponge:surface_solidifying_living_sponge",
                    "count":  1
                }
 }

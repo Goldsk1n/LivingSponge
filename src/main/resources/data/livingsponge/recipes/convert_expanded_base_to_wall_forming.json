@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:expanded_fruiting_living_sponge"
+                            "item":  "livingsponge:expanded_living_sponge"
                         },
                         {
-                            "item":  "minecraft:lily_pad"
+                            "item":  "minecraft:cobblestone_wall"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:expanded_surface_fruiting_living_sponge",
+                   "item":  "livingsponge:expanded_wall_forming_living_sponge",
                    "count":  1
                }
 }

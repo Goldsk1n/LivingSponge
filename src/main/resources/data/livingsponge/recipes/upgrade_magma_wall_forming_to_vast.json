@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:solidifying_living_sponge"
+                            "item":  "livingsponge:expanded_magma_wall_forming_living_sponge"
                         },
                         {
-                            "item":  "minecraft:magma_cream"
+                            "item":  "minecraft:heart_of_the_sea"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:magma_volume_solidifying_living_sponge",
+                   "item":  "livingsponge:vast_magma_wall_forming_living_sponge",
                    "count":  1
                }
 }

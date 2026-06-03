@@ -3,13 +3,10 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_solidifying_living_sponge"
+                            "item":  "livingsponge:vast_magma_surface_living_sponge"
                         },
                         {
-                            "item":  "minecraft:lily_pad"
-                        },
-                        {
-                            "item":  "minecraft:magma_cream"
+                            "item":  "minecraft:calcite"
                         }
                     ],
     "result":  {

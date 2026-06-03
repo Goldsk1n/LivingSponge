@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:fruiting_living_sponge"
+                            "item":  "livingsponge:expanded_magma_surface_living_sponge"
                         },
                         {
-                            "item":  "minecraft:lily_pad"
+                            "item":  "minecraft:heart_of_the_sea"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:surface_fruiting_living_sponge",
+                   "item":  "livingsponge:vast_magma_surface_living_sponge",
                    "count":  1
                }
 }

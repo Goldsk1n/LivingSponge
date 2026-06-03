@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:magma_surface_wall_forming_living_sponge"
+                            "item":  "livingsponge:vast_living_sponge"
                         },
                         {
-                            "item":  "minecraft:prismarine_crystals"
+                            "item":  "minecraft:cobblestone_wall"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:expanded_magma_surface_wall_forming_living_sponge",
+                   "item":  "livingsponge:vast_wall_forming_living_sponge",
                    "count":  1
                }
 }

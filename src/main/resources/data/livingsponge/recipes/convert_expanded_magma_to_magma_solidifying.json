@@ -3,10 +3,10 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:expanded_solidifying_living_sponge"
+                            "item":  "livingsponge:expanded_magma_living_sponge"
                         },
                         {
-                            "item":  "minecraft:magma_cream"
+                            "item":  "minecraft:calcite"
                         }
                     ],
     "result":  {

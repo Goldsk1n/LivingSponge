@@ -19,7 +19,7 @@ public record SpongeTraits(
     public static final SpongeTraits DEFAULT = new SpongeTraits(
             MediumTrait.WATER,
             SpreadTrait.VOLUME,
-            OutputTrait.WALL_FORMING,
+            OutputTrait.NEUTRAL,
             RadiusTrait.STANDARD
     );
 
@@ -43,7 +43,7 @@ public record SpongeTraits(
         return new SpongeTraits(
                 parseEnum(tag.getString(MEDIUM_KEY), MediumTrait.WATER, MediumTrait.class),
                 parseEnum(tag.getString(SPREAD_KEY), SpreadTrait.VOLUME, SpreadTrait.class),
-                parseEnum(tag.getString(OUTPUT_KEY), OutputTrait.WALL_FORMING, OutputTrait.class),
+                parseEnum(tag.getString(OUTPUT_KEY), OutputTrait.NEUTRAL, OutputTrait.class),
                 parseEnum(tag.getString(RADIUS_KEY), RadiusTrait.STANDARD, RadiusTrait.class)
         );
     }

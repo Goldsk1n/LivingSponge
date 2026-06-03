@@ -14,64 +14,62 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Optional;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public final class LivingSpongeItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, LivingSpongeMod.MOD_ID);
     private static final Map<PlacementKey, RegistryObject<Item>> PLACEMENT_ITEMS = new LinkedHashMap<>();
 
-    public static final SpongeTraits BASELINE_TRAITS = new SpongeTraits(
-            MediumTrait.WATER,
-            SpreadTrait.VOLUME,
-            OutputTrait.WALL_FORMING,
-            RadiusTrait.STANDARD
-    );
-    public static final SpongeTraits EXPANDED_BASELINE_TRAITS = baselineTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_BASELINE_TRAITS = baselineTraits(RadiusTrait.VAST);
-    public static final SpongeTraits SURFACE_TRAITS = new SpongeTraits(
-            MediumTrait.WATER,
-            SpreadTrait.SURFACE,
-            OutputTrait.WALL_FORMING,
-            RadiusTrait.STANDARD
-    );
-    public static final SpongeTraits EXPANDED_SURFACE_TRAITS = surfaceTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_SURFACE_TRAITS = surfaceTraits(RadiusTrait.VAST);
-    public static final SpongeTraits SOLIDIFYING_TRAITS = new SpongeTraits(
-            MediumTrait.WATER,
-            SpreadTrait.VOLUME,
-            OutputTrait.SOLIDIFYING,
-            RadiusTrait.STANDARD
-    );
-    public static final SpongeTraits EXPANDED_SOLIDIFYING_TRAITS = solidifyingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_SOLIDIFYING_TRAITS = solidifyingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits SURFACE_SOLIDIFYING_TRAITS = surfaceSolidifyingTraits(RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_SURFACE_SOLIDIFYING_TRAITS = surfaceSolidifyingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_SURFACE_SOLIDIFYING_TRAITS = surfaceSolidifyingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits FRUITING_TRAITS = fruitingTraits(RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_FRUITING_TRAITS = fruitingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_FRUITING_TRAITS = fruitingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits SURFACE_FRUITING_TRAITS = surfaceFruitingTraits(RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_SURFACE_FRUITING_TRAITS = surfaceFruitingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_SURFACE_FRUITING_TRAITS = surfaceFruitingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits MAGMA_SURFACE_SOLIDIFYING_TRAITS = new SpongeTraits(
-            MediumTrait.MAGMA,
-            SpreadTrait.SURFACE,
-            OutputTrait.SOLIDIFYING,
-            RadiusTrait.STANDARD
-    );
-    public static final SpongeTraits MAGMA_VOLUME_SOLIDIFYING_TRAITS = magmaVolumeSolidifyingTraits(RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_MAGMA_VOLUME_SOLIDIFYING_TRAITS = magmaVolumeSolidifyingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_MAGMA_VOLUME_SOLIDIFYING_TRAITS = magmaVolumeSolidifyingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits MAGMA_VOLUME_WALL_FORMING_TRAITS = magmaVolumeWallFormingTraits(RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_MAGMA_VOLUME_WALL_FORMING_TRAITS = magmaVolumeWallFormingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_MAGMA_VOLUME_WALL_FORMING_TRAITS = magmaVolumeWallFormingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits MAGMA_SURFACE_WALL_FORMING_TRAITS = magmaSurfaceWallFormingTraits(RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_MAGMA_SURFACE_WALL_FORMING_TRAITS = magmaSurfaceWallFormingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_MAGMA_SURFACE_WALL_FORMING_TRAITS = magmaSurfaceWallFormingTraits(RadiusTrait.VAST);
-    public static final SpongeTraits EXPANDED_MAGMA_SURFACE_SOLIDIFYING_TRAITS = magmaSurfaceSolidifyingTraits(RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_MAGMA_SURFACE_SOLIDIFYING_TRAITS = magmaSurfaceSolidifyingTraits(RadiusTrait.VAST);
+    public static final SpongeTraits BASELINE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_BASELINE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_BASELINE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits SURFACE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_SURFACE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_SURFACE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.VAST);
+
+    public static final SpongeTraits WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits SURFACE_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_SURFACE_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_SURFACE_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.VAST);
+
+    public static final SpongeTraits SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits SURFACE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_SURFACE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_SURFACE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.VAST);
+
+    public static final SpongeTraits FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits SURFACE_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_SURFACE_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_SURFACE_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.SURFACE, RadiusTrait.VAST);
+
+    public static final SpongeTraits MAGMA_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits MAGMA_SURFACE_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_SURFACE_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_SURFACE_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.VAST);
+
+    public static final SpongeTraits MAGMA_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits MAGMA_SURFACE_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_SURFACE_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_SURFACE_WALL_FORMING_TRAITS = wallFormingTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.VAST);
+
+    public static final SpongeTraits MAGMA_VOLUME_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_VOLUME_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_VOLUME_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits MAGMA_SURFACE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_SURFACE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_SURFACE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, RadiusTrait.VAST);
 
     public static final RegistryObject<Item> LIVING_SPONGE =
             registerPlacementItem("living_sponge", BASELINE_TRAITS, false);
@@ -86,6 +84,19 @@ public final class LivingSpongeItems {
             registerPlacementItem("expanded_surface_living_sponge", EXPANDED_SURFACE_TRAITS, false);
     public static final RegistryObject<Item> VAST_SURFACE_LIVING_SPONGE =
             registerPlacementItem("vast_surface_living_sponge", VAST_SURFACE_TRAITS, false);
+
+    public static final RegistryObject<Item> WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("wall_forming_living_sponge", WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("expanded_wall_forming_living_sponge", EXPANDED_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("vast_wall_forming_living_sponge", VAST_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> SURFACE_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("surface_wall_forming_living_sponge", SURFACE_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_SURFACE_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("expanded_surface_wall_forming_living_sponge", EXPANDED_SURFACE_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_SURFACE_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("vast_surface_wall_forming_living_sponge", VAST_SURFACE_WALL_FORMING_TRAITS, false);
 
     public static final RegistryObject<Item> SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("solidifying_living_sponge", SOLIDIFYING_TRAITS, false);
@@ -106,7 +117,6 @@ public final class LivingSpongeItems {
             registerPlacementItem("expanded_fruiting_living_sponge", EXPANDED_FRUITING_TRAITS, false);
     public static final RegistryObject<Item> VAST_FRUITING_LIVING_SPONGE =
             registerPlacementItem("vast_fruiting_living_sponge", VAST_FRUITING_TRAITS, false);
-
     public static final RegistryObject<Item> SURFACE_FRUITING_LIVING_SPONGE =
             registerPlacementItem("surface_fruiting_living_sponge", SURFACE_FRUITING_TRAITS, false);
     public static final RegistryObject<Item> EXPANDED_SURFACE_FRUITING_LIVING_SPONGE =
@@ -114,26 +124,40 @@ public final class LivingSpongeItems {
     public static final RegistryObject<Item> VAST_SURFACE_FRUITING_LIVING_SPONGE =
             registerPlacementItem("vast_surface_fruiting_living_sponge", VAST_SURFACE_FRUITING_TRAITS, false);
 
-    public static final RegistryObject<Item> MAGMA_SURFACE_SOLIDIFYING_LIVING_SPONGE =
-            registerPlacementItem("magma_surface_solidifying_living_sponge", MAGMA_SURFACE_SOLIDIFYING_TRAITS, false);
+    public static final RegistryObject<Item> MAGMA_LIVING_SPONGE =
+            registerPlacementItem("magma_living_sponge", MAGMA_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_MAGMA_LIVING_SPONGE =
+            registerPlacementItem("expanded_magma_living_sponge", EXPANDED_MAGMA_TRAITS, false);
+    public static final RegistryObject<Item> VAST_MAGMA_LIVING_SPONGE =
+            registerPlacementItem("vast_magma_living_sponge", VAST_MAGMA_TRAITS, false);
+    public static final RegistryObject<Item> MAGMA_SURFACE_LIVING_SPONGE =
+            registerPlacementItem("magma_surface_living_sponge", MAGMA_SURFACE_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_MAGMA_SURFACE_LIVING_SPONGE =
+            registerPlacementItem("expanded_magma_surface_living_sponge", EXPANDED_MAGMA_SURFACE_TRAITS, false);
+    public static final RegistryObject<Item> VAST_MAGMA_SURFACE_LIVING_SPONGE =
+            registerPlacementItem("vast_magma_surface_living_sponge", VAST_MAGMA_SURFACE_TRAITS, false);
+
+    public static final RegistryObject<Item> MAGMA_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("magma_wall_forming_living_sponge", MAGMA_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_MAGMA_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("expanded_magma_wall_forming_living_sponge", EXPANDED_MAGMA_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_MAGMA_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("vast_magma_wall_forming_living_sponge", VAST_MAGMA_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> MAGMA_SURFACE_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("magma_surface_wall_forming_living_sponge", MAGMA_SURFACE_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_MAGMA_SURFACE_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("expanded_magma_surface_wall_forming_living_sponge", EXPANDED_MAGMA_SURFACE_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_MAGMA_SURFACE_WALL_FORMING_LIVING_SPONGE =
+            registerPlacementItem("vast_magma_surface_wall_forming_living_sponge", VAST_MAGMA_SURFACE_WALL_FORMING_TRAITS, false);
+
     public static final RegistryObject<Item> MAGMA_VOLUME_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("magma_volume_solidifying_living_sponge", MAGMA_VOLUME_SOLIDIFYING_TRAITS, false);
     public static final RegistryObject<Item> EXPANDED_MAGMA_VOLUME_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("expanded_magma_volume_solidifying_living_sponge", EXPANDED_MAGMA_VOLUME_SOLIDIFYING_TRAITS, false);
     public static final RegistryObject<Item> VAST_MAGMA_VOLUME_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("vast_magma_volume_solidifying_living_sponge", VAST_MAGMA_VOLUME_SOLIDIFYING_TRAITS, false);
-    public static final RegistryObject<Item> MAGMA_LIVING_SPONGE =
-            registerPlacementItem("magma_living_sponge", MAGMA_VOLUME_WALL_FORMING_TRAITS, false);
-    public static final RegistryObject<Item> EXPANDED_MAGMA_LIVING_SPONGE =
-            registerPlacementItem("expanded_magma_living_sponge", EXPANDED_MAGMA_VOLUME_WALL_FORMING_TRAITS, false);
-    public static final RegistryObject<Item> VAST_MAGMA_LIVING_SPONGE =
-            registerPlacementItem("vast_magma_living_sponge", VAST_MAGMA_VOLUME_WALL_FORMING_TRAITS, false);
-    public static final RegistryObject<Item> MAGMA_SURFACE_LIVING_SPONGE =
-            registerPlacementItem("magma_surface_living_sponge", MAGMA_SURFACE_WALL_FORMING_TRAITS, false);
-    public static final RegistryObject<Item> EXPANDED_MAGMA_SURFACE_LIVING_SPONGE =
-            registerPlacementItem("expanded_magma_surface_living_sponge", EXPANDED_MAGMA_SURFACE_WALL_FORMING_TRAITS, false);
-    public static final RegistryObject<Item> VAST_MAGMA_SURFACE_LIVING_SPONGE =
-            registerPlacementItem("vast_magma_surface_living_sponge", VAST_MAGMA_SURFACE_WALL_FORMING_TRAITS, false);
+    public static final RegistryObject<Item> MAGMA_SURFACE_SOLIDIFYING_LIVING_SPONGE =
+            registerPlacementItem("magma_surface_solidifying_living_sponge", MAGMA_SURFACE_SOLIDIFYING_TRAITS, false);
     public static final RegistryObject<Item> EXPANDED_MAGMA_SURFACE_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("expanded_magma_surface_solidifying_living_sponge", EXPANDED_MAGMA_SURFACE_SOLIDIFYING_TRAITS, false);
     public static final RegistryObject<Item> VAST_MAGMA_SURFACE_SOLIDIFYING_LIVING_SPONGE =
@@ -177,44 +201,20 @@ public final class LivingSpongeItems {
         return item;
     }
 
-    private static SpongeTraits baselineTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.VOLUME, OutputTrait.WALL_FORMING, radius);
+    private static SpongeTraits neutralTraits(final MediumTrait medium, final SpreadTrait spread, final RadiusTrait radius) {
+        return new SpongeTraits(medium, spread, OutputTrait.NEUTRAL, radius);
     }
 
-    private static SpongeTraits surfaceTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.SURFACE, OutputTrait.WALL_FORMING, radius);
+    private static SpongeTraits wallFormingTraits(final MediumTrait medium, final SpreadTrait spread, final RadiusTrait radius) {
+        return new SpongeTraits(medium, spread, OutputTrait.WALL_FORMING, radius);
     }
 
-    private static SpongeTraits solidifyingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.VOLUME, OutputTrait.SOLIDIFYING, radius);
+    private static SpongeTraits solidifyingTraits(final MediumTrait medium, final SpreadTrait spread, final RadiusTrait radius) {
+        return new SpongeTraits(medium, spread, OutputTrait.SOLIDIFYING, radius);
     }
 
-    private static SpongeTraits surfaceSolidifyingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.SURFACE, OutputTrait.SOLIDIFYING, radius);
-    }
-
-    private static SpongeTraits fruitingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.VOLUME, OutputTrait.FRUITING, radius);
-    }
-
-    private static SpongeTraits surfaceFruitingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.WATER, SpreadTrait.SURFACE, OutputTrait.FRUITING, radius);
-    }
-
-    private static SpongeTraits magmaSurfaceSolidifyingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, OutputTrait.SOLIDIFYING, radius);
-    }
-
-    private static SpongeTraits magmaVolumeSolidifyingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, OutputTrait.SOLIDIFYING, radius);
-    }
-
-    private static SpongeTraits magmaVolumeWallFormingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, OutputTrait.WALL_FORMING, radius);
-    }
-
-    private static SpongeTraits magmaSurfaceWallFormingTraits(final RadiusTrait radius) {
-        return new SpongeTraits(MediumTrait.MAGMA, SpreadTrait.SURFACE, OutputTrait.WALL_FORMING, radius);
+    private static SpongeTraits fruitingTraits(final MediumTrait medium, final SpreadTrait spread, final RadiusTrait radius) {
+        return new SpongeTraits(medium, spread, OutputTrait.FRUITING, radius);
     }
 
     private record PlacementKey(SpongeTraits traits, boolean creativeOverrides) {
