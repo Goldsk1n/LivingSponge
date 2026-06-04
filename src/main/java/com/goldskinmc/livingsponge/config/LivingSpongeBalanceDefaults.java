@@ -9,6 +9,7 @@ public final class LivingSpongeBalanceDefaults {
         public static final int MEDIUM_SCAN_RADIUS = 2;
         public static final int MAX_MEDIUM_SAMPLES_PER_UPDATE = 3;
         public static final int REPRODUCTION_COOLDOWN_TICKS = 100;
+        public static final int NEUTRAL_DEATH_TARGET_COOLDOWN_TICKS = 800;
 
         private Spread() {
         }

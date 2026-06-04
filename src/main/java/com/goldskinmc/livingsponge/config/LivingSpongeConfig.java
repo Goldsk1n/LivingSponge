@@ -14,6 +14,7 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue SPREAD_MEDIUM_SCAN_RADIUS;
     private static final ForgeConfigSpec.IntValue SPREAD_MAX_MEDIUM_SAMPLES_PER_UPDATE;
     private static final ForgeConfigSpec.IntValue SPREAD_REPRODUCTION_COOLDOWN_TICKS;
+    private static final ForgeConfigSpec.IntValue SPREAD_NEUTRAL_DEATH_TARGET_COOLDOWN_TICKS;
 
     private static final ForgeConfigSpec.IntValue LIFECYCLE_YOUNG_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
@@ -40,6 +41,8 @@ public final class LivingSpongeConfig {
                 .defineInRange("max_medium_samples_per_update", LivingSpongeBalanceDefaults.Spread.MAX_MEDIUM_SAMPLES_PER_UPDATE, 0, 64);
         SPREAD_REPRODUCTION_COOLDOWN_TICKS = BUILDER.comment("Delay between reproduction attempts.")
                 .defineInRange("reproduction_cooldown_ticks", LivingSpongeBalanceDefaults.Spread.REPRODUCTION_COOLDOWN_TICKS, 0, 24000);
+        SPREAD_NEUTRAL_DEATH_TARGET_COOLDOWN_TICKS = BUILDER.comment("How long a neutral sponge's death cell stays blocked for reproduction.")
+                .defineInRange("neutral_death_target_cooldown_ticks", LivingSpongeBalanceDefaults.Spread.NEUTRAL_DEATH_TARGET_COOLDOWN_TICKS, 0, Integer.MAX_VALUE);
         BUILDER.pop();
 
         BUILDER.push("lifecycle");
@@ -93,7 +96,8 @@ public final class LivingSpongeConfig {
                         SPREAD_UPDATE_INTERVAL_TICKS.get(),
                         SPREAD_MEDIUM_SCAN_RADIUS.get(),
                         SPREAD_MAX_MEDIUM_SAMPLES_PER_UPDATE.get(),
-                        SPREAD_REPRODUCTION_COOLDOWN_TICKS.get()
+                        SPREAD_REPRODUCTION_COOLDOWN_TICKS.get(),
+                        SPREAD_NEUTRAL_DEATH_TARGET_COOLDOWN_TICKS.get()
                 ),
                 new Lifecycle(
                         LIFECYCLE_YOUNG_DURATION_TICKS.get(),
@@ -116,7 +120,8 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Spread.UPDATE_INTERVAL_TICKS,
                         LivingSpongeBalanceDefaults.Spread.MEDIUM_SCAN_RADIUS,
                         LivingSpongeBalanceDefaults.Spread.MAX_MEDIUM_SAMPLES_PER_UPDATE,
-                        LivingSpongeBalanceDefaults.Spread.REPRODUCTION_COOLDOWN_TICKS
+                        LivingSpongeBalanceDefaults.Spread.REPRODUCTION_COOLDOWN_TICKS,
+                        LivingSpongeBalanceDefaults.Spread.NEUTRAL_DEATH_TARGET_COOLDOWN_TICKS
                 ),
                 new Lifecycle(
                         LivingSpongeBalanceDefaults.Lifecycle.YOUNG_DURATION_TICKS,
@@ -145,7 +150,8 @@ public final class LivingSpongeConfig {
             int updateIntervalTicks,
             int mediumScanRadius,
             int maxMediumSamplesPerUpdate,
-            int reproductionCooldownTicks
+            int reproductionCooldownTicks,
+            int neutralDeathTargetCooldownTicks
     ) {
     }
 

@@ -39,6 +39,7 @@ public final class LivingSpongeRuntime {
 
     private final LivingSpongeSimulationService simulationService = new LivingSpongeSimulationService();
     private final Map<ResourceKey<Level>, Map<BlockPos, LivingSpongeNodeState>> nodesByLevel = new HashMap<>();
+    private final Map<ResourceKey<Level>, Map<BlockPos, Long>> blockedTargetsByLevel = new HashMap<>();
 
     private LivingSpongeRuntime() {
     }
@@ -77,6 +78,8 @@ public final class LivingSpongeRuntime {
     }
 
     private void tickLevel(final ServerLevel level) {
+        pruneExpiredBlockedTargets(level, level.getGameTime());
+
         final Map<BlockPos, LivingSpongeNodeState> levelNodes = nodesByLevel.get(level.dimension());
         if (levelNodes == null || levelNodes.isEmpty()) {
             return;
@@ -104,7 +107,7 @@ public final class LivingSpongeRuntime {
                 continue;
             }
 
-            final SampledContext sampledContext = sampleContext(level, pos, state, profile);
+            final SampledContext sampledContext = sampleContext(level, pos, state, profile, gameTime);
             final LivingSpongeTickResult result = simulationService.tickNode(
                     state,
                     profile,
@@ -116,6 +119,9 @@ public final class LivingSpongeRuntime {
 
             if (result.shouldDie()) {
                 iterator.remove();
+                if (profile.isNeutralOutput() && result.deathReason() == LivingSpongeDeathReason.AGING) {
+                    blockTargetUntil(level, pos, gameTime + values.spread().neutralDeathTargetCooldownTicks());
+                }
                 final BlockState replacementState = deathReplacementState(level, pos, state, profile, sampledContext.tickContext(), result);
                 level.setBlock(pos, replacementState, Block.UPDATE_ALL);
                 continue;
@@ -136,7 +142,7 @@ public final class LivingSpongeRuntime {
         }
 
         for (PendingChild childEntry : pendingChildren) {
-            placeChild(level, childEntry.pos(), childEntry.state());
+            placeChild(level, childEntry.pos(), childEntry.state(), gameTime);
         }
 
         if (levelNodes.isEmpty()) {
@@ -162,7 +168,8 @@ public final class LivingSpongeRuntime {
             final ServerLevel level,
             final BlockPos pos,
             final LivingSpongeNodeState state,
-            final ResolvedSpongeProfile profile
+            final ResolvedSpongeProfile profile,
+            final long gameTime
     ) {
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
         final List<BlockPos> mediumSources = findNearbyMediumSources(
@@ -175,7 +182,7 @@ public final class LivingSpongeRuntime {
         final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
         final boolean hasFireContact = hasFireContact(level, pos);
         final int radiusCap = profile.radiusCap(values);
-        final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, state.rootPos(), profile, radiusCap);
+        final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, state.rootPos(), profile, radiusCap, gameTime);
         final int distanceFromRoot = chebyshevDistance(pos, state.rootPos());
         final boolean canStayActive = level.hasChunkAt(pos) && isManagedLivingSponge(level, pos);
 
@@ -250,19 +257,22 @@ public final class LivingSpongeRuntime {
         return level.getBlockState(pos).is(Blocks.FIRE) || level.getBlockState(pos).is(Blocks.SOUL_FIRE);
     }
 
-    private static List<BlockPos> findReproductionTargets(
+    private List<BlockPos> findReproductionTargets(
             final ServerLevel level,
             final BlockPos pos,
             final BlockPos rootPos,
             final ResolvedSpongeProfile profile,
-            final int radiusCap
+            final int radiusCap,
+            final long gameTime
     ) {
         final List<BlockPos> targets = new ArrayList<>(profile.isSurfaceSpread() ? SURFACE_OFFSETS.length : 6);
 
         if (profile.isSurfaceSpread()) {
             for (int[] offset : SURFACE_OFFSETS) {
                 final BlockPos target = pos.offset(offset[0], 0, offset[1]);
-                if (isWithinRadius(rootPos, target, radiusCap) && canHostChild(level, target, profile)) {
+                if (isWithinRadius(rootPos, target, radiusCap)
+                        && !isTargetBlocked(level, target, gameTime)
+                        && canHostChild(level, target, profile)) {
                     targets.add(target.immutable());
                 }
             }
@@ -271,7 +281,9 @@ public final class LivingSpongeRuntime {
 
         for (Direction direction : Direction.values()) {
             final BlockPos target = pos.relative(direction);
-            if (isWithinRadius(rootPos, target, radiusCap) && canHostChild(level, target, profile)) {
+            if (isWithinRadius(rootPos, target, radiusCap)
+                    && !isTargetBlocked(level, target, gameTime)
+                    && canHostChild(level, target, profile)) {
                 targets.add(target.immutable());
             }
         }
@@ -310,9 +322,9 @@ public final class LivingSpongeRuntime {
         return blockEntity instanceof LivingSpongeBlockEntity;
     }
 
-    private void placeChild(final ServerLevel level, final BlockPos pos, final LivingSpongeNodeState state) {
+    private void placeChild(final ServerLevel level, final BlockPos pos, final LivingSpongeNodeState state, final long gameTime) {
         final ResolvedSpongeProfile profile = state.resolveProfile();
-        if (!canHostChild(level, pos, profile)) {
+        if (isTargetBlocked(level, pos, gameTime) || !canHostChild(level, pos, profile)) {
             return;
         }
 
@@ -448,6 +460,55 @@ public final class LivingSpongeRuntime {
 
     private Map<BlockPos, LivingSpongeNodeState> nodes(final ServerLevel level) {
         return nodesByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
+    }
+
+    private void blockTargetUntil(final ServerLevel level, final BlockPos pos, final long blockedUntilGameTime) {
+        if (blockedUntilGameTime <= level.getGameTime()) {
+            return;
+        }
+        blockedTargets(level).put(pos.immutable(), blockedUntilGameTime);
+    }
+
+    private boolean isTargetBlocked(final ServerLevel level, final BlockPos pos, final long gameTime) {
+        final Map<BlockPos, Long> blockedTargets = blockedTargetsByLevel.get(level.dimension());
+        if (blockedTargets == null) {
+            return false;
+        }
+
+        final Long blockedUntil = blockedTargets.get(pos);
+        if (blockedUntil == null) {
+            return false;
+        }
+        if (blockedUntil <= gameTime) {
+            blockedTargets.remove(pos);
+            if (blockedTargets.isEmpty()) {
+                blockedTargetsByLevel.remove(level.dimension());
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private void pruneExpiredBlockedTargets(final ServerLevel level, final long gameTime) {
+        final Map<BlockPos, Long> blockedTargets = blockedTargetsByLevel.get(level.dimension());
+        if (blockedTargets == null || blockedTargets.isEmpty()) {
+            return;
+        }
+
+        final Iterator<Map.Entry<BlockPos, Long>> iterator = blockedTargets.entrySet().iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getValue() <= gameTime) {
+                iterator.remove();
+            }
+        }
+
+        if (blockedTargets.isEmpty()) {
+            blockedTargetsByLevel.remove(level.dimension());
+        }
+    }
+
+    private Map<BlockPos, Long> blockedTargets(final ServerLevel level) {
+        return blockedTargetsByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
     }
 
     private static void addFruitTargetIfValid(
