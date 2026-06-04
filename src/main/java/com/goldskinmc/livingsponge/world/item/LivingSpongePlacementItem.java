@@ -99,13 +99,13 @@ public final class LivingSpongePlacementItem extends BlockItem {
     private static String spreadSummaryKey(final SpreadTrait spread) {
         return switch (spread) {
             case VOLUME -> "tooltip.livingsponge.summary.spread.volume";
-            case SURFACE -> "tooltip.livingsponge.summary.spread.surface";
+            case FLAT -> "tooltip.livingsponge.summary.spread.flat";
         };
     }
 
     private static String outputSummaryKey(final SpongeTraits spongeTraits) {
-        if (spongeTraits.output() == OutputTrait.FRUITING && spongeTraits.spread() == SpreadTrait.SURFACE) {
-            return "tooltip.livingsponge.summary.output.surface_fruiting";
+        if (spongeTraits.output() == OutputTrait.FRUITING && spongeTraits.spread() == SpreadTrait.FLAT) {
+            return "tooltip.livingsponge.summary.output.flat_fruiting";
         }
 
         return switch (spongeTraits.output()) {

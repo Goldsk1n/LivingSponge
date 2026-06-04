@@ -52,7 +52,7 @@ Recommended tooltip layout:
 
 ```text
 Growth Medium: Water
-Spread: Surface
+Spread: Flat
 Output: Fruiting
 Radius: Expanded (16)
 
@@ -75,13 +75,13 @@ Recommended behavior summary text by trait:
   - `Grows in lava. Dies on water contact.`
 - `Volume`
   - `Spreads through the body of the fluid.`
-- `Surface`
-  - `Spreads only across exposed fluid surfaces.`
+- `Flat`
+  - `Spreads only across exposed flat fluid layers.`
 - `Neutral`
   - `Leaves no special byproduct on old age death.`
 - `Fruiting`
   - `Produces hydro-fruit clusters.`
-- `Surface + Fruiting`
+- `Flat + Fruiting`
   - `Fruit attaches to sides and top.`
 - `Wall-Forming`
   - `Only frontier old-age deaths leave remains.`
@@ -115,7 +115,7 @@ Recommended order:
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-2. Neutral surface variants
+2. Neutral flat variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
@@ -189,7 +189,7 @@ Keep direct crafting recipes, but make the trait meaning legible through tooltip
 
 Ingredient mapping should remain simple and mnemonic:
 
-- `Lily Pad` -> `Surface`
+- `Lily Pad` -> `Flat`
 - `Hydro Fruit` -> `Fruiting`
 - `Calcite` -> `Solidifying`
 - `Magma Cream` -> `Magma`
@@ -208,7 +208,7 @@ Move toward a trait-component model:
 
 Example conceptual items:
 
-- `Surface Membrane`
+- `Flat Membrane`
 - `Fruiting Core`
 - `Solidifying Core`
 - `Magma Core`
@@ -246,7 +246,7 @@ Still recommended:
 
 ## Examples
 
-### Water Surface Fruiting Expanded
+### Water Flat Fruiting Expanded
 
 Display name:
 
@@ -256,7 +256,7 @@ Tooltip:
 
 ```text
 Growth Medium: Water
-Spread: Surface
+Spread: Flat
 Output: Fruiting
 Radius: Expanded (16)
 
@@ -282,7 +282,7 @@ Spreads through the body of the fluid.
 Leaves no special byproduct on old age death.
 ```
 
-### Magma Surface Solidifying Vast
+### Magma Flat Solidifying Vast
 
 Display name:
 
@@ -292,7 +292,7 @@ Tooltip:
 
 ```text
 Growth Medium: Lava
-Spread: Surface
+Spread: Flat
 Output: Solidifying
 Radius: Vast (512)
 

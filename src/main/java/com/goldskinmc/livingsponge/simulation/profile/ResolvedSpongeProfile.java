@@ -36,8 +36,8 @@ public record ResolvedSpongeProfile(
         return traits.medium() == MediumTrait.WATER;
     }
 
-    public boolean isSurfaceSpread() {
-        return traits.spread() == SpreadTrait.SURFACE;
+    public boolean isFlatSpread() {
+        return traits.spread() == SpreadTrait.FLAT;
     }
 
     public boolean isNeutralOutput() {

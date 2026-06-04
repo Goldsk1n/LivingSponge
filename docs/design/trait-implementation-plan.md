@@ -53,7 +53,7 @@ These assumptions describe the current supported system:
 
 - Trait slots are fixed:
   - `Medium = Water | Magma`
-  - `Spread = Volume | Surface`
+  - `Spread = Volume | Flat`
   - `Output = Neutral | Fruiting | Wall-Forming | Solidifying`
   - `Radius = Standard | Expanded | Vast`
 - Radius caps are fixed:
@@ -62,7 +62,7 @@ These assumptions describe the current supported system:
   - `Vast = 512`
 - `Wall-Forming` and `Fruiting` are incompatible.
 - `Solidifying` and `Fruiting` are incompatible.
-- `Surface + Fruiting` is valid, but fruit cannot hang downward.
+- `Flat + Fruiting` is valid, but fruit cannot hang downward.
 - `Water` dies on lava contact.
 - `Magma` dies on water contact.
 - `Wall-Forming` frontier deaths produce `sponge_remains`.
@@ -182,22 +182,22 @@ At minimum test:
 
 - freshly placed `Water + Volume + Neutral + Standard`
 - freshly placed `Water + Volume + Wall-Forming + Standard`
-- `Water + Surface + Wall-Forming + Standard`
-- `Water + Surface + Fruiting + Standard`
+- `Water + Flat + Wall-Forming + Standard`
+- `Water + Flat + Fruiting + Standard`
 - `Magma + Volume + Fruiting + Standard`
-- `Magma + Surface + Fruiting + Standard`
-- `Magma + Surface + Solidifying + Standard`
-- `Magma + Surface + Solidifying + Expanded`
+- `Magma + Flat + Fruiting + Standard`
+- `Magma + Flat + Solidifying + Standard`
+- `Magma + Flat + Solidifying + Expanded`
 - one `Vast` profile to confirm cap and performance behavior
 
 ### Specific Regressions To Watch
 
 - block entity state loss on phase swap
 - trait loss on chunk unload/reload
-- incorrect frontier detection under `Surface`
+- incorrect frontier detection under `Flat`
 - incorrect medium kill behavior
 - invalid reproduction into air for volume colonies
-- fruit placement falling when `Surface + Fruiting`
+- fruit placement falling when `Flat + Fruiting`
 - runaway spread in `Vast` colonies causing heavy tick cost
 
 ## Risks
@@ -228,7 +228,7 @@ Mitigation:
 
 Risk:
 
-- `Vast` colonies and surface scans become expensive
+- `Vast` colonies and flat scans become expensive
 
 Mitigation:
 

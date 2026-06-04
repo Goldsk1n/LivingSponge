@@ -26,7 +26,7 @@ import java.util.UUID;
 
 public final class LivingSpongeRuntime {
     private static final LivingSpongeRuntime INSTANCE = new LivingSpongeRuntime();
-    private static final int[][] SURFACE_OFFSETS = {
+    private static final int[][] FLAT_OFFSETS = {
             {1, 0},
             {-1, 0},
             {0, 1},
@@ -265,10 +265,10 @@ public final class LivingSpongeRuntime {
             final int radiusCap,
             final long gameTime
     ) {
-        final List<BlockPos> targets = new ArrayList<>(profile.isSurfaceSpread() ? SURFACE_OFFSETS.length : 6);
+        final List<BlockPos> targets = new ArrayList<>(profile.isFlatSpread() ? FLAT_OFFSETS.length : 6);
 
-        if (profile.isSurfaceSpread()) {
-            for (int[] offset : SURFACE_OFFSETS) {
+        if (profile.isFlatSpread()) {
+            for (int[] offset : FLAT_OFFSETS) {
                 final BlockPos target = pos.offset(offset[0], 0, offset[1]);
                 if (isWithinRadius(rootPos, target, radiusCap)
                         && !isTargetBlocked(level, target, gameTime)
@@ -296,7 +296,7 @@ public final class LivingSpongeRuntime {
             final ResolvedSpongeProfile profile
     ) {
         final List<BlockPos> targets = new ArrayList<>(6);
-        if (profile.isSurfaceSpread()) {
+        if (profile.isFlatSpread()) {
             addFruitTargetIfValid(level, pos.above(), profile, targets);
             addFruitTargetIfValid(level, pos.north(), profile, targets);
             addFruitTargetIfValid(level, pos.south(), profile, targets);
@@ -361,7 +361,7 @@ public final class LivingSpongeRuntime {
             return false;
         }
 
-        if (profile.isSurfaceSpread() && !level.getBlockState(pos.above()).isAir()) {
+        if (profile.isFlatSpread() && !level.getBlockState(pos.above()).isAir()) {
             return false;
         }
 
@@ -400,7 +400,7 @@ public final class LivingSpongeRuntime {
         }
 
         if (profile.isWallFormingOutput()) {
-            return isFrontierDeath(pos, state, context)
+            return isBorderShellDeath(pos, state, profile)
                     ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
                     : Blocks.AIR.defaultBlockState();
         }
@@ -408,18 +408,14 @@ public final class LivingSpongeRuntime {
         return Blocks.AIR.defaultBlockState();
     }
 
-    private static boolean isFrontierDeath(
+    private static boolean isBorderShellDeath(
             final BlockPos pos,
             final LivingSpongeNodeState state,
-            final LivingSpongeTickContext context
+            final ResolvedSpongeProfile profile
     ) {
         final int currentDistance = chebyshevDistance(pos, state.rootPos());
-        for (BlockPos target : context.reproductionTargets()) {
-            if (chebyshevDistance(target, state.rootPos()) >= currentDistance) {
-                return true;
-            }
-        }
-        return false;
+        final int radiusCap = profile.radiusCap(LivingSpongeConfig.values());
+        return currentDistance == radiusCap;
     }
 
     private static void syncPhase(

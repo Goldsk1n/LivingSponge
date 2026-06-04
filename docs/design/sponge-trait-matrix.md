@@ -11,7 +11,7 @@ A sponge instance is composed from four trait slots:
   - `Magma`
 - `Spread`
   - `Volume`
-  - `Surface`
+  - `Flat`
 - `Output`
   - `Neutral`
   - `Fruiting`
@@ -29,8 +29,8 @@ Canonical profile form:
 Examples:
 
 - `Water + Volume + Neutral + Standard`
-- `Water + Surface + Fruiting + Expanded`
-- `Magma + Surface + Solidifying + Vast`
+- `Water + Flat + Fruiting + Expanded`
+- `Magma + Flat + Solidifying + Vast`
 
 ## Radius Tiers
 
@@ -44,8 +44,8 @@ Examples:
 
 - `Wall-Forming` and `Fruiting` are incompatible.
 - `Solidifying` and `Fruiting` are incompatible.
-- `Surface + Fruiting` is allowed.
-- `Surface + Fruiting` fruit does not hang downward.
+- `Flat + Fruiting` is allowed.
+- `Flat + Fruiting` fruit does not hang downward.
 - All radius tiers share the same lifecycle rules unless explicitly changed later.
 
 ## Medium Rules
@@ -67,7 +67,7 @@ Examples:
 - Spreads through the body of the valid fluid.
 - Valid target: a fluid-filled cell in the correct medium.
 
-### `Surface`
+### `Flat`
 
 - Spreads only on the exposed top layer of the valid fluid.
 - Valid target: a fluid-filled cell in the correct medium with air above it.
@@ -82,18 +82,18 @@ Examples:
 
 - Produces fruit during lifecycle progression.
 - Old-age death output: `air`
-- When combined with `Surface`, fruit attaches to the side or top and does not hang below.
+- When combined with `Flat`, fruit attaches to the side or top and does not hang below.
 
 ### `Wall-Forming`
 
 - Frontier old-age death output: `sponge_remains`
 - Non-frontier old-age death output: `air`
-- Intended result with `Surface`: rings, rims, and perimeter structures
+- Intended result with `Flat`: rings, rims, and perimeter structures
 
 ### `Solidifying`
 
 - Any old-age death output: `sponge_remains`
-- Intended result with `Surface`: filled crusts and platforms
+- Intended result with `Flat`: filled crusts and platforms
 
 ## Frontier Rule
 
@@ -116,13 +116,13 @@ This is intentionally a local frontier rule based on live colony geometry, not a
   - underwater shell or ring maker
 - `Water + Volume + Solidifying`
   - submerged fossilizing mass
-- `Water + Surface + Neutral`
+- `Water + Flat + Neutral`
   - floating cleaner
-- `Water + Surface + Fruiting`
+- `Water + Flat + Fruiting`
   - floating orchard
-- `Water + Surface + Wall-Forming`
+- `Water + Flat + Wall-Forming`
   - floating ring maker
-- `Water + Surface + Solidifying`
+- `Water + Flat + Solidifying`
   - floating platform maker
 
 ### Magma Medium
@@ -135,13 +135,13 @@ This is intentionally a local frontier rule based on live colony geometry, not a
   - lava shell maker
 - `Magma + Volume + Solidifying`
   - lava crust mass
-- `Magma + Surface + Neutral`
+- `Magma + Flat + Neutral`
   - lava skimmer
-- `Magma + Surface + Fruiting`
-  - lava surface orchard
-- `Magma + Surface + Wall-Forming`
+- `Magma + Flat + Fruiting`
+  - lava flat orchard
+- `Magma + Flat + Wall-Forming`
   - lava perimeter ring
-- `Magma + Surface + Solidifying`
+- `Magma + Flat + Solidifying`
   - Nether platform builder
 
 Each valid combination can use any radius tier:
@@ -191,21 +191,21 @@ Resolved profile fields should cover:
 The full supported matrix is currently exposed for gameplay:
 
 - `Water + Volume + Neutral`
-- `Water + Surface + Neutral`
+- `Water + Flat + Neutral`
 - `Water + Volume + Fruiting`
-- `Water + Surface + Fruiting`
+- `Water + Flat + Fruiting`
 - `Water + Volume + Wall-Forming`
-- `Water + Surface + Wall-Forming`
+- `Water + Flat + Wall-Forming`
 - `Water + Volume + Solidifying`
-- `Water + Surface + Solidifying`
+- `Water + Flat + Solidifying`
 - `Magma + Volume + Neutral`
-- `Magma + Surface + Neutral`
+- `Magma + Flat + Neutral`
 - `Magma + Volume + Fruiting`
-- `Magma + Surface + Fruiting`
+- `Magma + Flat + Fruiting`
 - `Magma + Volume + Wall-Forming`
-- `Magma + Surface + Wall-Forming`
+- `Magma + Flat + Wall-Forming`
 - `Magma + Volume + Solidifying`
-- `Magma + Surface + Solidifying`
+- `Magma + Flat + Solidifying`
 
 Each of those combinations supports:
 
