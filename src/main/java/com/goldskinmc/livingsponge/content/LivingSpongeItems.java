@@ -7,6 +7,7 @@ import com.goldskinmc.livingsponge.simulation.profile.RadiusTrait;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import com.goldskinmc.livingsponge.simulation.profile.SpreadTrait;
 import com.goldskinmc.livingsponge.world.item.LivingSpongePlacementItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -185,7 +186,11 @@ public final class LivingSpongeItems {
             registerPlacementItem("creative_living_sponge", BASELINE_TRAITS, true);
     public static final RegistryObject<Item> HYDRO_FRUIT = ITEMS.register(
             "hydro_fruit",
-            () -> new Item(new Item.Properties().stacksTo(16))
+            () -> new BlockItem(LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get(), new Item.Properties().stacksTo(16))
+    );
+    public static final RegistryObject<Item> LAVA_FRUIT = ITEMS.register(
+            "lava_fruit",
+            () -> new BlockItem(LivingSpongeBlocks.LAVA_FRUIT_CLUSTER.get(), new Item.Properties().stacksTo(16))
     );
 
     private LivingSpongeItems() {

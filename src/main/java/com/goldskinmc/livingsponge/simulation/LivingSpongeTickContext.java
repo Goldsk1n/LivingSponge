@@ -10,12 +10,10 @@ public record LivingSpongeTickContext(
         boolean hasOpposingFluidContact,
         boolean hasFireContact,
         List<BlockPos> reproductionTargets,
-        List<BlockPos> fruitTargets,
         int colonyChildren,
         int distanceFromRoot
 ) {
     public LivingSpongeTickContext {
         reproductionTargets = List.copyOf(reproductionTargets);
-        fruitTargets = List.copyOf(fruitTargets);
     }
 }

@@ -104,10 +104,6 @@ public final class LivingSpongePlacementItem extends BlockItem {
     }
 
     private static String outputSummaryKey(final SpongeTraits spongeTraits) {
-        if (spongeTraits.output() == OutputTrait.FRUITING && spongeTraits.spread() == SpreadTrait.FLAT) {
-            return "tooltip.livingsponge.summary.output.flat_fruiting";
-        }
-
         return switch (spongeTraits.output()) {
             case NEUTRAL -> "tooltip.livingsponge.summary.output.neutral";
             case FRUITING -> "tooltip.livingsponge.summary.output.fruiting";

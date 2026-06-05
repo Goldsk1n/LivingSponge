@@ -85,6 +85,7 @@ public final class LivingSpongeMod {
 
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(LivingSpongeItems.HYDRO_FRUIT.get());
+            event.accept(LivingSpongeItems.LAVA_FRUIT.get());
         }
     }
 }

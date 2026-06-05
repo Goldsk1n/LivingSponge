@@ -25,8 +25,7 @@ public final class LivingSpongeBalanceDefaults {
     }
 
     public static final class Fruit {
-        public static final int PROGRESS_PER_NEARBY_MEDIUM_BLOCK = 1;
-        public static final int PROGRESS_NEEDED = 28;
+        public static final double DEATH_SPAWN_CHANCE = 0.05D;
 
         private Fruit() {
         }

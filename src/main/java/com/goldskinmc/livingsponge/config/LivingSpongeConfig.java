@@ -20,8 +20,7 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
 
-    private static final ForgeConfigSpec.IntValue FRUIT_PROGRESS_PER_NEARBY_MEDIUM_BLOCK;
-    private static final ForgeConfigSpec.IntValue FRUIT_PROGRESS_NEEDED;
+    private static final ForgeConfigSpec.DoubleValue FRUIT_DEATH_SPAWN_CHANCE;
 
     private static final ForgeConfigSpec.IntValue CREATIVE_UPDATE_INTERVAL_TICKS;
 
@@ -55,10 +54,8 @@ public final class LivingSpongeConfig {
         BUILDER.pop();
 
         BUILDER.push("fruit");
-        FRUIT_PROGRESS_PER_NEARBY_MEDIUM_BLOCK = BUILDER.comment("Fruit progress granted by each nearby valid medium cell counted during an update.")
-                .defineInRange("progress_per_nearby_medium_block", LivingSpongeBalanceDefaults.Fruit.PROGRESS_PER_NEARBY_MEDIUM_BLOCK, 0, 1000);
-        FRUIT_PROGRESS_NEEDED = BUILDER.comment("Progress needed to create one hydro-fruit cluster.")
-                .defineInRange("progress_needed", LivingSpongeBalanceDefaults.Fruit.PROGRESS_NEEDED, 1, Integer.MAX_VALUE);
+        FRUIT_DEATH_SPAWN_CHANCE = BUILDER.comment("Chance for a fruiting sponge to leave a hydro-fruit on old-age death.")
+                .defineInRange("death_spawn_chance", LivingSpongeBalanceDefaults.Fruit.DEATH_SPAWN_CHANCE, 0.0D, 1.0D);
         BUILDER.pop();
 
         BUILDER.push("creative");
@@ -105,8 +102,7 @@ public final class LivingSpongeConfig {
                         LIFECYCLE_OLD_DURATION_TICKS.get()
                 ),
                 new Fruit(
-                        FRUIT_PROGRESS_PER_NEARBY_MEDIUM_BLOCK.get(),
-                        FRUIT_PROGRESS_NEEDED.get()
+                        FRUIT_DEATH_SPAWN_CHANCE.get()
                 ),
                 new Creative(
                         CREATIVE_UPDATE_INTERVAL_TICKS.get()
@@ -129,8 +125,7 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS
                 ),
                 new Fruit(
-                        LivingSpongeBalanceDefaults.Fruit.PROGRESS_PER_NEARBY_MEDIUM_BLOCK,
-                        LivingSpongeBalanceDefaults.Fruit.PROGRESS_NEEDED
+                        LivingSpongeBalanceDefaults.Fruit.DEATH_SPAWN_CHANCE
                 ),
                 new Creative(
                         LivingSpongeBalanceDefaults.Creative.UPDATE_INTERVAL_TICKS
@@ -163,8 +158,7 @@ public final class LivingSpongeConfig {
     }
 
     public record Fruit(
-            int progressPerNearbyMediumBlock,
-            int progressNeeded
+            double deathSpawnChance
     ) {
     }
 

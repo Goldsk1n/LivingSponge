@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -87,7 +88,6 @@ public final class LivingSpongeRuntime {
 
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
         final List<PendingChild> pendingChildren = new ArrayList<>();
-        final List<PendingFruit> pendingFruitTargets = new ArrayList<>();
         final long gameTime = level.getGameTime();
 
         final Iterator<Map.Entry<BlockPos, LivingSpongeNodeState>> iterator = levelNodes.entrySet().iterator();
@@ -122,23 +122,16 @@ public final class LivingSpongeRuntime {
                 if (profile.isNeutralOutput() && result.deathReason() == LivingSpongeDeathReason.AGING) {
                     blockTargetUntil(level, pos, gameTime + values.spread().neutralDeathTargetCooldownTicks());
                 }
-                final BlockState replacementState = deathReplacementState(level, pos, state, profile, sampledContext.tickContext(), result);
-                level.setBlock(pos, replacementState, Block.UPDATE_ALL);
+                applyDeathOutcome(level, pos, state, profile, result);
                 continue;
             }
 
             syncPhase(level, pos, state, profile, result.stage());
 
-            result.fruitTarget().ifPresent(target -> pendingFruitTargets.add(new PendingFruit(target.immutable(), profile)));
-
             result.reproductionTarget().ifPresent(target -> {
                 final LivingSpongeNodeState child = LivingSpongeNodeState.createChild(state, LivingSpongeConfig.values());
                 pendingChildren.add(new PendingChild(target.immutable(), child));
             });
-        }
-
-        for (PendingFruit fruitTarget : pendingFruitTargets) {
-            placeFruitNode(level, fruitTarget.pos(), fruitTarget.profile());
         }
 
         for (PendingChild childEntry : pendingChildren) {
@@ -193,7 +186,6 @@ public final class LivingSpongeRuntime {
                         hasOpposingFluidContact,
                         hasFireContact,
                         reproductionTargets,
-                        findFruitTargets(level, pos, profile),
                         0,
                         distanceFromRoot
                 ),
@@ -290,30 +282,6 @@ public final class LivingSpongeRuntime {
         return targets;
     }
 
-    private static List<BlockPos> findFruitTargets(
-            final ServerLevel level,
-            final BlockPos pos,
-            final ResolvedSpongeProfile profile
-    ) {
-        final List<BlockPos> targets = new ArrayList<>(6);
-        if (profile.isFlatSpread()) {
-            addFruitTargetIfValid(level, pos.above(), profile, targets);
-            addFruitTargetIfValid(level, pos.north(), profile, targets);
-            addFruitTargetIfValid(level, pos.south(), profile, targets);
-            addFruitTargetIfValid(level, pos.east(), profile, targets);
-            addFruitTargetIfValid(level, pos.west(), profile, targets);
-            return targets;
-        }
-
-        addFruitTargetIfValid(level, pos.below(), profile, targets);
-        addFruitTargetIfValid(level, pos.north(), profile, targets);
-        addFruitTargetIfValid(level, pos.south(), profile, targets);
-        addFruitTargetIfValid(level, pos.east(), profile, targets);
-        addFruitTargetIfValid(level, pos.west(), profile, targets);
-        addFruitTargetIfValid(level, pos.above(), profile, targets);
-        return targets;
-    }
-
     private static boolean isManagedLivingSponge(final ServerLevel level, final BlockPos pos) {
         if (!LivingSpongeBlocks.isLivingSponge(level.getBlockState(pos).getBlock())) {
             return false;
@@ -342,14 +310,6 @@ public final class LivingSpongeRuntime {
         }
     }
 
-    private static void placeFruitNode(final ServerLevel level, final BlockPos pos, final ResolvedSpongeProfile profile) {
-        if (!canHostFruit(level, pos, profile)) {
-            return;
-        }
-
-        level.setBlock(pos, LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get().defaultBlockState(), Block.UPDATE_ALL);
-    }
-
     private static boolean canHostChild(
             final ServerLevel level,
             final BlockPos pos,
@@ -369,43 +329,47 @@ public final class LivingSpongeRuntime {
         return state.canBeReplaced() || state.is(mediumBlock);
     }
 
-    private static boolean canHostFruit(
-            final ServerLevel level,
-            final BlockPos pos,
-            final ResolvedSpongeProfile profile
-    ) {
-        final BlockState state = level.getBlockState(pos);
-        final boolean validFluid = profile.usesWaterMedium()
-                ? level.getFluidState(pos).is(FluidTags.WATER)
-                : level.getFluidState(pos).is(FluidTags.LAVA);
-        return !LivingSpongeBlocks.isLivingSponge(state.getBlock())
-                && !state.is(LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get())
-                && (state.canBeReplaced() || validFluid);
-    }
-
-    private static BlockState deathReplacementState(
+    private static void applyDeathOutcome(
             final ServerLevel level,
             final BlockPos pos,
             final LivingSpongeNodeState state,
             final ResolvedSpongeProfile profile,
-            final LivingSpongeTickContext context,
             final LivingSpongeTickResult result
     ) {
         if (result.deathReason() != LivingSpongeDeathReason.AGING) {
-            return Blocks.AIR.defaultBlockState();
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            return;
         }
 
         if (profile.isSolidifyingOutput()) {
-            return LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState();
+            level.setBlock(pos, LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState(), Block.UPDATE_ALL);
+            return;
         }
 
         if (profile.isWallFormingOutput()) {
-            return isBorderShellDeath(pos, state, profile)
-                    ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
-                    : Blocks.AIR.defaultBlockState();
+            level.setBlock(
+                    pos,
+                    isBorderShellDeath(pos, state, profile)
+                            ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
+                            : Blocks.AIR.defaultBlockState(),
+                    Block.UPDATE_ALL
+            );
+            return;
         }
 
-        return Blocks.AIR.defaultBlockState();
+        if (profile.isFruitingOutput() && level.getRandom().nextDouble() < LivingSpongeConfig.values().fruit().deathSpawnChance()) {
+            final BlockState fruitState = profile.usesWaterMedium()
+                    ? LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get().defaultBlockState()
+                    : LivingSpongeBlocks.LAVA_FRUIT_CLUSTER.get().defaultBlockState();
+            if (profile.isFlatSpread()) {
+                level.setBlock(pos, fruitState, Block.UPDATE_ALL);
+            } else {
+                FallingBlockEntity.fall(level, pos, fruitState);
+            }
+            return;
+        }
+
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
     }
 
     private static boolean isBorderShellDeath(
@@ -507,17 +471,6 @@ public final class LivingSpongeRuntime {
         return blockedTargetsByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
     }
 
-    private static void addFruitTargetIfValid(
-            final ServerLevel level,
-            final BlockPos pos,
-            final ResolvedSpongeProfile profile,
-            final List<BlockPos> targets
-    ) {
-        if (canHostFruit(level, pos, profile)) {
-            targets.add(pos.immutable());
-        }
-    }
-
     private static boolean matchesMediumSource(
             final ServerLevel level,
             final BlockPos pos,
@@ -553,9 +506,6 @@ public final class LivingSpongeRuntime {
     }
 
     private record PendingChild(BlockPos pos, LivingSpongeNodeState state) {
-    }
-
-    private record PendingFruit(BlockPos pos, ResolvedSpongeProfile profile) {
     }
 
     private record SampledContext(LivingSpongeTickContext tickContext, List<BlockPos> mediumSourceTargets) {
