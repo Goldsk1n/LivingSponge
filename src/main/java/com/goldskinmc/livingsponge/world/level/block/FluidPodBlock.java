@@ -22,12 +22,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public final class HydroFruitBlock extends Block {
+public final class FluidPodBlock extends Block {
     private static final Map<ResourceKey<Level>, Set<BlockPos>> SUPPRESSED_RELEASES = new HashMap<>();
     private final Supplier<Item> pickupItem;
     private final Supplier<BlockState> releasedState;
 
-    public HydroFruitBlock(
+    public FluidPodBlock(
             final BlockBehaviour.Properties properties,
             final Supplier<Item> pickupItem,
             final Supplier<BlockState> releasedState

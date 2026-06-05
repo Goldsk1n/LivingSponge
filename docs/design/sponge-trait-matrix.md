@@ -14,7 +14,7 @@ A sponge instance is composed from four trait slots:
   - `Flat`
 - `Output`
   - `Neutral`
-  - `Fruiting`
+  - `Podding`
   - `Wall-Forming`
   - `Solidifying`
 - `Radius`
@@ -29,7 +29,7 @@ Canonical profile form:
 Examples:
 
 - `Water + Volume + Neutral + Standard`
-- `Water + Flat + Fruiting + Expanded`
+- `Water + Flat + Podding + Expanded`
 - `Magma + Flat + Solidifying + Vast`
 
 ## Radius Tiers
@@ -42,10 +42,11 @@ Examples:
 
 ## Hard Rules
 
-- `Wall-Forming` and `Fruiting` are incompatible.
-- `Solidifying` and `Fruiting` are incompatible.
-- `Flat + Fruiting` is allowed.
-- `Flat + Fruiting` fruit does not hang downward.
+- `Wall-Forming` and `Podding` are incompatible.
+- `Solidifying` and `Podding` are incompatible.
+- `Flat + Podding` is allowed.
+- `Flat + Podding` leaves pods in place on old-age death.
+- `Volume + Podding` drops falling pods on old-age death.
 - All radius tiers share the same lifecycle rules unless explicitly changed later.
 
 ## Medium Rules
@@ -78,11 +79,13 @@ Examples:
 
 - Old-age death output: `air`
 
-### `Fruiting`
+### `Podding`
 
-- Produces fruit during lifecycle progression.
-- Old-age death output: `air`
-- When combined with `Flat`, fruit attaches to the side or top and does not hang below.
+- Old-age death output: medium-matched pod with chance
+- `Water` podding creates `Hydro Pod`
+- `Magma` podding creates `Lava Pod`
+- `Flat + Podding` leaves a pod in place
+- `Volume + Podding` creates a falling pod
 
 ### `Wall-Forming`
 
@@ -97,12 +100,11 @@ Examples:
 
 ## Frontier Rule
 
-A sponge counts as a frontier sponge when:
+For wall-forming behavior, a sponge counts as a border-shell sponge when:
 
-- it has at least one adjacent valid growth target
-- that target is not closer to the colony root than the sponge itself
+- its Chebyshev distance from the colony root is equal to the active radius cap
 
-This is intentionally a local frontier rule based on live colony geometry, not a perfect radial shell test.
+This is an explicit root-distance shell rule, not a live frontier-geometry heuristic.
 
 ## Combination Meaning
 
@@ -110,16 +112,16 @@ This is intentionally a local frontier rule based on live colony geometry, not a
 
 - `Water + Volume + Neutral`
   - classic water-clearing colony
-- `Water + Volume + Fruiting`
-  - submerged fruit colony
+- `Water + Volume + Podding`
+  - submerged pod colony
 - `Water + Volume + Wall-Forming`
   - underwater shell or ring maker
 - `Water + Volume + Solidifying`
   - submerged fossilizing mass
 - `Water + Flat + Neutral`
   - floating cleaner
-- `Water + Flat + Fruiting`
-  - floating orchard
+- `Water + Flat + Podding`
+  - floating pod colony
 - `Water + Flat + Wall-Forming`
   - floating ring maker
 - `Water + Flat + Solidifying`
@@ -129,16 +131,16 @@ This is intentionally a local frontier rule based on live colony geometry, not a
 
 - `Magma + Volume + Neutral`
   - lava-clearing colony
-- `Magma + Volume + Fruiting`
-  - lava fruit colony
+- `Magma + Volume + Podding`
+  - lava pod colony
 - `Magma + Volume + Wall-Forming`
   - lava shell maker
 - `Magma + Volume + Solidifying`
   - lava crust mass
 - `Magma + Flat + Neutral`
   - lava skimmer
-- `Magma + Flat + Fruiting`
-  - lava flat orchard
+- `Magma + Flat + Podding`
+  - lava flat pod colony
 - `Magma + Flat + Wall-Forming`
   - lava perimeter ring
 - `Magma + Flat + Solidifying`
@@ -183,8 +185,8 @@ Resolved profile fields should cover:
 - target predicate
 - radius cap
 - death output mode
-- fruit mode
-- frontier behavior
+- pod mode
+- border-shell behavior
 
 ## Current Exposure
 
@@ -192,16 +194,16 @@ The full supported matrix is currently exposed for gameplay:
 
 - `Water + Volume + Neutral`
 - `Water + Flat + Neutral`
-- `Water + Volume + Fruiting`
-- `Water + Flat + Fruiting`
+- `Water + Volume + Podding`
+- `Water + Flat + Podding`
 - `Water + Volume + Wall-Forming`
 - `Water + Flat + Wall-Forming`
 - `Water + Volume + Solidifying`
 - `Water + Flat + Solidifying`
 - `Magma + Volume + Neutral`
 - `Magma + Flat + Neutral`
-- `Magma + Volume + Fruiting`
-- `Magma + Flat + Fruiting`
+- `Magma + Volume + Podding`
+- `Magma + Flat + Podding`
 - `Magma + Volume + Wall-Forming`
 - `Magma + Flat + Wall-Forming`
 - `Magma + Volume + Solidifying`

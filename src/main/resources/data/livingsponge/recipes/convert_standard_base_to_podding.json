@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:fruiting_living_sponge"
+                            "item":  "livingsponge:living_sponge"
                         },
                         {
-                            "item":  "minecraft:prismarine_crystals"
+                            "item":  "livingsponge:hydro_pod"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:expanded_fruiting_living_sponge",
+                   "item":  "livingsponge:podding_living_sponge",
                    "count":  1
                }
 }

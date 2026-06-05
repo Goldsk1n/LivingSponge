@@ -53,11 +53,10 @@ Recommended tooltip layout:
 ```text
 Growth Medium: Water
 Spread: Flat
-Output: Fruiting
+Output: Podding
 Radius: Expanded (16)
 
-Produces hydro-fruit clusters.
-Fruit attaches to sides and top.
+Can leave liquid pods on old-age death.
 ```
 
 Formatting rules:
@@ -79,10 +78,8 @@ Recommended behavior summary text by trait:
   - `Spreads only across exposed flat fluid layers.`
 - `Neutral`
   - `Leaves no special byproduct on old age death.`
-- `Fruiting`
-  - `Produces hydro-fruit clusters.`
-- `Flat + Fruiting`
-  - `Fruit attaches to sides and top.`
+- `Podding`
+  - `Can leave liquid pods on old-age death.`
 - `Wall-Forming`
   - `Only frontier old-age deaths leave remains.`
 - `Solidifying`
@@ -126,7 +123,7 @@ Recommended order:
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-4. Fruiting variants
+4. Podding variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
@@ -154,7 +151,7 @@ Recommended order:
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-8. Magma fruiting variants
+8. Magma podding variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
@@ -169,7 +166,7 @@ Recommended order:
     - `Living Sponge`
     - `Living Sponge`
 10. Support items and blocks
-   - `Hydro Fruit`
+   - `Hydro Pod`
    - `Hydro Block`
    - `Sponge Remains`
 11. Creative-only utility
@@ -190,7 +187,7 @@ Keep direct crafting recipes, but make the trait meaning legible through tooltip
 Ingredient mapping should remain simple and mnemonic:
 
 - `Lily Pad` -> `Flat`
-- `Hydro Fruit` -> `Fruiting`
+- `Hydro Pod` -> `Podding`
 - `Calcite` -> `Solidifying`
 - `Magma Cream` -> `Magma`
 - `Prismarine Crystals` -> `Expanded`
@@ -209,7 +206,7 @@ Move toward a trait-component model:
 Example conceptual items:
 
 - `Flat Membrane`
-- `Fruiting Core`
+- `Podding Core`
 - `Solidifying Core`
 - `Magma Core`
 - `Expanded Radius Core`
@@ -246,7 +243,7 @@ Still recommended:
 
 ## Examples
 
-### Water Flat Fruiting Expanded
+### Water Flat Podding Expanded
 
 Display name:
 
@@ -257,11 +254,10 @@ Tooltip:
 ```text
 Growth Medium: Water
 Spread: Flat
-Output: Fruiting
+Output: Podding
 Radius: Expanded (16)
 
-Produces hydro-fruit clusters.
-Fruit attaches to sides and top.
+Can leave liquid pods on old-age death.
 ```
 
 ### Water Volume Neutral Standard

@@ -54,18 +54,18 @@ public final class LivingSpongeMod {
             event.accept(LivingSpongeItems.MAGMA_FLAT_WALL_FORMING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.EXPANDED_MAGMA_FLAT_WALL_FORMING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.VAST_MAGMA_FLAT_WALL_FORMING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.EXPANDED_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.VAST_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.FLAT_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.EXPANDED_FLAT_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.VAST_FLAT_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.MAGMA_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.EXPANDED_MAGMA_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.VAST_MAGMA_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.MAGMA_FLAT_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.EXPANDED_MAGMA_FLAT_FRUITING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeItems.VAST_MAGMA_FLAT_FRUITING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.EXPANDED_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.VAST_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.FLAT_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.EXPANDED_FLAT_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.VAST_FLAT_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.MAGMA_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.EXPANDED_MAGMA_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.VAST_MAGMA_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.MAGMA_FLAT_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.EXPANDED_MAGMA_FLAT_PODDING_LIVING_SPONGE.get());
+            event.accept(LivingSpongeItems.VAST_MAGMA_FLAT_PODDING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.SOLIDIFYING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.EXPANDED_SOLIDIFYING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.VAST_SOLIDIFYING_LIVING_SPONGE.get());
@@ -84,8 +84,8 @@ public final class LivingSpongeMod {
         }
 
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            event.accept(LivingSpongeItems.HYDRO_FRUIT.get());
-            event.accept(LivingSpongeItems.LAVA_FRUIT.get());
+            event.accept(LivingSpongeItems.HYDRO_POD.get());
+            event.accept(LivingSpongeItems.LAVA_POD.get());
         }
     }
 }

@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_living_sponge"
+                            "item":  "livingsponge:expanded_podding_living_sponge"
                         },
                         {
-                            "item":  "livingsponge:hydro_fruit"
+                            "item":  "minecraft:heart_of_the_sea"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_fruiting_living_sponge",
+                   "item":  "livingsponge:vast_podding_living_sponge",
                    "count":  1
                }
 }

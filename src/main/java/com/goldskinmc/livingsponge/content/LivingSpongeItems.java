@@ -44,18 +44,18 @@ public final class LivingSpongeItems {
     public static final SpongeTraits EXPANDED_FLAT_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.EXPANDED);
     public static final SpongeTraits VAST_FLAT_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.VAST);
 
-    public static final SpongeTraits FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
-    public static final SpongeTraits FLAT_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_FLAT_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_FLAT_FRUITING_TRAITS = fruitingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.VAST);
-    public static final SpongeTraits MAGMA_FRUITING_TRAITS = fruitingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_MAGMA_FRUITING_TRAITS = fruitingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_MAGMA_FRUITING_TRAITS = fruitingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.VAST);
-    public static final SpongeTraits MAGMA_FLAT_FRUITING_TRAITS = fruitingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.STANDARD);
-    public static final SpongeTraits EXPANDED_MAGMA_FLAT_FRUITING_TRAITS = fruitingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.EXPANDED);
-    public static final SpongeTraits VAST_MAGMA_FLAT_FRUITING_TRAITS = fruitingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.VAST);
+    public static final SpongeTraits PODDING_TRAITS = poddingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_PODDING_TRAITS = poddingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_PODDING_TRAITS = poddingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits FLAT_PODDING_TRAITS = poddingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_FLAT_PODDING_TRAITS = poddingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_FLAT_PODDING_TRAITS = poddingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.VAST);
+    public static final SpongeTraits MAGMA_PODDING_TRAITS = poddingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_PODDING_TRAITS = poddingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_PODDING_TRAITS = poddingTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits MAGMA_FLAT_PODDING_TRAITS = poddingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.STANDARD);
+    public static final SpongeTraits EXPANDED_MAGMA_FLAT_PODDING_TRAITS = poddingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.EXPANDED);
+    public static final SpongeTraits VAST_MAGMA_FLAT_PODDING_TRAITS = poddingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.VAST);
 
     public static final SpongeTraits MAGMA_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.STANDARD);
     public static final SpongeTraits EXPANDED_MAGMA_TRAITS = neutralTraits(MediumTrait.MAGMA, SpreadTrait.VOLUME, RadiusTrait.EXPANDED);
@@ -118,30 +118,30 @@ public final class LivingSpongeItems {
     public static final RegistryObject<Item> VAST_FLAT_SOLIDIFYING_LIVING_SPONGE =
             registerPlacementItem("vast_flat_solidifying_living_sponge", VAST_FLAT_SOLIDIFYING_TRAITS, false);
 
-    public static final RegistryObject<Item> FRUITING_LIVING_SPONGE =
-            registerPlacementItem("fruiting_living_sponge", FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> EXPANDED_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("expanded_fruiting_living_sponge", EXPANDED_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> VAST_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("vast_fruiting_living_sponge", VAST_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> FLAT_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("flat_fruiting_living_sponge", FLAT_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> EXPANDED_FLAT_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("expanded_flat_fruiting_living_sponge", EXPANDED_FLAT_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> VAST_FLAT_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("vast_flat_fruiting_living_sponge", VAST_FLAT_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> MAGMA_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("magma_fruiting_living_sponge", MAGMA_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> EXPANDED_MAGMA_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("expanded_magma_fruiting_living_sponge", EXPANDED_MAGMA_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> VAST_MAGMA_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("vast_magma_fruiting_living_sponge", VAST_MAGMA_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> MAGMA_FLAT_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("magma_flat_fruiting_living_sponge", MAGMA_FLAT_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> EXPANDED_MAGMA_FLAT_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("expanded_magma_flat_fruiting_living_sponge", EXPANDED_MAGMA_FLAT_FRUITING_TRAITS, false);
-    public static final RegistryObject<Item> VAST_MAGMA_FLAT_FRUITING_LIVING_SPONGE =
-            registerPlacementItem("vast_magma_flat_fruiting_living_sponge", VAST_MAGMA_FLAT_FRUITING_TRAITS, false);
+    public static final RegistryObject<Item> PODDING_LIVING_SPONGE =
+            registerPlacementItem("podding_living_sponge", PODDING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_PODDING_LIVING_SPONGE =
+            registerPlacementItem("expanded_podding_living_sponge", EXPANDED_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_PODDING_LIVING_SPONGE =
+            registerPlacementItem("vast_podding_living_sponge", VAST_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> FLAT_PODDING_LIVING_SPONGE =
+            registerPlacementItem("flat_podding_living_sponge", FLAT_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_FLAT_PODDING_LIVING_SPONGE =
+            registerPlacementItem("expanded_flat_podding_living_sponge", EXPANDED_FLAT_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_FLAT_PODDING_LIVING_SPONGE =
+            registerPlacementItem("vast_flat_podding_living_sponge", VAST_FLAT_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> MAGMA_PODDING_LIVING_SPONGE =
+            registerPlacementItem("magma_podding_living_sponge", MAGMA_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_MAGMA_PODDING_LIVING_SPONGE =
+            registerPlacementItem("expanded_magma_podding_living_sponge", EXPANDED_MAGMA_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_MAGMA_PODDING_LIVING_SPONGE =
+            registerPlacementItem("vast_magma_podding_living_sponge", VAST_MAGMA_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> MAGMA_FLAT_PODDING_LIVING_SPONGE =
+            registerPlacementItem("magma_flat_podding_living_sponge", MAGMA_FLAT_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> EXPANDED_MAGMA_FLAT_PODDING_LIVING_SPONGE =
+            registerPlacementItem("expanded_magma_flat_podding_living_sponge", EXPANDED_MAGMA_FLAT_PODDING_TRAITS, false);
+    public static final RegistryObject<Item> VAST_MAGMA_FLAT_PODDING_LIVING_SPONGE =
+            registerPlacementItem("vast_magma_flat_podding_living_sponge", VAST_MAGMA_FLAT_PODDING_TRAITS, false);
 
     public static final RegistryObject<Item> MAGMA_LIVING_SPONGE =
             registerPlacementItem("magma_living_sponge", MAGMA_TRAITS, false);
@@ -184,13 +184,13 @@ public final class LivingSpongeItems {
 
     public static final RegistryObject<Item> CREATIVE_LIVING_SPONGE =
             registerPlacementItem("creative_living_sponge", BASELINE_TRAITS, true);
-    public static final RegistryObject<Item> HYDRO_FRUIT = ITEMS.register(
-            "hydro_fruit",
-            () -> new BlockItem(LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get(), new Item.Properties().stacksTo(16))
+    public static final RegistryObject<Item> HYDRO_POD = ITEMS.register(
+            "hydro_pod",
+            () -> new BlockItem(LivingSpongeBlocks.HYDRO_POD.get(), new Item.Properties().stacksTo(16))
     );
-    public static final RegistryObject<Item> LAVA_FRUIT = ITEMS.register(
-            "lava_fruit",
-            () -> new BlockItem(LivingSpongeBlocks.LAVA_FRUIT_CLUSTER.get(), new Item.Properties().stacksTo(16))
+    public static final RegistryObject<Item> LAVA_POD = ITEMS.register(
+            "lava_pod",
+            () -> new BlockItem(LivingSpongeBlocks.LAVA_POD.get(), new Item.Properties().stacksTo(16))
     );
 
     private LivingSpongeItems() {
@@ -236,8 +236,8 @@ public final class LivingSpongeItems {
         return new SpongeTraits(medium, spread, OutputTrait.SOLIDIFYING, radius);
     }
 
-    private static SpongeTraits fruitingTraits(final MediumTrait medium, final SpreadTrait spread, final RadiusTrait radius) {
-        return new SpongeTraits(medium, spread, OutputTrait.FRUITING, radius);
+    private static SpongeTraits poddingTraits(final MediumTrait medium, final SpreadTrait spread, final RadiusTrait radius) {
+        return new SpongeTraits(medium, spread, OutputTrait.PODDING, radius);
     }
 
     private record PlacementKey(SpongeTraits traits, boolean creativeOverrides) {

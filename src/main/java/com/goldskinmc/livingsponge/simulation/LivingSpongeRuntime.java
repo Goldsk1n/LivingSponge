@@ -119,7 +119,7 @@ public final class LivingSpongeRuntime {
 
             if (result.shouldDie()) {
                 iterator.remove();
-                if ((profile.isNeutralOutput() || profile.isFruitingOutput() || profile.isWallFormingOutput())
+                if ((profile.isNeutralOutput() || profile.isPoddingOutput() || profile.isWallFormingOutput())
                         && result.deathReason() == LivingSpongeDeathReason.AGING) {
                     blockTargetUntil(level, pos, gameTime + values.spread().deathTargetCooldownTicks());
                 }
@@ -358,14 +358,14 @@ public final class LivingSpongeRuntime {
             return;
         }
 
-        if (profile.isFruitingOutput() && level.getRandom().nextDouble() < LivingSpongeConfig.values().fruit().deathSpawnChance()) {
-            final BlockState fruitState = profile.usesWaterMedium()
-                    ? LivingSpongeBlocks.HYDRO_FRUIT_CLUSTER.get().defaultBlockState()
-                    : LivingSpongeBlocks.LAVA_FRUIT_CLUSTER.get().defaultBlockState();
+        if (profile.isPoddingOutput() && level.getRandom().nextDouble() < LivingSpongeConfig.values().pod().deathSpawnChance()) {
+            final BlockState podState = profile.usesWaterMedium()
+                    ? LivingSpongeBlocks.HYDRO_POD.get().defaultBlockState()
+                    : LivingSpongeBlocks.LAVA_POD.get().defaultBlockState();
             if (profile.isFlatSpread()) {
-                level.setBlock(pos, fruitState, Block.UPDATE_ALL);
+                level.setBlock(pos, podState, Block.UPDATE_ALL);
             } else {
-                FallingBlockEntity.fall(level, pos, fruitState);
+                FallingBlockEntity.fall(level, pos, podState);
             }
             return;
         }

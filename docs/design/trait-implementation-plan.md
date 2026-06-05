@@ -33,7 +33,7 @@ The current implementation has these important properties:
 - Radius is trait-driven, not globally configured per world.
 - Death output is trait-driven:
   - `Neutral` -> `air`
-  - `Fruiting` -> `air`
+  - `Podding` -> chance-based medium-matched pod on old-age death
   - `Wall-Forming` -> frontier old-age deaths leave `sponge_remains`
   - `Solidifying` -> all old-age deaths leave `sponge_remains`
 - Block entity state currently stores:
@@ -44,8 +44,7 @@ The current implementation has these important properties:
   - creative override flag
   - age
   - reproduction cooldown
-  - fruit progress
-- Config has already been reduced to the currently used lifecycle, spread sampling, fruit progress, and creative timing settings.
+- Config has already been reduced to the currently used lifecycle, spread sampling, pod death chance, and creative timing settings.
 
 ## Design Assumptions For Implementation
 
@@ -54,20 +53,21 @@ These assumptions describe the current supported system:
 - Trait slots are fixed:
   - `Medium = Water | Magma`
   - `Spread = Volume | Flat`
-  - `Output = Neutral | Fruiting | Wall-Forming | Solidifying`
+  - `Output = Neutral | Podding | Wall-Forming | Solidifying`
   - `Radius = Standard | Expanded | Vast`
 - Radius caps are fixed:
   - `Standard = 8`
   - `Expanded = 16`
   - `Vast = 512`
-- `Wall-Forming` and `Fruiting` are incompatible.
-- `Solidifying` and `Fruiting` are incompatible.
-- `Flat + Fruiting` is valid, but fruit cannot hang downward.
+- `Wall-Forming` and `Podding` are incompatible.
+- `Solidifying` and `Podding` are incompatible.
+- `Flat + Podding` is valid and leaves pods in place on old-age death.
+- `Volume + Podding` creates falling pods on old-age death.
 - `Water` dies on lava contact.
 - `Magma` dies on water contact.
 - `Wall-Forming` frontier deaths produce `sponge_remains`.
 - `Solidifying` all old-age deaths produce `sponge_remains`.
-- `Neutral` and `Fruiting` old-age deaths produce `air`.
+- `Neutral` old-age deaths produce `air`.
 - The base `Living Sponge` item families are neutral by default.
 - All survival variants share the same display name and expose traits through tooltips.
 
@@ -96,7 +96,7 @@ Recommended responsibilities:
   - reproduction target rule
   - radius cap
   - death output mode
-  - fruit attachment rule
+  - pod output mode
   - whether water should be removed or preserved
 
 ### Node State Changes
@@ -139,7 +139,7 @@ Implemented:
 - trait persistence and resolved profiles
 - creative override separation
 - trait-driven radius, medium, spread, and output behavior
-- water and magma fruiting
+- water and magma podding
 - full exposed trait matrix across `Standard`, `Expanded`, and `Vast`
 - tooltip-based variant identity
 - direct recipe-based trait conversions and radius upgrades
@@ -183,9 +183,9 @@ At minimum test:
 - freshly placed `Water + Volume + Neutral + Standard`
 - freshly placed `Water + Volume + Wall-Forming + Standard`
 - `Water + Flat + Wall-Forming + Standard`
-- `Water + Flat + Fruiting + Standard`
-- `Magma + Volume + Fruiting + Standard`
-- `Magma + Flat + Fruiting + Standard`
+- `Water + Flat + Podding + Standard`
+- `Magma + Volume + Podding + Standard`
+- `Magma + Flat + Podding + Standard`
 - `Magma + Flat + Solidifying + Standard`
 - `Magma + Flat + Solidifying + Expanded`
 - one `Vast` profile to confirm cap and performance behavior
@@ -197,7 +197,7 @@ At minimum test:
 - incorrect frontier detection under `Flat`
 - incorrect medium kill behavior
 - invalid reproduction into air for volume colonies
-- fruit placement falling when `Flat + Fruiting`
+- incorrect pod output mode for `Flat + Podding` vs `Volume + Podding`
 - runaway spread in `Vast` colonies causing heavy tick cost
 
 ## Risks

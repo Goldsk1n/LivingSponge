@@ -24,10 +24,10 @@ public final class LivingSpongeBalanceDefaults {
         }
     }
 
-    public static final class Fruit {
+    public static final class Pod {
         public static final double DEATH_SPAWN_CHANCE = 0.05D;
 
-        private Fruit() {
+        private Pod() {
         }
     }
 

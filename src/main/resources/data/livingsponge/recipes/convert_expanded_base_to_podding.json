@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_magma_living_sponge"
+                            "item":  "livingsponge:expanded_living_sponge"
                         },
                         {
-                            "item":  "livingsponge:hydro_fruit"
+                            "item":  "livingsponge:hydro_pod"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_magma_fruiting_living_sponge",
+                   "item":  "livingsponge:expanded_podding_living_sponge",
                    "count":  1
                }
 }

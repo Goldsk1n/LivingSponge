@@ -6,7 +6,7 @@ It assumes the current exposed system includes:
 
 - `Water` and `Magma`
 - `Volume` and `Flat`
-- `Neutral`, `Fruiting`, `Wall-Forming`, and `Solidifying`
+- `Neutral`, `Podding`, `Wall-Forming`, and `Solidifying`
 - `Standard`, `Expanded`, and `Vast`
 
 ## Test Setup
@@ -55,7 +55,7 @@ Verify conversions:
 
 - `+ lily_pad` -> flat
 - `+ cobblestone_wall` -> wall-forming
-- `+ hydro_fruit` -> fruiting
+- `+ hydro_pod` -> podding
 - `+ calcite` -> solidifying
 - `+ magma_cream` -> magma
 
@@ -82,7 +82,7 @@ Verify:
 
 - colony spreads
 - colony dies by age
-- no fruit is produced
+- no pods are produced
 - no remains are left on old-age death
 
 ### 4. Wall-Forming Behavior
@@ -115,21 +115,25 @@ Verify:
 - `Flat + Solidifying` produces filled crust/platform outcomes
 - magma flat solidifying remains usable as a lava platform tool
 
-### 6. Fruiting Behavior
+### 6. Podding Behavior
 
 Test:
 
-- `Water + Volume + Fruiting + Standard`
-- `Water + Flat + Fruiting + Standard`
-- `Magma + Volume + Fruiting + Standard`
-- `Magma + Flat + Fruiting + Standard`
+- `Water + Volume + Podding + Standard`
+- `Water + Flat + Podding + Standard`
+- `Magma + Volume + Podding + Standard`
+- `Magma + Flat + Podding + Standard`
 
 Verify:
 
-- hydro-fruit clusters appear over time
-- mining clusters drops `hydro_fruit`
-- `Flat + Fruiting` never places fruit below the sponge
-- magma fruiting can create fruit in lava environments without immediately failing
+- no live pods appear while the colony is alive
+- old-age deaths can leave pods
+- `Flat + Podding` leaves pods in place on death
+- `Volume + Podding` creates falling pods on death
+- right-click picks pods up safely
+- breaking pods releases their stored fluid
+- connected pods burst in a domino effect, including diagonals
+- magma podding creates lava pods in lava environments
 
 ### 7. Medium Rules
 
@@ -198,9 +202,9 @@ At minimum, explicitly test these profiles:
 
 - `Water + Volume + Neutral + Standard`
 - `Water + Flat + Wall-Forming + Standard`
-- `Water + Flat + Fruiting + Standard`
-- `Magma + Volume + Fruiting + Standard`
-- `Magma + Flat + Fruiting + Standard`
+- `Water + Flat + Podding + Standard`
+- `Magma + Volume + Podding + Standard`
+- `Magma + Flat + Podding + Standard`
 - `Magma + Flat + Solidifying + Standard`
 - `Magma + Flat + Solidifying + Expanded`
 - one `Vast` profile for stress/performance
@@ -216,7 +220,7 @@ Ignore `Expanded` and `Vast` initially.
 Judge:
 
 - spread feel
-- fruit frequency
+- pod frequency
 - remains frequency
 - colony lifetime usefulness
 
@@ -241,12 +245,11 @@ If colonies are too explosive or too inert, adjust:
 - `spread.update_interval_ticks`
 - `spread.reproduction_cooldown_ticks`
 
-### 4. Tune Fruiting Rate
+### 4. Tune Podding Rate
 
-If fruit feels too rare or too noisy, adjust:
+If pods feel too rare or too noisy, adjust:
 
-- `fruit.progress_per_nearby_medium_block`
-- `fruit.progress_needed`
+- `pod.death_spawn_chance`
 
 ### 5. Tune Scan Pressure
 
@@ -270,7 +273,7 @@ Watch for:
 - heavy spreading cost
 - chunk boundary oddities
 - visual clutter
-- fruit clutter
+- pod clutter
 
 If `Vast` is too heavy, first reduce:
 
@@ -289,8 +292,9 @@ Use this as a quick pass after any major behavior change.
 - neutral leaves no byproduct
 - wall-forming leaves frontier remains only
 - solidifying leaves remains everywhere on old-age death
-- fruiting creates clusters
-- flat fruit never hangs below
+- podding creates pods only on old-age death
+- volume podding creates falling pods
+- flat podding leaves pods in place
 - magma survives lava
 - water survives water
 - wrong-medium death still works

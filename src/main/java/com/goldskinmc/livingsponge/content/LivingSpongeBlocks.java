@@ -3,7 +3,7 @@ package com.goldskinmc.livingsponge.content;
 import com.goldskinmc.livingsponge.LivingSpongeMod;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
 import com.goldskinmc.livingsponge.world.level.block.HydroBlock;
-import com.goldskinmc.livingsponge.world.level.block.HydroFruitBlock;
+import com.goldskinmc.livingsponge.world.level.block.FluidPodBlock;
 import com.goldskinmc.livingsponge.world.level.block.LivingSpongeBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -91,28 +91,28 @@ public final class LivingSpongeBlocks {
                     .sound(SoundType.WOOL))
     );
 
-    public static final RegistryObject<Block> HYDRO_FRUIT_CLUSTER = register(
-            "hydro_fruit_cluster",
-            () -> new HydroFruitBlock(
+    public static final RegistryObject<Block> HYDRO_POD = register(
+            "hydro_pod",
+            () -> new FluidPodBlock(
                     BlockBehaviour.Properties.of()
                             .mapColor(MapColor.COLOR_LIGHT_BLUE)
                             .strength(0.2F)
                             .sound(SoundType.WET_GRASS)
                             .noOcclusion(),
-                    () -> LivingSpongeItems.HYDRO_FRUIT.get(),
+                    () -> LivingSpongeItems.HYDRO_POD.get(),
                     () -> net.minecraft.world.level.block.Blocks.WATER.defaultBlockState()
             )
     );
 
-    public static final RegistryObject<Block> LAVA_FRUIT_CLUSTER = register(
-            "lava_fruit_cluster",
-            () -> new HydroFruitBlock(
+    public static final RegistryObject<Block> LAVA_POD = register(
+            "lava_pod",
+            () -> new FluidPodBlock(
                     BlockBehaviour.Properties.of()
                             .mapColor(MapColor.COLOR_ORANGE)
                             .strength(0.2F)
                             .sound(SoundType.WET_GRASS)
                             .noOcclusion(),
-                    () -> LivingSpongeItems.LAVA_FRUIT.get(),
+                    () -> LivingSpongeItems.LAVA_POD.get(),
                     () -> net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState()
             )
     );
