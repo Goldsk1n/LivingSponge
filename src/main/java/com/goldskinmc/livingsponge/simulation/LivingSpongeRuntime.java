@@ -119,8 +119,9 @@ public final class LivingSpongeRuntime {
 
             if (result.shouldDie()) {
                 iterator.remove();
-                if (profile.isNeutralOutput() && result.deathReason() == LivingSpongeDeathReason.AGING) {
-                    blockTargetUntil(level, pos, gameTime + values.spread().neutralDeathTargetCooldownTicks());
+                if ((profile.isNeutralOutput() || profile.isFruitingOutput() || profile.isWallFormingOutput())
+                        && result.deathReason() == LivingSpongeDeathReason.AGING) {
+                    blockTargetUntil(level, pos, gameTime + values.spread().deathTargetCooldownTicks());
                 }
                 applyDeathOutcome(level, pos, state, profile, result);
                 continue;
