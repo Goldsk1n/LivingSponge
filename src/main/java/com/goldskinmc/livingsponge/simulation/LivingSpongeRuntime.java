@@ -26,6 +26,7 @@ import java.util.UUID;
 
 public final class LivingSpongeRuntime {
     private static final LivingSpongeRuntime INSTANCE = new LivingSpongeRuntime();
+    private static final int MAX_CHILD_PLACEMENTS_PER_COLONY_PER_TICK = 8;
     private static final int[][] FLAT_OFFSETS = {
             {1, 0},
             {-1, 0},
@@ -41,6 +42,7 @@ public final class LivingSpongeRuntime {
     private final Map<ResourceKey<Level>, Map<BlockPos, LivingSpongeNodeState>> nodesByLevel = new HashMap<>();
     private final Map<ResourceKey<Level>, Map<BlockPos, Long>> blockedTargetsByLevel = new HashMap<>();
     private final Map<ResourceKey<Level>, Map<MediumSampleCacheKey, Boolean>> mediumSourceMatchesByLevel = new HashMap<>();
+    private final Map<ResourceKey<Level>, List<PendingChild>> deferredChildrenByLevel = new HashMap<>();
 
     private LivingSpongeRuntime() {
     }
@@ -88,7 +90,7 @@ public final class LivingSpongeRuntime {
         }
 
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
-        final List<PendingChild> pendingChildren = new ArrayList<>();
+        final List<PendingChild> pendingChildren = new ArrayList<>(takeDeferredChildren(level));
         final long gameTime = level.getGameTime();
 
         final Iterator<Map.Entry<BlockPos, LivingSpongeNodeState>> iterator = levelNodes.entrySet().iterator();
@@ -108,12 +110,16 @@ public final class LivingSpongeRuntime {
                 continue;
             }
 
-            final SampledContext sampledContext = sampleContext(level, pos, state, profile, gameTime);
-            final LivingSpongeTickResult result = simulationService.tickNode(
+            final int distanceFromRoot = chebyshevDistance(pos, state.rootPos());
+            final boolean canStayActive = level.hasChunkAt(pos) && isManagedLivingSponge(level, pos);
+            final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
+            final boolean hasFireContact = hasFireContact(level, pos, profile);
+
+            final LivingSpongeTickResult result = simulationService.tickLifecycle(
                     state,
-                    profile,
-                    sampledContext.tickContext(),
-                    level.getRandom(),
+                    canStayActive,
+                    hasOpposingFluidContact,
+                    hasFireContact,
                     values,
                     updateInterval
             );
@@ -130,14 +136,70 @@ public final class LivingSpongeRuntime {
 
             syncPhase(level, pos, state, profile, result.stage());
 
-            result.reproductionTarget().ifPresent(target -> {
+            final int radiusCap = profile.radiusCap(values);
+            if (!requiresReproductionSampling(
+                    state,
+                    result.stage(),
+                    distanceFromRoot,
+                    radiusCap
+            )) {
+                continue;
+            }
+
+            final int nearbyMediumSources = countNearbyMediumSources(
+                    level,
+                    pos,
+                    profile,
+                    values.spread().mediumScanRadius(),
+                    values.spread().maxMediumSamplesPerUpdate()
+            );
+            if (nearbyMediumSources <= 0) {
+                continue;
+            }
+
+            final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, state.rootPos(), profile, radiusCap, gameTime);
+            if (!simulationService.canAttemptReproduction(
+                    state,
+                    profile,
+                    values,
+                    result.stage(),
+                    nearbyMediumSources,
+                    reproductionTargets,
+                    distanceFromRoot
+            )) {
+                continue;
+            }
+
+            simulationService.chooseReproductionTarget(
+                    state,
+                    profile,
+                    level.getRandom(),
+                    values,
+                    reproductionTargets
+            ).ifPresent(target -> {
                 final LivingSpongeNodeState child = LivingSpongeNodeState.createChild(state, LivingSpongeConfig.values());
                 pendingChildren.add(new PendingChild(target.immutable(), child));
             });
         }
 
+        final Map<UUID, Integer> placementsByColony = new HashMap<>();
+        final List<PendingChild> nextDeferredChildren = new ArrayList<>();
         for (PendingChild childEntry : pendingChildren) {
-            placeChild(level, childEntry.pos(), childEntry.state(), gameTime);
+            final UUID colonyId = childEntry.state().colonyId();
+            final int placementsThisTick = placementsByColony.getOrDefault(colonyId, 0);
+            if (placementsThisTick >= MAX_CHILD_PLACEMENTS_PER_COLONY_PER_TICK) {
+                nextDeferredChildren.add(childEntry);
+                continue;
+            }
+            if (placeChild(level, childEntry.pos(), childEntry.state(), gameTime)) {
+                placementsByColony.put(colonyId, placementsThisTick + 1);
+            }
+        }
+
+        if (nextDeferredChildren.isEmpty()) {
+            deferredChildrenByLevel.remove(level.dimension());
+        } else {
+            deferredChildrenByLevel.put(level.dimension(), nextDeferredChildren);
         }
 
         if (levelNodes.isEmpty()) {
@@ -159,131 +221,19 @@ public final class LivingSpongeRuntime {
         return Math.floorMod(gameTime, interval) == slot;
     }
 
-    private SampledContext sampleContext(
-            final ServerLevel level,
-            final BlockPos pos,
-            final LivingSpongeNodeState state,
-            final ResolvedSpongeProfile profile,
-            final long gameTime
-    ) {
-        final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
-        final int distanceFromRoot = chebyshevDistance(pos, state.rootPos());
-        final boolean canStayActive = level.hasChunkAt(pos) && isManagedLivingSponge(level, pos);
-        if (!canStayActive) {
-            return emptyContext(false, distanceFromRoot);
-        }
-
-        final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
-        final boolean hasFireContact = hasFireContact(level, pos, profile);
-        if (hasOpposingFluidContact || hasFireContact) {
-            return new SampledContext(
-                    new LivingSpongeTickContext(
-                            true,
-                            0,
-                            hasOpposingFluidContact,
-                            hasFireContact,
-                            List.of(),
-                            0,
-                            distanceFromRoot
-                    ),
-                    0
-            );
-        }
-
-        final LivingSpongeLifecycleStage projectedStage = projectedStage(state, profile, values);
-        final int radiusCap = profile.radiusCap(values);
-        if (!requiresReproductionSampling(
-                state,
-                profile.updateIntervalTicks(values),
-                projectedStage,
-                distanceFromRoot,
-                radiusCap
-        )) {
-            return emptyContext(true, distanceFromRoot);
-        }
-
-        final int nearbyMediumSources = countNearbyMediumSources(
-                level,
-                pos,
-                profile,
-                values.spread().mediumScanRadius(),
-                values.spread().maxMediumSamplesPerUpdate()
-        );
-        if (nearbyMediumSources <= 0) {
-            return new SampledContext(
-                    new LivingSpongeTickContext(
-                            true,
-                            0,
-                            false,
-                            false,
-                            List.of(),
-                            0,
-                            distanceFromRoot
-                    ),
-                    0
-            );
-        }
-
-        final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, state.rootPos(), profile, radiusCap, gameTime);
-
-        return new SampledContext(
-                new LivingSpongeTickContext(
-                        canStayActive,
-                        nearbyMediumSources,
-                        hasOpposingFluidContact,
-                        hasFireContact,
-                        reproductionTargets,
-                        0,
-                        distanceFromRoot
-                ),
-                nearbyMediumSources
-        );
-    }
-
-    private static SampledContext emptyContext(final boolean canStayActive, final int distanceFromRoot) {
-        return new SampledContext(
-                new LivingSpongeTickContext(
-                        canStayActive,
-                        0,
-                        false,
-                        false,
-                        List.of(),
-                        0,
-                        distanceFromRoot
-                    ),
-                    0
-        );
-    }
-
-    private static LivingSpongeLifecycleStage projectedStage(
-            final LivingSpongeNodeState state,
-            final ResolvedSpongeProfile profile,
-            final LivingSpongeConfig.BalanceValues values
-    ) {
-        return LivingSpongeLifecycleStage.fromAgeTicks(
-                state.ageTicks() + profile.updateIntervalTicks(values),
-                profile.lifecycle(values)
-        );
-    }
-
     private static boolean requiresReproductionSampling(
             final LivingSpongeNodeState state,
-            final int elapsedTicks,
-            final LivingSpongeLifecycleStage projectedStage,
+            final LivingSpongeLifecycleStage stage,
             final int distanceFromRoot,
             final int radiusCap
     ) {
-        if (projectedStage == LivingSpongeLifecycleStage.OLD || projectedStage == LivingSpongeLifecycleStage.DEAD) {
+        if (stage == LivingSpongeLifecycleStage.OLD || stage == LivingSpongeLifecycleStage.DEAD) {
             return false;
         }
-        if (projectedReproductionCooldown(state, elapsedTicks) > 0) {
+        if (state.reproductionCooldownTicks() > 0) {
             return false;
         }
         return distanceFromRoot <= radiusCap;
-    }
-
-    private static int projectedReproductionCooldown(final LivingSpongeNodeState state, final int elapsedTicks) {
-        return Math.max(0, state.reproductionCooldownTicks() - elapsedTicks);
     }
 
     private int countNearbyMediumSources(
@@ -420,10 +370,10 @@ public final class LivingSpongeRuntime {
         return blockEntity instanceof LivingSpongeBlockEntity;
     }
 
-    private void placeChild(final ServerLevel level, final BlockPos pos, final LivingSpongeNodeState state, final long gameTime) {
+    private boolean placeChild(final ServerLevel level, final BlockPos pos, final LivingSpongeNodeState state, final long gameTime) {
         final ResolvedSpongeProfile profile = state.resolveProfile();
         if (isTargetBlocked(level, pos, gameTime) || !canHostChild(level, pos, profile)) {
-            return;
+            return false;
         }
 
         final Block block = LivingSpongeBlocks.spongeBlockFor(
@@ -431,13 +381,15 @@ public final class LivingSpongeRuntime {
                 state.creativeOverrides()
         );
         if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
-            return;
+            return false;
         }
 
         final BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
             livingSpongeBlockEntity.initializeFromState(state);
+            return true;
         }
+        return false;
     }
 
     private static boolean canHostChild(
@@ -664,10 +616,12 @@ public final class LivingSpongeRuntime {
         return mediumSourceMatchesByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
     }
 
-    private record PendingChild(BlockPos pos, LivingSpongeNodeState state) {
+    private List<PendingChild> takeDeferredChildren(final ServerLevel level) {
+        final List<PendingChild> deferred = deferredChildrenByLevel.remove(level.dimension());
+        return deferred == null ? List.of() : deferred;
     }
 
-    private record SampledContext(LivingSpongeTickContext tickContext, int nearbyMediumSources) {
+    private record PendingChild(BlockPos pos, LivingSpongeNodeState state) {
     }
 
     private record MediumSampleCacheKey(
