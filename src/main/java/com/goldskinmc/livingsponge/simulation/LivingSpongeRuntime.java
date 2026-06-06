@@ -30,11 +30,7 @@ public final class LivingSpongeRuntime {
             {1, 0},
             {-1, 0},
             {0, 1},
-            {0, -1},
-            {1, 1},
-            {1, -1},
-            {-1, 1},
-            {-1, -1}
+            {0, -1}
     };
 
     private final LivingSpongeSimulationService simulationService = new LivingSpongeSimulationService();
