@@ -2,6 +2,7 @@ package com.goldskinmc.livingsponge.world.level.block;
 
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.content.LivingSpongeItems;
+import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import com.goldskinmc.livingsponge.world.level.block.entity.LivingSpongeBlockEntity;
 import com.goldskinmc.livingsponge.world.item.LivingSpongePlacementItem;
@@ -62,18 +63,23 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
             return;
         }
 
+        final SpongeTraits traits = stack.getItem() instanceof LivingSpongePlacementItem placementItem
+                ? placementItem.traits()
+                : SpongeTraits.DEFAULT;
+        final boolean overrides = stack.getItem() instanceof LivingSpongePlacementItem placementItem
+                ? placementItem.creativeOverrides()
+                : creativeOverrides;
+        final BlockState placedState = LivingSpongeBlocks.spongeStateFor(
+                LivingSpongeLifecycleStage.MATURE,
+                traits,
+                overrides
+        );
+        if (!state.equals(placedState)) {
+            level.setBlock(pos, placedState, Block.UPDATE_ALL);
+        }
+
         final BlockEntity blockEntity = serverLevel.getBlockEntity(pos);
         if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
-            final SpongeTraits traits = stack.getItem() instanceof LivingSpongePlacementItem placementItem
-                    ? placementItem.traits()
-                    : SpongeTraits.DEFAULT;
-            final boolean overrides = stack.getItem() instanceof LivingSpongePlacementItem placementItem
-                    ? placementItem.creativeOverrides()
-                    : creativeOverrides;
-            final LivingSpongeVisualProfile visualProfile = LivingSpongeVisualProfile.from(traits, overrides);
-            if (state.hasProperty(VISUAL_PROFILE) && state.getValue(VISUAL_PROFILE) != visualProfile) {
-                level.setBlock(pos, state.setValue(VISUAL_PROFILE, visualProfile), Block.UPDATE_ALL);
-            }
             livingSpongeBlockEntity.initializeRoot(traits, overrides);
         }
     }

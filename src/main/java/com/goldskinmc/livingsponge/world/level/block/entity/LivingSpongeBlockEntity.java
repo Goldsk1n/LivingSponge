@@ -32,7 +32,7 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
             return;
         }
 
-        nodeState = LivingSpongeNodeState.createRoot(worldPosition, traits, creativeOverrides, LivingSpongeConfig.values());
+        nodeState = LivingSpongeNodeState.createPlacedRoot(worldPosition, traits, creativeOverrides, LivingSpongeConfig.values());
         LivingSpongeRuntime.instance().registerNode(serverLevel, worldPosition, nodeState);
         setChanged();
     }

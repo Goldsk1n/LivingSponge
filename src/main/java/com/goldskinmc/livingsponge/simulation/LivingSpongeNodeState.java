@@ -51,6 +51,17 @@ public final class LivingSpongeNodeState {
         );
     }
 
+    public static LivingSpongeNodeState createPlacedRoot(
+            final BlockPos rootPos,
+            final SpongeTraits traits,
+            final boolean creativeOverrides,
+            final LivingSpongeConfig.BalanceValues values
+    ) {
+        final LivingSpongeNodeState state = createRoot(rootPos, traits, creativeOverrides, values);
+        state.ageTicks = state.resolveProfile().lifecycle(values).youngDurationTicks();
+        return state;
+    }
+
     public static LivingSpongeNodeState createChild(
             final LivingSpongeNodeState parent,
             final LivingSpongeConfig.BalanceValues values
