@@ -26,7 +26,6 @@ import java.util.UUID;
 
 public final class LivingSpongeRuntime {
     private static final LivingSpongeRuntime INSTANCE = new LivingSpongeRuntime();
-    private static final int MAX_CHILD_PLACEMENTS_PER_COLONY_PER_TICK = 8;
     private static final int[][] FLAT_OFFSETS = {
             {1, 0},
             {-1, 0},
@@ -42,7 +41,6 @@ public final class LivingSpongeRuntime {
     private final Map<ResourceKey<Level>, Map<BlockPos, LivingSpongeNodeState>> nodesByLevel = new HashMap<>();
     private final Map<ResourceKey<Level>, Map<BlockPos, Long>> blockedTargetsByLevel = new HashMap<>();
     private final Map<ResourceKey<Level>, Map<MediumSampleCacheKey, Boolean>> mediumSourceMatchesByLevel = new HashMap<>();
-    private final Map<ResourceKey<Level>, List<PendingChild>> deferredChildrenByLevel = new HashMap<>();
 
     private LivingSpongeRuntime() {
     }
@@ -90,7 +88,7 @@ public final class LivingSpongeRuntime {
         }
 
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
-        final List<PendingChild> pendingChildren = new ArrayList<>(takeDeferredChildren(level));
+        final List<PendingChild> pendingChildren = new ArrayList<>();
         final long gameTime = level.getGameTime();
 
         final Iterator<Map.Entry<BlockPos, LivingSpongeNodeState>> iterator = levelNodes.entrySet().iterator();
@@ -182,24 +180,8 @@ public final class LivingSpongeRuntime {
             });
         }
 
-        final Map<UUID, Integer> placementsByColony = new HashMap<>();
-        final List<PendingChild> nextDeferredChildren = new ArrayList<>();
         for (PendingChild childEntry : pendingChildren) {
-            final UUID colonyId = childEntry.state().colonyId();
-            final int placementsThisTick = placementsByColony.getOrDefault(colonyId, 0);
-            if (placementsThisTick >= MAX_CHILD_PLACEMENTS_PER_COLONY_PER_TICK) {
-                nextDeferredChildren.add(childEntry);
-                continue;
-            }
-            if (placeChild(level, childEntry.pos(), childEntry.state(), gameTime)) {
-                placementsByColony.put(colonyId, placementsThisTick + 1);
-            }
-        }
-
-        if (nextDeferredChildren.isEmpty()) {
-            deferredChildrenByLevel.remove(level.dimension());
-        } else {
-            deferredChildrenByLevel.put(level.dimension(), nextDeferredChildren);
+            placeChild(level, childEntry.pos(), childEntry.state(), gameTime);
         }
 
         if (levelNodes.isEmpty()) {
@@ -614,11 +596,6 @@ public final class LivingSpongeRuntime {
 
     private Map<MediumSampleCacheKey, Boolean> mediumSourceMatches(final ServerLevel level) {
         return mediumSourceMatchesByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
-    }
-
-    private List<PendingChild> takeDeferredChildren(final ServerLevel level) {
-        final List<PendingChild> deferred = deferredChildrenByLevel.remove(level.dimension());
-        return deferred == null ? List.of() : deferred;
     }
 
     private record PendingChild(BlockPos pos, LivingSpongeNodeState state) {
