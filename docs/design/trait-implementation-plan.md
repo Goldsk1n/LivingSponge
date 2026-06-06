@@ -62,7 +62,7 @@ These assumptions describe the current supported system:
 - `Wall-Forming` and `Podding` are incompatible.
 - `Solidifying` and `Podding` are incompatible.
 - `Flat + Podding` is valid and leaves pods in place on old-age death.
-- `Volume + Podding` creates falling pods on old-age death.
+- `Volume + Podding` leaves pods in place on old-age death.
 - `Water` dies on lava contact.
 - `Magma` dies on water contact.
 - `Wall-Forming` frontier deaths produce `sponge_remains`.
@@ -139,7 +139,6 @@ Implemented:
 - trait persistence and resolved profiles
 - creative override separation
 - trait-driven radius, medium, spread, and output behavior
-- water and magma podding
 - full exposed trait matrix across `Standard`, `Expanded`, and `Vast`
 - tooltip-based variant identity
 - direct recipe-based trait conversions and radius upgrades

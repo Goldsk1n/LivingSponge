@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "livingsponge:hydro_pod"
+          "name": "livingsponge:hydro_block"
         }
       ]
     }

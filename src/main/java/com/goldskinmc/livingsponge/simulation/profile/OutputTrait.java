@@ -2,7 +2,6 @@ package com.goldskinmc.livingsponge.simulation.profile;
 
 public enum OutputTrait {
     NEUTRAL,
-    PODDING,
     WALL_FORMING,
     SOLIDIFYING;
 

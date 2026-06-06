@@ -20,8 +20,6 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
 
-    private static final ForgeConfigSpec.DoubleValue POD_DEATH_SPAWN_CHANCE;
-
     private static final ForgeConfigSpec.IntValue CREATIVE_UPDATE_INTERVAL_TICKS;
 
     public static final ForgeConfigSpec SPEC;
@@ -51,11 +49,6 @@ public final class LivingSpongeConfig {
                 .defineInRange("mature_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS, 1, Integer.MAX_VALUE);
         LIFECYCLE_OLD_DURATION_TICKS = BUILDER.comment("Old stage duration in ticks before death.")
                 .defineInRange("old_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS, 1, Integer.MAX_VALUE);
-        BUILDER.pop();
-
-        BUILDER.push("pod");
-        POD_DEATH_SPAWN_CHANCE = BUILDER.comment("Chance for a podding sponge to leave a pod on old-age death.")
-                .defineInRange("death_spawn_chance", LivingSpongeBalanceDefaults.Pod.DEATH_SPAWN_CHANCE, 0.0D, 1.0D);
         BUILDER.pop();
 
         BUILDER.push("creative");
@@ -101,9 +94,6 @@ public final class LivingSpongeConfig {
                         LIFECYCLE_MATURE_DURATION_TICKS.get(),
                         LIFECYCLE_OLD_DURATION_TICKS.get()
                 ),
-                new Pod(
-                        POD_DEATH_SPAWN_CHANCE.get()
-                ),
                 new Creative(
                         CREATIVE_UPDATE_INTERVAL_TICKS.get()
                 )
@@ -124,9 +114,6 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS,
                         LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS
                 ),
-                new Pod(
-                        LivingSpongeBalanceDefaults.Pod.DEATH_SPAWN_CHANCE
-                ),
                 new Creative(
                         LivingSpongeBalanceDefaults.Creative.UPDATE_INTERVAL_TICKS
                 )
@@ -136,7 +123,6 @@ public final class LivingSpongeConfig {
     public record BalanceValues(
             Spread spread,
             Lifecycle lifecycle,
-            Pod pod,
             Creative creative
     ) {
     }
@@ -154,11 +140,6 @@ public final class LivingSpongeConfig {
             int youngDurationTicks,
             int matureDurationTicks,
             int oldDurationTicks
-    ) {
-    }
-
-    public record Pod(
-            double deathSpawnChance
     ) {
     }
 

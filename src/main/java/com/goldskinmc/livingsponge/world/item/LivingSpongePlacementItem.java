@@ -106,7 +106,6 @@ public final class LivingSpongePlacementItem extends BlockItem {
     private static String outputSummaryKey(final SpongeTraits spongeTraits) {
         return switch (spongeTraits.output()) {
             case NEUTRAL -> "tooltip.livingsponge.summary.output.neutral";
-            case PODDING -> "tooltip.livingsponge.summary.output.podding";
             case WALL_FORMING -> "tooltip.livingsponge.summary.output.wall_forming";
             case SOLIDIFYING -> "tooltip.livingsponge.summary.output.solidifying";
         };

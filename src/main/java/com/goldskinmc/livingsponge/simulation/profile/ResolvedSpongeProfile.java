@@ -44,10 +44,6 @@ public record ResolvedSpongeProfile(
         return traits.output() == OutputTrait.NEUTRAL;
     }
 
-    public boolean isPoddingOutput() {
-        return traits.output() == OutputTrait.PODDING;
-    }
-
     public boolean isWallFormingOutput() {
         return traits.output() == OutputTrait.WALL_FORMING;
     }

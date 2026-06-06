@@ -24,13 +24,6 @@ public final class LivingSpongeBalanceDefaults {
         }
     }
 
-    public static final class Pod {
-        public static final double DEATH_SPAWN_CHANCE = 0.05D;
-
-        private Pod() {
-        }
-    }
-
     public static final class Creative {
         public static final int UPDATE_INTERVAL_TICKS = 10;
 

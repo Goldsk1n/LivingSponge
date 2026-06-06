@@ -151,7 +151,6 @@ Recommended order:
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
-8. Magma podding variants
    - `Living Sponge`
    - `Living Sponge`
    - `Living Sponge`
@@ -166,7 +165,6 @@ Recommended order:
     - `Living Sponge`
     - `Living Sponge`
 10. Support items and blocks
-   - `Hydro Pod`
    - `Hydro Block`
    - `Sponge Remains`
 11. Creative-only utility
@@ -187,7 +185,6 @@ Keep direct crafting recipes, but make the trait meaning legible through tooltip
 Ingredient mapping should remain simple and mnemonic:
 
 - `Lily Pad` -> `Flat`
-- `Hydro Pod` -> `Podding`
 - `Calcite` -> `Solidifying`
 - `Magma Cream` -> `Magma`
 - `Prismarine Crystals` -> `Expanded`

@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -119,7 +118,7 @@ public final class LivingSpongeRuntime {
 
             if (result.shouldDie()) {
                 iterator.remove();
-                if ((profile.isNeutralOutput() || profile.isPoddingOutput() || profile.isWallFormingOutput())
+                if ((profile.isNeutralOutput() || profile.isWallFormingOutput())
                         && result.deathReason() == LivingSpongeDeathReason.AGING) {
                     blockTargetUntil(level, pos, gameTime + values.spread().deathTargetCooldownTicks());
                 }
@@ -355,18 +354,6 @@ public final class LivingSpongeRuntime {
                             : Blocks.AIR.defaultBlockState(),
                     Block.UPDATE_ALL
             );
-            return;
-        }
-
-        if (profile.isPoddingOutput() && level.getRandom().nextDouble() < LivingSpongeConfig.values().pod().deathSpawnChance()) {
-            final BlockState podState = profile.usesWaterMedium()
-                    ? LivingSpongeBlocks.HYDRO_POD.get().defaultBlockState()
-                    : LivingSpongeBlocks.LAVA_POD.get().defaultBlockState();
-            if (profile.isFlatSpread()) {
-                level.setBlock(pos, podState, Block.UPDATE_ALL);
-            } else {
-                FallingBlockEntity.fall(level, pos, podState);
-            }
             return;
         }
 

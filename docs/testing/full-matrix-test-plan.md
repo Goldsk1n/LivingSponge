@@ -55,7 +55,6 @@ Verify conversions:
 
 - `+ lily_pad` -> flat
 - `+ cobblestone_wall` -> wall-forming
-- `+ hydro_pod` -> podding
 - `+ calcite` -> solidifying
 - `+ magma_cream` -> magma
 
@@ -129,11 +128,10 @@ Verify:
 - no live pods appear while the colony is alive
 - old-age deaths can leave pods
 - `Flat + Podding` leaves pods in place on death
-- `Volume + Podding` creates falling pods on death
+- `Volume + Podding` leaves pods in place on death
 - right-click picks pods up safely
 - breaking pods releases their stored fluid
 - connected pods burst in a domino effect, including diagonals
-- magma podding creates lava pods in lava environments
 
 ### 7. Medium Rules
 
@@ -292,9 +290,6 @@ Use this as a quick pass after any major behavior change.
 - neutral leaves no byproduct
 - wall-forming leaves frontier remains only
 - solidifying leaves remains everywhere on old-age death
-- podding creates pods only on old-age death
-- volume podding creates falling pods
-- flat podding leaves pods in place
 - magma survives lava
 - water survives water
 - wrong-medium death still works

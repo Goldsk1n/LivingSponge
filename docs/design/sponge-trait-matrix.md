@@ -46,7 +46,7 @@ Examples:
 - `Solidifying` and `Podding` are incompatible.
 - `Flat + Podding` is allowed.
 - `Flat + Podding` leaves pods in place on old-age death.
-- `Volume + Podding` drops falling pods on old-age death.
+- `Volume + Podding` also leaves pods in place on old-age death.
 - All radius tiers share the same lifecycle rules unless explicitly changed later.
 
 ## Medium Rules
@@ -82,10 +82,8 @@ Examples:
 ### `Podding`
 
 - Old-age death output: medium-matched pod with chance
-- `Water` podding creates `Hydro Pod`
-- `Magma` podding creates `Lava Pod`
 - `Flat + Podding` leaves a pod in place
-- `Volume + Podding` creates a falling pod
+- `Volume + Podding` leaves a pod in place
 
 ### `Wall-Forming`
 
