@@ -141,6 +141,7 @@ Implemented:
 Still left to polish:
 
 - in-world visual differentiation beyond lifecycle phases
+- texture/visual identity implementation per `docs/design/texture-visual-plan.md`
 - creative-tab and JEI readability tuning as recipe count grows
 - focused stress/performance testing for `Vast` colonies
 - behavior-preserving runtime optimization per `docs/design/performance-optimization-plan.md`
