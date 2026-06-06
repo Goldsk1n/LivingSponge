@@ -40,6 +40,7 @@ public final class LivingSpongeRuntime {
     private final LivingSpongeSimulationService simulationService = new LivingSpongeSimulationService();
     private final Map<ResourceKey<Level>, Map<BlockPos, LivingSpongeNodeState>> nodesByLevel = new HashMap<>();
     private final Map<ResourceKey<Level>, Map<BlockPos, Long>> blockedTargetsByLevel = new HashMap<>();
+    private final Map<ResourceKey<Level>, Map<MediumSampleCacheKey, Boolean>> mediumSourceMatchesByLevel = new HashMap<>();
 
     private LivingSpongeRuntime() {
     }
@@ -79,6 +80,7 @@ public final class LivingSpongeRuntime {
 
     private void tickLevel(final ServerLevel level) {
         pruneExpiredBlockedTargets(level, level.getGameTime());
+        clearMediumSampleCache(level);
 
         final Map<BlockPos, LivingSpongeNodeState> levelNodes = nodesByLevel.get(level.dimension());
         if (levelNodes == null || levelNodes.isEmpty()) {
@@ -184,7 +186,7 @@ public final class LivingSpongeRuntime {
                             0,
                             distanceFromRoot
                     ),
-                    List.of()
+                    0
             );
         }
 
@@ -200,14 +202,14 @@ public final class LivingSpongeRuntime {
             return emptyContext(true, distanceFromRoot);
         }
 
-        final List<BlockPos> mediumSources = findNearbyMediumSources(
+        final int nearbyMediumSources = countNearbyMediumSources(
                 level,
                 pos,
                 profile,
                 values.spread().mediumScanRadius(),
                 values.spread().maxMediumSamplesPerUpdate()
         );
-        if (mediumSources.isEmpty()) {
+        if (nearbyMediumSources <= 0) {
             return new SampledContext(
                     new LivingSpongeTickContext(
                             true,
@@ -218,7 +220,7 @@ public final class LivingSpongeRuntime {
                             0,
                             distanceFromRoot
                     ),
-                    List.of()
+                    0
             );
         }
 
@@ -227,14 +229,14 @@ public final class LivingSpongeRuntime {
         return new SampledContext(
                 new LivingSpongeTickContext(
                         canStayActive,
-                        mediumSources.size(),
+                        nearbyMediumSources,
                         hasOpposingFluidContact,
                         hasFireContact,
                         reproductionTargets,
                         0,
                         distanceFromRoot
                 ),
-                mediumSources
+                nearbyMediumSources
         );
     }
 
@@ -248,8 +250,8 @@ public final class LivingSpongeRuntime {
                         List.of(),
                         0,
                         distanceFromRoot
-                ),
-                List.of()
+                    ),
+                    0
         );
     }
 
@@ -284,51 +286,51 @@ public final class LivingSpongeRuntime {
         return Math.max(0, state.reproductionCooldownTicks() - elapsedTicks);
     }
 
-    private static List<BlockPos> findNearbyMediumSources(
+    private int countNearbyMediumSources(
             final ServerLevel level,
             final BlockPos center,
             final ResolvedSpongeProfile profile,
             final int radius,
             final int cap
     ) {
-        final List<BlockPos> targets = new ArrayList<>(cap);
+        int count = 0;
         if (profile.isFlatSpread()) {
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
                     final BlockPos samplePos = center.offset(x, 0, z);
                     if (matchesFlatMediumSource(level, samplePos, profile)) {
-                        targets.add(samplePos.immutable());
-                        if (targets.size() >= cap) {
-                            return targets;
+                        count++;
+                        if (count >= cap) {
+                            return count;
                         }
                     }
                 }
             }
-            return targets;
+            return count;
         }
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     final BlockPos samplePos = center.offset(x, y, z);
-                    if (matchesMediumSource(level, samplePos, profile)) {
-                        targets.add(samplePos.immutable());
-                        if (targets.size() >= cap) {
-                            return targets;
+                    if (matchesMediumSourceCached(level, samplePos, profile, false)) {
+                        count++;
+                        if (count >= cap) {
+                            return count;
                         }
                     }
                 }
             }
         }
-        return targets;
+        return count;
     }
 
-    private static boolean matchesFlatMediumSource(
+    private boolean matchesFlatMediumSource(
             final ServerLevel level,
             final BlockPos pos,
             final ResolvedSpongeProfile profile
     ) {
-        return matchesMediumSource(level, pos, profile) && level.getBlockState(pos.above()).isAir();
+        return matchesMediumSourceCached(level, pos, profile, true);
     }
 
     private static boolean hasOpposingFluidContact(
@@ -586,7 +588,7 @@ public final class LivingSpongeRuntime {
         return blockedTargetsByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
     }
 
-    private static boolean matchesMediumSource(
+    private boolean matchesMediumSource(
             final ServerLevel level,
             final BlockPos pos,
             final ResolvedSpongeProfile profile
@@ -596,6 +598,31 @@ public final class LivingSpongeRuntime {
         }
 
         return isMediumBlock(level.getBlockState(pos), profile);
+    }
+
+    private boolean matchesMediumSourceCached(
+            final ServerLevel level,
+            final BlockPos pos,
+            final ResolvedSpongeProfile profile,
+            final boolean requireAirAbove
+    ) {
+        final MediumSampleCacheKey key = new MediumSampleCacheKey(
+                pos.immutable(),
+                profile.supportsWaterMedium(),
+                profile.supportsLavaMedium(),
+                requireAirAbove
+        );
+        final Map<MediumSampleCacheKey, Boolean> cache = mediumSourceMatches(level);
+        final Boolean cached = cache.get(key);
+        if (cached != null) {
+            return cached;
+        }
+
+        final boolean matches = requireAirAbove
+                ? matchesMediumSource(level, pos, profile) && level.getBlockState(pos.above()).isAir()
+                : matchesMediumSource(level, pos, profile);
+        cache.put(key, matches);
+        return matches;
     }
 
     private static boolean matchesMedium(
@@ -626,9 +653,28 @@ public final class LivingSpongeRuntime {
                 || (profile.supportsLavaMedium() && state.is(Blocks.LAVA));
     }
 
+    private void clearMediumSampleCache(final ServerLevel level) {
+        final Map<MediumSampleCacheKey, Boolean> cache = mediumSourceMatchesByLevel.get(level.dimension());
+        if (cache != null) {
+            cache.clear();
+        }
+    }
+
+    private Map<MediumSampleCacheKey, Boolean> mediumSourceMatches(final ServerLevel level) {
+        return mediumSourceMatchesByLevel.computeIfAbsent(level.dimension(), ignored -> new HashMap<>());
+    }
+
     private record PendingChild(BlockPos pos, LivingSpongeNodeState state) {
     }
 
-    private record SampledContext(LivingSpongeTickContext tickContext, List<BlockPos> mediumSourceTargets) {
+    private record SampledContext(LivingSpongeTickContext tickContext, int nearbyMediumSources) {
+    }
+
+    private record MediumSampleCacheKey(
+            BlockPos pos,
+            boolean supportsWater,
+            boolean supportsLava,
+            boolean requireAirAbove
+    ) {
     }
 }
