@@ -165,6 +165,41 @@ public final class LivingSpongeRuntime {
             final long gameTime
     ) {
         final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
+        final int distanceFromRoot = chebyshevDistance(pos, state.rootPos());
+        final boolean canStayActive = level.hasChunkAt(pos) && isManagedLivingSponge(level, pos);
+        if (!canStayActive) {
+            return emptyContext(false, distanceFromRoot);
+        }
+
+        final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
+        final boolean hasFireContact = hasFireContact(level, pos, profile);
+        if (hasOpposingFluidContact || hasFireContact) {
+            return new SampledContext(
+                    new LivingSpongeTickContext(
+                            true,
+                            0,
+                            hasOpposingFluidContact,
+                            hasFireContact,
+                            List.of(),
+                            0,
+                            distanceFromRoot
+                    ),
+                    List.of()
+            );
+        }
+
+        final LivingSpongeLifecycleStage projectedStage = projectedStage(state, profile, values);
+        final int radiusCap = profile.radiusCap(values);
+        if (!requiresReproductionSampling(
+                state,
+                profile.updateIntervalTicks(values),
+                projectedStage,
+                distanceFromRoot,
+                radiusCap
+        )) {
+            return emptyContext(true, distanceFromRoot);
+        }
+
         final List<BlockPos> mediumSources = findNearbyMediumSources(
                 level,
                 pos,
@@ -172,12 +207,22 @@ public final class LivingSpongeRuntime {
                 values.spread().mediumScanRadius(),
                 values.spread().maxMediumSamplesPerUpdate()
         );
-        final boolean hasOpposingFluidContact = hasOpposingFluidContact(level, pos, profile);
-        final boolean hasFireContact = hasFireContact(level, pos, profile);
-        final int radiusCap = profile.radiusCap(values);
+        if (mediumSources.isEmpty()) {
+            return new SampledContext(
+                    new LivingSpongeTickContext(
+                            true,
+                            0,
+                            false,
+                            false,
+                            List.of(),
+                            0,
+                            distanceFromRoot
+                    ),
+                    List.of()
+            );
+        }
+
         final List<BlockPos> reproductionTargets = findReproductionTargets(level, pos, state.rootPos(), profile, radiusCap, gameTime);
-        final int distanceFromRoot = chebyshevDistance(pos, state.rootPos());
-        final boolean canStayActive = level.hasChunkAt(pos) && isManagedLivingSponge(level, pos);
 
         return new SampledContext(
                 new LivingSpongeTickContext(
@@ -191,6 +236,52 @@ public final class LivingSpongeRuntime {
                 ),
                 mediumSources
         );
+    }
+
+    private static SampledContext emptyContext(final boolean canStayActive, final int distanceFromRoot) {
+        return new SampledContext(
+                new LivingSpongeTickContext(
+                        canStayActive,
+                        0,
+                        false,
+                        false,
+                        List.of(),
+                        0,
+                        distanceFromRoot
+                ),
+                List.of()
+        );
+    }
+
+    private static LivingSpongeLifecycleStage projectedStage(
+            final LivingSpongeNodeState state,
+            final ResolvedSpongeProfile profile,
+            final LivingSpongeConfig.BalanceValues values
+    ) {
+        return LivingSpongeLifecycleStage.fromAgeTicks(
+                state.ageTicks() + profile.updateIntervalTicks(values),
+                profile.lifecycle(values)
+        );
+    }
+
+    private static boolean requiresReproductionSampling(
+            final LivingSpongeNodeState state,
+            final int elapsedTicks,
+            final LivingSpongeLifecycleStage projectedStage,
+            final int distanceFromRoot,
+            final int radiusCap
+    ) {
+        if (projectedStage == LivingSpongeLifecycleStage.OLD || projectedStage == LivingSpongeLifecycleStage.DEAD) {
+            return false;
+        }
+        if (projectedReproductionCooldown(state, elapsedTicks) > 0) {
+            return false;
+        }
+        return distanceFromRoot <= radiusCap;
+    }
+
+    private static int projectedReproductionCooldown(final LivingSpongeNodeState state, final int elapsedTicks) {
+        return Math.max(0, state.reproductionCooldownTicks() - elapsedTicks);
     }
 
     private static List<BlockPos> findNearbyMediumSources(
