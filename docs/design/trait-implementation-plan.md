@@ -143,6 +143,7 @@ Still left to polish:
 - in-world visual differentiation beyond lifecycle phases
 - creative-tab and JEI readability tuning as recipe count grows
 - focused stress/performance testing for `Vast` colonies
+- behavior-preserving runtime optimization per `docs/design/performance-optimization-plan.md`
 - gameplay balancing and wording refinement after wider in-game testing
 - creative sponge redesign per `docs/design/creative-sponge-plan.md`
 
