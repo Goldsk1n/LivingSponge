@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.block.state.BlockState;
@@ -96,6 +97,11 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
     @Override
     public boolean propagatesSkylightDown(final BlockState state, final BlockGetter reader, final BlockPos pos) {
         return true;
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(final BlockState state) {
+        return PushReaction.BLOCK;
     }
 
     private ItemStack defaultPlacementStack() {
