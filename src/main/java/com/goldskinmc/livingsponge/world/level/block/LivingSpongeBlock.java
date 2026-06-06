@@ -99,7 +99,10 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
     }
 
     private ItemStack defaultPlacementStack() {
-        return LivingSpongeItems.placementStackFor(SpongeTraits.DEFAULT, creativeOverrides)
+        final SpongeTraits fallbackTraits = creativeOverrides
+                ? LivingSpongeItems.CREATIVE_BASELINE_TRAITS
+                : SpongeTraits.DEFAULT;
+        return LivingSpongeItems.placementStackFor(fallbackTraits, creativeOverrides)
                 .orElseGet(() -> ItemStack.EMPTY)
                 .copy();
     }

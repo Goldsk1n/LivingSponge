@@ -7,16 +7,16 @@ public record ResolvedSpongeProfile(
         boolean creativeOverrides
 ) {
     public int updateIntervalTicks(final LivingSpongeConfig.BalanceValues values) {
-        return creativeOverrides ? values.creative().updateIntervalTicks() : values.spread().updateIntervalTicks();
+        return creativeOverrides ? quarterTicks(values.spread().updateIntervalTicks()) : values.spread().updateIntervalTicks();
     }
 
     public int reproductionCooldownTicks(final LivingSpongeConfig.BalanceValues values) {
         final int baseCooldown = values.spread().reproductionCooldownTicks();
-        return creativeOverrides ? halveTicks(baseCooldown) : baseCooldown;
+        return creativeOverrides ? quarterTicks(baseCooldown) : baseCooldown;
     }
 
     public int radiusCap(final LivingSpongeConfig.BalanceValues values) {
-        return traits.radius().radiusCap();
+        return creativeOverrides ? RadiusTrait.VAST.radiusCap() : traits.radius().radiusCap();
     }
 
     public LivingSpongeConfig.Lifecycle lifecycle(final LivingSpongeConfig.BalanceValues values) {
@@ -26,14 +26,22 @@ public record ResolvedSpongeProfile(
         }
 
         return new LivingSpongeConfig.Lifecycle(
-                halveTicks(lifecycle.youngDurationTicks()),
-                halveTicks(lifecycle.matureDurationTicks()),
-                halveTicks(lifecycle.oldDurationTicks())
+                quarterTicks(lifecycle.youngDurationTicks()),
+                quarterTicks(lifecycle.matureDurationTicks()),
+                quarterTicks(lifecycle.oldDurationTicks())
         );
     }
 
     public boolean usesWaterMedium() {
         return traits.medium() == MediumTrait.WATER;
+    }
+
+    public boolean supportsWaterMedium() {
+        return creativeOverrides || traits.medium() == MediumTrait.WATER;
+    }
+
+    public boolean supportsLavaMedium() {
+        return creativeOverrides || traits.medium() == MediumTrait.MAGMA;
     }
 
     public boolean isFlatSpread() {
@@ -52,7 +60,11 @@ public record ResolvedSpongeProfile(
         return traits.output() == OutputTrait.SOLIDIFYING;
     }
 
-    private static int halveTicks(final int ticks) {
-        return Math.max(1, ticks / 2);
+    public boolean ignoresEnvironmentDeath() {
+        return creativeOverrides;
+    }
+
+    private static int quarterTicks(final int ticks) {
+        return Math.max(1, ticks / 4);
     }
 }

@@ -164,14 +164,22 @@ Verify:
 - old sponges do not reproduce
 - death output matches output trait
 
-### 10. Creative Variant
+### 10. Creative Variants
 
-Test `Creative Living Sponge`.
+Test the exposed creative set:
+
+- `Creative Living Sponge` with `Neutral + Volume`
+- `Creative Living Sponge` with `Neutral + Flat`
+- `Creative Living Sponge` with `Solidifying + Volume`
+- `Creative Living Sponge` with `Solidifying + Flat`
 
 Verify:
 
 - it uses the same trait tooltip model
-- it runs faster than survival timing
+- it runs `4x` faster than survival timing
+- it works in both water and lava
+- it ignores lava, water, and fire death
+- it still ages and dies normally
 - it behaves consistently through phase progression and spread
 
 ## Recommended Gameplay Matrix

@@ -23,11 +23,4 @@ public final class LivingSpongeBalanceDefaults {
         private Lifecycle() {
         }
     }
-
-    public static final class Creative {
-        public static final int UPDATE_INTERVAL_TICKS = 10;
-
-        private Creative() {
-        }
-    }
 }

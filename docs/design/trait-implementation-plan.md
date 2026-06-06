@@ -43,7 +43,7 @@ The current implementation has these important properties:
   - creative override flag
   - age
   - reproduction cooldown
-- Config has already been reduced to the currently used lifecycle, spread sampling, death-cell cooldown, and creative timing settings.
+- Config has already been reduced to the currently used lifecycle, spread sampling, and death-cell cooldown settings.
 
 ## Design Assumptions For Implementation
 

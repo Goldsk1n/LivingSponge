@@ -20,8 +20,6 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
 
-    private static final ForgeConfigSpec.IntValue CREATIVE_UPDATE_INTERVAL_TICKS;
-
     public static final ForgeConfigSpec SPEC;
 
     private static volatile BalanceValues values = defaults();
@@ -49,11 +47,6 @@ public final class LivingSpongeConfig {
                 .defineInRange("mature_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS, 1, Integer.MAX_VALUE);
         LIFECYCLE_OLD_DURATION_TICKS = BUILDER.comment("Old stage duration in ticks before death.")
                 .defineInRange("old_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS, 1, Integer.MAX_VALUE);
-        BUILDER.pop();
-
-        BUILDER.push("creative");
-        CREATIVE_UPDATE_INTERVAL_TICKS = BUILDER.comment("Update interval for creative living sponge variants.")
-                .defineInRange("update_interval_ticks", LivingSpongeBalanceDefaults.Creative.UPDATE_INTERVAL_TICKS, 1, 1200);
         BUILDER.pop();
 
         SPEC = BUILDER.build();
@@ -93,9 +86,6 @@ public final class LivingSpongeConfig {
                         LIFECYCLE_YOUNG_DURATION_TICKS.get(),
                         LIFECYCLE_MATURE_DURATION_TICKS.get(),
                         LIFECYCLE_OLD_DURATION_TICKS.get()
-                ),
-                new Creative(
-                        CREATIVE_UPDATE_INTERVAL_TICKS.get()
                 )
         );
     }
@@ -113,17 +103,13 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Lifecycle.YOUNG_DURATION_TICKS,
                         LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS,
                         LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS
-                ),
-                new Creative(
-                        LivingSpongeBalanceDefaults.Creative.UPDATE_INTERVAL_TICKS
                 )
         );
     }
 
     public record BalanceValues(
             Spread spread,
-            Lifecycle lifecycle,
-            Creative creative
+            Lifecycle lifecycle
     ) {
     }
 
@@ -143,8 +129,4 @@ public final class LivingSpongeConfig {
     ) {
     }
 
-    public record Creative(
-            int updateIntervalTicks
-    ) {
-    }
 }

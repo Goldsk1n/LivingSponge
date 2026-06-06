@@ -65,6 +65,11 @@ public final class LivingSpongeItems {
     public static final SpongeTraits EXPANDED_MAGMA_FLAT_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.EXPANDED);
     public static final SpongeTraits VAST_MAGMA_FLAT_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.MAGMA, SpreadTrait.FLAT, RadiusTrait.VAST);
 
+    public static final SpongeTraits CREATIVE_BASELINE_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits CREATIVE_FLAT_TRAITS = neutralTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.VAST);
+    public static final SpongeTraits CREATIVE_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.VOLUME, RadiusTrait.VAST);
+    public static final SpongeTraits CREATIVE_FLAT_SOLIDIFYING_TRAITS = solidifyingTraits(MediumTrait.WATER, SpreadTrait.FLAT, RadiusTrait.VAST);
+
     public static final RegistryObject<Item> LIVING_SPONGE =
             registerPlacementItem("living_sponge", BASELINE_TRAITS, false);
     public static final RegistryObject<Item> EXPANDED_LIVING_SPONGE =
@@ -145,7 +150,13 @@ public final class LivingSpongeItems {
             registerPlacementItem("vast_magma_flat_solidifying_living_sponge", VAST_MAGMA_FLAT_SOLIDIFYING_TRAITS, false);
 
     public static final RegistryObject<Item> CREATIVE_LIVING_SPONGE =
-            registerPlacementItem("creative_living_sponge", BASELINE_TRAITS, true);
+            registerPlacementItem("creative_living_sponge", CREATIVE_BASELINE_TRAITS, true);
+    public static final RegistryObject<Item> CREATIVE_FLAT_LIVING_SPONGE =
+            registerPlacementItem("creative_flat_living_sponge", CREATIVE_FLAT_TRAITS, true);
+    public static final RegistryObject<Item> CREATIVE_SOLIDIFYING_LIVING_SPONGE =
+            registerPlacementItem("creative_solidifying_living_sponge", CREATIVE_SOLIDIFYING_TRAITS, true);
+    public static final RegistryObject<Item> CREATIVE_FLAT_SOLIDIFYING_LIVING_SPONGE =
+            registerPlacementItem("creative_flat_solidifying_living_sponge", CREATIVE_FLAT_SOLIDIFYING_TRAITS, true);
 
     private LivingSpongeItems() {
     }

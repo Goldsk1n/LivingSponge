@@ -48,12 +48,12 @@ public final class LivingSpongePlacementItem extends BlockItem {
     ) {
         super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
 
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.medium", mediumLabel(traits.medium())));
+        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.medium", mediumLabel(traits.medium(), creativeOverrides)));
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.spread", spreadLabel(traits.spread())));
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.output", outputLabel(traits.output())));
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.radius", radiusLabel(traits.radius())));
+        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.radius", radiusLabel(creativeOverrides ? RadiusTrait.VAST : traits.radius())));
         tooltipComponents.add(Component.empty());
-        tooltipComponents.add(descriptionLine(mediumSummaryKey(traits.medium())));
+        tooltipComponents.add(descriptionLine(mediumSummaryKey(traits.medium(), creativeOverrides)));
         tooltipComponents.add(descriptionLine(spreadSummaryKey(traits.spread())));
         tooltipComponents.add(descriptionLine(outputSummaryKey(traits)));
 
@@ -70,7 +70,10 @@ public final class LivingSpongePlacementItem extends BlockItem {
         return Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY);
     }
 
-    private static Component mediumLabel(final MediumTrait medium) {
+    private static Component mediumLabel(final MediumTrait medium, final boolean creativeOverrides) {
+        if (creativeOverrides) {
+            return Component.translatable("tooltip.livingsponge.medium.creative").withStyle(ChatFormatting.AQUA);
+        }
         return Component.translatable("tooltip.livingsponge.medium." + key(medium)).withStyle(ChatFormatting.AQUA);
     }
 
@@ -89,7 +92,10 @@ public final class LivingSpongePlacementItem extends BlockItem {
         ).withStyle(ChatFormatting.AQUA);
     }
 
-    private static String mediumSummaryKey(final MediumTrait medium) {
+    private static String mediumSummaryKey(final MediumTrait medium, final boolean creativeOverrides) {
+        if (creativeOverrides) {
+            return "tooltip.livingsponge.summary.medium.creative";
+        }
         return switch (medium) {
             case WATER -> "tooltip.livingsponge.summary.medium.water";
             case MAGMA -> "tooltip.livingsponge.summary.medium.magma";
