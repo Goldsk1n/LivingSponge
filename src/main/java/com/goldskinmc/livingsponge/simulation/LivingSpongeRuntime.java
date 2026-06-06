@@ -292,6 +292,21 @@ public final class LivingSpongeRuntime {
             final int cap
     ) {
         final List<BlockPos> targets = new ArrayList<>(cap);
+        if (profile.isFlatSpread()) {
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    final BlockPos samplePos = center.offset(x, 0, z);
+                    if (matchesFlatMediumSource(level, samplePos, profile)) {
+                        targets.add(samplePos.immutable());
+                        if (targets.size() >= cap) {
+                            return targets;
+                        }
+                    }
+                }
+            }
+            return targets;
+        }
+
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -306,6 +321,14 @@ public final class LivingSpongeRuntime {
             }
         }
         return targets;
+    }
+
+    private static boolean matchesFlatMediumSource(
+            final ServerLevel level,
+            final BlockPos pos,
+            final ResolvedSpongeProfile profile
+    ) {
+        return matchesMediumSource(level, pos, profile) && level.getBlockState(pos.above()).isAir();
     }
 
     private static boolean hasOpposingFluidContact(
