@@ -57,7 +57,7 @@ These assumptions describe the current supported system:
 - Radius caps are fixed:
   - `Standard = 8`
   - `Expanded = 16`
-  - `Vast = 512`
+  - `Vast = 256`
 - `Water` dies on lava contact.
 - `Magma` dies on water contact.
 - `Wall-Forming` frontier deaths produce `sponge_remains`.

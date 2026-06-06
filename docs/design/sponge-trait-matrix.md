@@ -35,7 +35,7 @@ Examples:
 
 - `Standard` = `8`
 - `Expanded` = `16`
-- `Vast` = `512`
+- `Vast` = `256`
 
 `Vast` is treated as practically unbounded, but it is still capped in code.
 

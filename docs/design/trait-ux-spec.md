@@ -87,7 +87,7 @@ Recommended radius text:
 
 - `Standard (8)`
 - `Expanded (16)`
-- `Vast (512)`
+- `Vast (256)`
 
 ## Tooltip Priorities
 
@@ -278,7 +278,7 @@ Tooltip:
 Growth Medium: Lava
 Spread: Flat
 Output: Solidifying
-Radius: Vast (512)
+Radius: Vast (256)
 
 Grows in lava. Dies on water contact.
 All old-age deaths leave remains.

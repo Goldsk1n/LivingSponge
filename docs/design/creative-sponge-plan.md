@@ -108,7 +108,7 @@ Creative sponges should always behave as `Vast`.
 Implementation meaning:
 
 - ignore the stored radius trait when `creativeOverrides == true`
-- return the `Vast` cap (`512`) from the resolved profile
+- return the `Vast` cap (`256`) from the resolved profile
 
 ## Item And Registry Plan
 
@@ -146,7 +146,7 @@ Do not add:
 
 Update `ResolvedSpongeProfile` so creative overrides:
 
-- force `radiusCap()` to `512`
+- force `radiusCap()` to `256`
 - quarter timing values instead of using the current `2x` behavior
 - expose a `usesBothMedia()` or equivalent helper
 
