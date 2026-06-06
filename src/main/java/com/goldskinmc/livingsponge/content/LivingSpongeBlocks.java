@@ -2,7 +2,6 @@ package com.goldskinmc.livingsponge.content;
 
 import com.goldskinmc.livingsponge.LivingSpongeMod;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
-import com.goldskinmc.livingsponge.world.level.block.HydroBlock;
 import com.goldskinmc.livingsponge.world.level.block.LivingSpongeBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -72,14 +71,6 @@ public final class LivingSpongeBlocks {
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
                     .noOcclusion())
-    );
-
-    public static final RegistryObject<Block> HYDRO_BLOCK = registerWithItem(
-            "hydro_block",
-            () -> new HydroBlock(BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
-                    .strength(0.4F)
-                    .sound(SoundType.WOOL))
     );
 
     public static final RegistryObject<Block> SPONGE_REMAINS = registerWithItem(

@@ -33,7 +33,6 @@ The current implementation has these important properties:
 - Radius is trait-driven, not globally configured per world.
 - Death output is trait-driven:
   - `Neutral` -> `air`
-  - `Podding` -> chance-based medium-matched pod on old-age death
   - `Wall-Forming` -> frontier old-age deaths leave `sponge_remains`
   - `Solidifying` -> all old-age deaths leave `sponge_remains`
 - Block entity state currently stores:
@@ -44,7 +43,7 @@ The current implementation has these important properties:
   - creative override flag
   - age
   - reproduction cooldown
-- Config has already been reduced to the currently used lifecycle, spread sampling, pod death chance, and creative timing settings.
+- Config has already been reduced to the currently used lifecycle, spread sampling, death-cell cooldown, and creative timing settings.
 
 ## Design Assumptions For Implementation
 
@@ -53,16 +52,12 @@ These assumptions describe the current supported system:
 - Trait slots are fixed:
   - `Medium = Water | Magma`
   - `Spread = Volume | Flat`
-  - `Output = Neutral | Podding | Wall-Forming | Solidifying`
+  - `Output = Neutral | Wall-Forming | Solidifying`
   - `Radius = Standard | Expanded | Vast`
 - Radius caps are fixed:
   - `Standard = 8`
   - `Expanded = 16`
   - `Vast = 512`
-- `Wall-Forming` and `Podding` are incompatible.
-- `Solidifying` and `Podding` are incompatible.
-- `Flat + Podding` is valid and leaves pods in place on old-age death.
-- `Volume + Podding` leaves pods in place on old-age death.
 - `Water` dies on lava contact.
 - `Magma` dies on water contact.
 - `Wall-Forming` frontier deaths produce `sponge_remains`.
@@ -96,7 +91,6 @@ Recommended responsibilities:
   - reproduction target rule
   - radius cap
   - death output mode
-  - pod output mode
   - whether water should be removed or preserved
 
 ### Node State Changes
@@ -182,9 +176,8 @@ At minimum test:
 - freshly placed `Water + Volume + Neutral + Standard`
 - freshly placed `Water + Volume + Wall-Forming + Standard`
 - `Water + Flat + Wall-Forming + Standard`
-- `Water + Flat + Podding + Standard`
-- `Magma + Volume + Podding + Standard`
-- `Magma + Flat + Podding + Standard`
+- `Water + Volume + Solidifying + Standard`
+- `Magma + Volume + Neutral + Standard`
 - `Magma + Flat + Solidifying + Standard`
 - `Magma + Flat + Solidifying + Expanded`
 - one `Vast` profile to confirm cap and performance behavior
@@ -196,7 +189,6 @@ At minimum test:
 - incorrect frontier detection under `Flat`
 - incorrect medium kill behavior
 - invalid reproduction into air for volume colonies
-- incorrect pod output mode for `Flat + Podding` vs `Volume + Podding`
 - runaway spread in `Vast` colonies causing heavy tick cost
 
 ## Risks

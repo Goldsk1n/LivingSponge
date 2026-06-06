@@ -66,7 +66,6 @@ public final class LivingSpongeMod {
             event.accept(LivingSpongeItems.MAGMA_FLAT_SOLIDIFYING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.EXPANDED_MAGMA_FLAT_SOLIDIFYING_LIVING_SPONGE.get());
             event.accept(LivingSpongeItems.VAST_MAGMA_FLAT_SOLIDIFYING_LIVING_SPONGE.get());
-            event.accept(LivingSpongeBlocks.HYDRO_BLOCK.get());
             event.accept(LivingSpongeBlocks.SPONGE_REMAINS.get());
             event.accept(LivingSpongeItems.CREATIVE_LIVING_SPONGE.get());
         }

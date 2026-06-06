@@ -53,10 +53,10 @@ Recommended tooltip layout:
 ```text
 Growth Medium: Water
 Spread: Flat
-Output: Podding
+Output: Wall-Forming
 Radius: Expanded (16)
 
-Can leave liquid pods on old-age death.
+Only border-shell old-age deaths leave remains.
 ```
 
 Formatting rules:
@@ -78,8 +78,6 @@ Recommended behavior summary text by trait:
   - `Spreads only across exposed flat fluid layers.`
 - `Neutral`
   - `Leaves no special byproduct on old age death.`
-- `Podding`
-  - `Can leave liquid pods on old-age death.`
 - `Wall-Forming`
   - `Only frontier old-age deaths leave remains.`
 - `Solidifying`
@@ -117,57 +115,49 @@ Recommended order:
    - `Living Sponge`
    - `Living Sponge`
 3. Wall-forming variants
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-4. Podding variants
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-5. Solidifying variants
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+4. Solidifying variants
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
     - `Living Sponge`
     - `Living Sponge`
     - `Living Sponge`
-6. Magma neutral variants
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-7. Magma wall-forming variants
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
-9. Magma solidifying variants
-   - `Living Sponge`
-   - `Living Sponge`
-   - `Living Sponge`
+5. Magma neutral variants
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+6. Magma wall-forming variants
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
+7. Magma solidifying variants
+  - `Living Sponge`
+  - `Living Sponge`
+  - `Living Sponge`
     - `Living Sponge`
     - `Living Sponge`
     - `Living Sponge`
-10. Support items and blocks
-   - `Hydro Block`
+8. Support items and blocks
    - `Sponge Remains`
-11. Creative-only utility
+9. Creative-only utility
    - `Creative Living Sponge`
 
 This order matches how a player is likely to evaluate the items.
@@ -185,6 +175,7 @@ Keep direct crafting recipes, but make the trait meaning legible through tooltip
 Ingredient mapping should remain simple and mnemonic:
 
 - `Lily Pad` -> `Flat`
+- `Cobblestone Wall` -> `Wall-Forming`
 - `Calcite` -> `Solidifying`
 - `Magma Cream` -> `Magma`
 - `Prismarine Crystals` -> `Expanded`
@@ -203,7 +194,7 @@ Move toward a trait-component model:
 Example conceptual items:
 
 - `Flat Membrane`
-- `Podding Core`
+- `Wall-Forming Core`
 - `Solidifying Core`
 - `Magma Core`
 - `Expanded Radius Core`
@@ -240,7 +231,7 @@ Still recommended:
 
 ## Examples
 
-### Water Flat Podding Expanded
+### Water Flat Wall-Forming Expanded
 
 Display name:
 
@@ -251,10 +242,10 @@ Tooltip:
 ```text
 Growth Medium: Water
 Spread: Flat
-Output: Podding
+Output: Wall-Forming
 Radius: Expanded (16)
 
-Can leave liquid pods on old-age death.
+Only frontier old-age deaths leave remains.
 ```
 
 ### Water Volume Neutral Standard

@@ -6,7 +6,7 @@ It assumes the current exposed system includes:
 
 - `Water` and `Magma`
 - `Volume` and `Flat`
-- `Neutral`, `Podding`, `Wall-Forming`, and `Solidifying`
+- `Neutral`, `Wall-Forming`, and `Solidifying`
 - `Standard`, `Expanded`, and `Vast`
 
 ## Test Setup
@@ -81,7 +81,6 @@ Verify:
 
 - colony spreads
 - colony dies by age
-- no pods are produced
 - no remains are left on old-age death
 
 ### 4. Wall-Forming Behavior
@@ -114,26 +113,7 @@ Verify:
 - `Flat + Solidifying` produces filled crust/platform outcomes
 - magma flat solidifying remains usable as a lava platform tool
 
-### 6. Podding Behavior
-
-Test:
-
-- `Water + Volume + Podding + Standard`
-- `Water + Flat + Podding + Standard`
-- `Magma + Volume + Podding + Standard`
-- `Magma + Flat + Podding + Standard`
-
-Verify:
-
-- no live pods appear while the colony is alive
-- old-age deaths can leave pods
-- `Flat + Podding` leaves pods in place on death
-- `Volume + Podding` leaves pods in place on death
-- right-click picks pods up safely
-- breaking pods releases their stored fluid
-- connected pods burst in a domino effect, including diagonals
-
-### 7. Medium Rules
+### 6. Medium Rules
 
 Verify cross-medium kill behavior:
 
@@ -142,7 +122,7 @@ Verify cross-medium kill behavior:
 - magma sponge in lava survives
 - water sponge in water survives
 
-### 8. Radius Caps
+### 7. Radius Caps
 
 Test `Standard`, `Expanded`, and `Vast` for both `Volume` and `Flat`.
 
@@ -153,7 +133,7 @@ Verify:
 - `Expanded` flat platforms stabilize at the expected footprint
 - `Vast` remains bounded by the configured practical cap
 
-### 9. Persistence
+### 8. Persistence
 
 For several trait combinations:
 
@@ -169,7 +149,7 @@ Verify:
 - drops preserve traits when broken
 - no current-format colonies become inert after reload
 
-### 10. Lifecycle Progression
+### 9. Lifecycle Progression
 
 Watch at least one colony from:
 
@@ -184,7 +164,7 @@ Verify:
 - old sponges do not reproduce
 - death output matches output trait
 
-### 11. Creative Variant
+### 10. Creative Variant
 
 Test `Creative Living Sponge`.
 
@@ -200,9 +180,8 @@ At minimum, explicitly test these profiles:
 
 - `Water + Volume + Neutral + Standard`
 - `Water + Flat + Wall-Forming + Standard`
-- `Water + Flat + Podding + Standard`
-- `Magma + Volume + Podding + Standard`
-- `Magma + Flat + Podding + Standard`
+- `Water + Volume + Solidifying + Standard`
+- `Magma + Volume + Neutral + Standard`
 - `Magma + Flat + Solidifying + Standard`
 - `Magma + Flat + Solidifying + Expanded`
 - one `Vast` profile for stress/performance
@@ -218,7 +197,6 @@ Ignore `Expanded` and `Vast` initially.
 Judge:
 
 - spread feel
-- pod frequency
 - remains frequency
 - colony lifetime usefulness
 
@@ -243,26 +221,20 @@ If colonies are too explosive or too inert, adjust:
 - `spread.update_interval_ticks`
 - `spread.reproduction_cooldown_ticks`
 
-### 4. Tune Podding Rate
-
-If pods feel too rare or too noisy, adjust:
-
-- `pod.death_spawn_chance`
-
-### 5. Tune Scan Pressure
+### 4. Tune Scan Pressure
 
 If behavior feels weak or expensive, adjust:
 
 - `spread.medium_scan_radius`
 - `spread.max_medium_samples_per_update`
 
-### 6. Move to Expanded
+### 5. Move to Expanded
 
 Once `Standard` feels right, test `Expanded`.
 
 Prefer tuning timing and scan pressure before adding special-case behavior.
 
-### 7. Test Vast Last
+### 6. Test Vast Last
 
 Use one colony first.
 
@@ -271,7 +243,6 @@ Watch for:
 - heavy spreading cost
 - chunk boundary oddities
 - visual clutter
-- pod clutter
 
 If `Vast` is too heavy, first reduce:
 
