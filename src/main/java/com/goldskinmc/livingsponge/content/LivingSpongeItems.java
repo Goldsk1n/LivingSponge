@@ -179,7 +179,7 @@ public final class LivingSpongeItems {
         final RegistryObject<Item> item = ITEMS.register(
                 name,
                 () -> new LivingSpongePlacementItem(
-                        creativeOverrides ? LivingSpongeBlocks.CREATIVE_LIVING_SPONGE.get() : LivingSpongeBlocks.LIVING_SPONGE.get(),
+                        creativeOverrides ? LivingSpongeBlocks.CREATIVE_MATURE_LIVING_SPONGE.get() : LivingSpongeBlocks.MATURE_LIVING_SPONGE.get(),
                         new Item.Properties(),
                         traits,
                         creativeOverrides
