@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "livingsponge:block/creative_living_sponge_old"
+  }
+}

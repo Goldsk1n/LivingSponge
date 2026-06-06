@@ -2,12 +2,17 @@ package com.goldskinmc.livingsponge.content;
 
 import com.goldskinmc.livingsponge.LivingSpongeMod;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
+import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import com.goldskinmc.livingsponge.world.level.block.LivingSpongeBlock;
+import com.goldskinmc.livingsponge.world.level.block.LivingSpongeVisualProfile;
+import com.goldskinmc.livingsponge.world.level.block.SpongeRemainsBlock;
+import com.goldskinmc.livingsponge.world.level.block.SpongeRemainsStyle;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -75,7 +80,7 @@ public final class LivingSpongeBlocks {
 
     public static final RegistryObject<Block> SPONGE_REMAINS = registerWithItem(
             "sponge_remains",
-            () -> new Block(BlockBehaviour.Properties.of()
+            () -> new SpongeRemainsBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .strength(0.4F)
                     .sound(SoundType.WOOL))
@@ -104,6 +109,22 @@ public final class LivingSpongeBlocks {
             case OLD -> creativeOverrides ? CREATIVE_OLD_LIVING_SPONGE.get() : OLD_LIVING_SPONGE.get();
             case DEAD -> throw new IllegalArgumentException("Dead sponges do not have a block state");
         };
+    }
+
+    public static BlockState spongeStateFor(
+            final LivingSpongeLifecycleStage stage,
+            final SpongeTraits traits,
+            final boolean creativeOverrides
+    ) {
+        return spongeBlockFor(stage, creativeOverrides)
+                .defaultBlockState()
+                .setValue(LivingSpongeBlock.VISUAL_PROFILE, LivingSpongeVisualProfile.from(traits, creativeOverrides));
+    }
+
+    public static BlockState spongeRemainsState(final boolean wallFormingStyle) {
+        return SPONGE_REMAINS.get()
+                .defaultBlockState()
+                .setValue(SpongeRemainsBlock.STYLE, wallFormingStyle ? SpongeRemainsStyle.WALL_FORMING : SpongeRemainsStyle.DEFAULT);
     }
 
     private static RegistryObject<Block> register(final String name, final Supplier<? extends Block> blockSupplier) {

@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "livingsponge:block/sponge_remains"
+    "style=default": {
+      "model": "livingsponge:block/sponge_remains_default"
+    },
+    "style=wall_forming": {
+      "model": "livingsponge:block/sponge_remains_wall_forming"
     }
   }
 }

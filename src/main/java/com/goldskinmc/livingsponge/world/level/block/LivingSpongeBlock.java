@@ -15,20 +15,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBlock {
+    public static final EnumProperty<LivingSpongeVisualProfile> VISUAL_PROFILE =
+            EnumProperty.create("visual_profile", LivingSpongeVisualProfile.class);
+
     private final boolean creativeOverrides;
 
     public LivingSpongeBlock(final boolean creativeOverrides, final Properties properties) {
         super(properties);
         this.creativeOverrides = creativeOverrides;
+        final LivingSpongeVisualProfile defaultProfile = creativeOverrides
+                ? LivingSpongeVisualProfile.CREATIVE_NEUTRAL
+                : LivingSpongeVisualProfile.WATER_NEUTRAL;
+        registerDefaultState(defaultBlockState().setValue(VISUAL_PROFILE, defaultProfile));
     }
 
     public boolean creativeOverrides() {
@@ -61,6 +70,10 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
             final boolean overrides = stack.getItem() instanceof LivingSpongePlacementItem placementItem
                     ? placementItem.creativeOverrides()
                     : creativeOverrides;
+            final LivingSpongeVisualProfile visualProfile = LivingSpongeVisualProfile.from(traits, overrides);
+            if (state.hasProperty(VISUAL_PROFILE) && state.getValue(VISUAL_PROFILE) != visualProfile) {
+                level.setBlock(pos, state.setValue(VISUAL_PROFILE, visualProfile), Block.UPDATE_ALL);
+            }
             livingSpongeBlockEntity.initializeRoot(traits, overrides);
         }
     }
@@ -102,6 +115,12 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
     @Override
     public PushReaction getPistonPushReaction(final BlockState state) {
         return PushReaction.BLOCK;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(VISUAL_PROFILE);
     }
 
     private ItemStack defaultPlacementStack() {

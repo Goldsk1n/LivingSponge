@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "livingsponge:block/living_sponge_mature_magma_wall_forming"
+  }
+}

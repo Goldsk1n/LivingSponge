@@ -1,7 +1,28 @@
 {
   "variants": {
-    "": {
-      "model": "livingsponge:block/living_sponge_mature"
+    "visual_profile=water_neutral": {
+      "model": "livingsponge:block/living_sponge_mature_water_neutral"
+    },
+    "visual_profile=water_wall_forming": {
+      "model": "livingsponge:block/living_sponge_mature_water_wall_forming"
+    },
+    "visual_profile=water_solidifying": {
+      "model": "livingsponge:block/living_sponge_mature_water_solidifying"
+    },
+    "visual_profile=magma_neutral": {
+      "model": "livingsponge:block/living_sponge_mature_magma_neutral"
+    },
+    "visual_profile=magma_wall_forming": {
+      "model": "livingsponge:block/living_sponge_mature_magma_wall_forming"
+    },
+    "visual_profile=magma_solidifying": {
+      "model": "livingsponge:block/living_sponge_mature_magma_solidifying"
+    },
+    "visual_profile=creative_neutral": {
+      "model": "livingsponge:block/living_sponge_mature_creative_neutral"
+    },
+    "visual_profile=creative_solidifying": {
+      "model": "livingsponge:block/living_sponge_mature_creative_solidifying"
     }
   }
 }

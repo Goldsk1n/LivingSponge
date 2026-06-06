@@ -358,11 +358,15 @@ public final class LivingSpongeRuntime {
             return false;
         }
 
-        final Block block = LivingSpongeBlocks.spongeBlockFor(
-                state.stage(LivingSpongeConfig.values()),
-                state.creativeOverrides()
-        );
-        if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
+        if (!level.setBlock(
+                pos,
+                LivingSpongeBlocks.spongeStateFor(
+                        state.stage(LivingSpongeConfig.values()),
+                        state.traits(),
+                        state.creativeOverrides()
+                ),
+                Block.UPDATE_ALL
+        )) {
             return false;
         }
 
@@ -405,7 +409,7 @@ public final class LivingSpongeRuntime {
         }
 
         if (profile.isSolidifyingOutput()) {
-            level.setBlock(pos, LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState(), Block.UPDATE_ALL);
+            level.setBlock(pos, LivingSpongeBlocks.spongeRemainsState(false), Block.UPDATE_ALL);
             return;
         }
 
@@ -413,7 +417,7 @@ public final class LivingSpongeRuntime {
             level.setBlock(
                     pos,
                     isBorderShellDeath(pos, state, profile)
-                            ? LivingSpongeBlocks.SPONGE_REMAINS.get().defaultBlockState()
+                            ? LivingSpongeBlocks.spongeRemainsState(true)
                             : Blocks.AIR.defaultBlockState(),
                     Block.UPDATE_ALL
             );
@@ -446,11 +450,12 @@ public final class LivingSpongeRuntime {
 
         final BlockState currentState = level.getBlockState(pos);
         final Block targetBlock = LivingSpongeBlocks.spongeBlockFor(stage, profile.creativeOverrides());
-        if (currentState.is(targetBlock)) {
+        final BlockState targetState = LivingSpongeBlocks.spongeStateFor(stage, state.traits(), profile.creativeOverrides());
+        if (currentState.equals(targetState)) {
             return;
         }
 
-        if (level.setBlock(pos, targetBlock.defaultBlockState(), Block.UPDATE_ALL)) {
+        if (level.setBlock(pos, targetState, Block.UPDATE_ALL)) {
             final BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
                 livingSpongeBlockEntity.initializeFromState(state);
