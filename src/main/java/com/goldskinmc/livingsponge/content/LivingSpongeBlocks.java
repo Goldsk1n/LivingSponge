@@ -83,7 +83,7 @@ public final class LivingSpongeBlocks {
             () -> new SpongeRemainsBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .strength(0.4F)
-                    .sound(SoundType.WOOL))
+                    .sound(SoundType.DEEPSLATE))
     );
 
     private LivingSpongeBlocks() {
