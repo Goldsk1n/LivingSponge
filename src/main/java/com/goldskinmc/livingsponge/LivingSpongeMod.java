@@ -4,8 +4,10 @@ import com.goldskinmc.livingsponge.content.LivingSpongeBlockEntities;
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.content.LivingSpongeItems;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
+import com.goldskinmc.livingsponge.recipe.conditions.ConfigFlagCondition;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +27,7 @@ public final class LivingSpongeMod {
         LivingSpongeBlockEntities.register(modEventBus);
         modEventBus.addListener(this::addCreativeTabContents);
         context.registerConfig(ModConfig.Type.COMMON, LivingSpongeConfig.SPEC);
+        CraftingHelper.register(ConfigFlagCondition.Serializer.INSTANCE);
         LOGGER.info("Living Sponge initialized.");
     }
 

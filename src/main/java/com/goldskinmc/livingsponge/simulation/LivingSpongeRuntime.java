@@ -442,8 +442,11 @@ public final class LivingSpongeRuntime {
             final ResolvedSpongeProfile profile
     ) {
         final int currentDistance = chebyshevDistance(pos, state.rootPos());
-        final int radiusCap = profile.radiusCap(LivingSpongeConfig.values());
-        return currentDistance == radiusCap;
+        final LivingSpongeConfig.BalanceValues values = LivingSpongeConfig.values();
+        final int radiusCap = profile.radiusCap(values);
+        final int shellThickness = Math.max(1, values.output().wallFormingShellThickness());
+        final int shellStart = Math.max(0, radiusCap - shellThickness + 1);
+        return currentDistance >= shellStart && currentDistance <= radiusCap;
     }
 
     private static void syncPhase(

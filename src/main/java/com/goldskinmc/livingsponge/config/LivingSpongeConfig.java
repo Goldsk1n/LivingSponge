@@ -32,6 +32,10 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_WATER;
     private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_LAVA;
 
+    private static final ForgeConfigSpec.IntValue OUTPUT_WALL_FORMING_SHELL_THICKNESS;
+
+    private static final ForgeConfigSpec.BooleanValue RECIPES_ENABLE_VANILLA_SPONGE_RECIPE;
+
     public static final ForgeConfigSpec SPEC;
 
     private static volatile BalanceValues values = defaults();
@@ -87,6 +91,16 @@ public final class LivingSpongeConfig {
                 .define("supports_lava", LivingSpongeBalanceDefaults.Creative.SUPPORTS_LAVA);
         BUILDER.pop();
 
+        BUILDER.push("output");
+        OUTPUT_WALL_FORMING_SHELL_THICKNESS = BUILDER.comment("How many outer radius layers wall-forming sponges preserve as remains on old-age death.")
+                .defineInRange("wall_forming_shell_thickness", LivingSpongeBalanceDefaults.Output.WALL_FORMING_SHELL_THICKNESS, 1, Integer.MAX_VALUE);
+        BUILDER.pop();
+
+        BUILDER.push("recipes");
+        RECIPES_ENABLE_VANILLA_SPONGE_RECIPE = BUILDER.comment("Whether the custom wool-based vanilla sponge recipe is enabled.")
+                .define("enable_vanilla_sponge_recipe", LivingSpongeBalanceDefaults.Recipes.ENABLE_VANILLA_SPONGE_RECIPE);
+        BUILDER.pop();
+
         SPEC = BUILDER.build();
     }
 
@@ -138,6 +152,12 @@ public final class LivingSpongeConfig {
                         CREATIVE_IGNORE_ENVIRONMENT_DEATH.get(),
                         CREATIVE_SUPPORTS_WATER.get(),
                         CREATIVE_SUPPORTS_LAVA.get()
+                ),
+                new Output(
+                        OUTPUT_WALL_FORMING_SHELL_THICKNESS.get()
+                ),
+                new Recipes(
+                        RECIPES_ENABLE_VANILLA_SPONGE_RECIPE.get()
                 )
         );
     }
@@ -169,6 +189,12 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Creative.IGNORE_ENVIRONMENT_DEATH,
                         LivingSpongeBalanceDefaults.Creative.SUPPORTS_WATER,
                         LivingSpongeBalanceDefaults.Creative.SUPPORTS_LAVA
+                ),
+                new Output(
+                        LivingSpongeBalanceDefaults.Output.WALL_FORMING_SHELL_THICKNESS
+                ),
+                new Recipes(
+                        LivingSpongeBalanceDefaults.Recipes.ENABLE_VANILLA_SPONGE_RECIPE
                 )
         );
     }
@@ -177,7 +203,9 @@ public final class LivingSpongeConfig {
             Spread spread,
             Lifecycle lifecycle,
             Radius radius,
-            Creative creative
+            Creative creative,
+            Output output,
+            Recipes recipes
     ) {
     }
 
@@ -213,6 +241,23 @@ public final class LivingSpongeConfig {
             boolean supportsWater,
             boolean supportsLava
     ) {
+    }
+
+    public record Output(
+            int wallFormingShellThickness
+    ) {
+    }
+
+    public record Recipes(
+            boolean enableVanillaSpongeRecipe
+    ) {
+    }
+
+    public static boolean configFlag(final String flag) {
+        return switch (flag) {
+            case "enable_vanilla_sponge_recipe" -> values.recipes().enableVanillaSpongeRecipe();
+            default -> false;
+        };
     }
 
 }

@@ -45,4 +45,18 @@ public final class LivingSpongeBalanceDefaults {
         private Creative() {
         }
     }
+
+    public static final class Output {
+        public static final int WALL_FORMING_SHELL_THICKNESS = 1;
+
+        private Output() {
+        }
+    }
+
+    public static final class Recipes {
+        public static final boolean ENABLE_VANILLA_SPONGE_RECIPE = true;
+
+        private Recipes() {
+        }
+    }
 }
