@@ -1,7 +1,6 @@
 package com.goldskinmc.livingsponge.world.level.block;
 
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
-import com.goldskinmc.livingsponge.content.LivingSpongeItems;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
@@ -106,15 +104,7 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
 
     @Override
     public List<ItemStack> getDrops(final BlockState state, final LootParams.Builder params) {
-        final BlockEntity blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity && livingSpongeBlockEntity.hasNodeState()) {
-            return LivingSpongeItems.placementStackFor(
-                    livingSpongeBlockEntity.getNodeState().traits(),
-                    livingSpongeBlockEntity.getNodeState().creativeOverrides()
-            ).map(List::of).orElseGet(() -> List.of(defaultPlacementStack()));
-        }
-
-        return List.of(defaultPlacementStack());
+        return List.of();
     }
 
     @Override
@@ -133,12 +123,4 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
         builder.add(VISUAL_PROFILE);
     }
 
-    private ItemStack defaultPlacementStack() {
-        final SpongeTraits fallbackTraits = creativeOverrides
-                ? LivingSpongeItems.CREATIVE_BASELINE_TRAITS
-                : SpongeTraits.DEFAULT;
-        return LivingSpongeItems.placementStackFor(fallbackTraits, creativeOverrides)
-                .orElseGet(() -> ItemStack.EMPTY)
-                .copy();
-    }
 }
