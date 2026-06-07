@@ -3,14 +3,17 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "minecraft:sponge"
+      "tag": "minecraft:wool"
     },
     {
-      "item": "minecraft:slime_ball"
+      "item": "minecraft:kelp"
+    },
+    {
+      "item": "minecraft:seagrass"
     }
   ],
   "result": {
-    "item": "livingsponge:living_sponge",
+    "item": "minecraft:sponge",
     "count": 1
   }
 }
