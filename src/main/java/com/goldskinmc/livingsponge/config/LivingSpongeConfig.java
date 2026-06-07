@@ -24,10 +24,10 @@ public final class LivingSpongeConfig {
 
     private static final ForgeConfigSpec.IntValue RADIUS_STANDARD;
     private static final ForgeConfigSpec.IntValue RADIUS_EXPANDED;
-    private static final ForgeConfigSpec.IntValue RADIUS_VAST;
+    private static final ForgeConfigSpec.IntValue RADIUS_HUGE;
 
     private static final ForgeConfigSpec.IntValue CREATIVE_SPEED_MULTIPLIER;
-    private static final ForgeConfigSpec.BooleanValue CREATIVE_FORCE_VAST_RADIUS;
+    private static final ForgeConfigSpec.BooleanValue CREATIVE_FORCE_HUGE_RADIUS;
     private static final ForgeConfigSpec.BooleanValue CREATIVE_IGNORE_ENVIRONMENT_DEATH;
     private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_WATER;
     private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_LAVA;
@@ -74,15 +74,15 @@ public final class LivingSpongeConfig {
                 .defineInRange("standard", LivingSpongeBalanceDefaults.Radius.STANDARD, 1, Integer.MAX_VALUE);
         RADIUS_EXPANDED = BUILDER.comment("Maximum root distance for expanded radius sponges.")
                 .defineInRange("expanded", LivingSpongeBalanceDefaults.Radius.EXPANDED, 1, Integer.MAX_VALUE);
-        RADIUS_VAST = BUILDER.comment("Maximum root distance for vast radius sponges.")
-                .defineInRange("vast", LivingSpongeBalanceDefaults.Radius.VAST, 1, Integer.MAX_VALUE);
+        RADIUS_HUGE = BUILDER.comment("Maximum root distance for huge radius sponges.")
+                .defineInRange("huge", LivingSpongeBalanceDefaults.Radius.HUGE, 1, Integer.MAX_VALUE);
         BUILDER.pop();
 
         BUILDER.push("creative");
         CREATIVE_SPEED_MULTIPLIER = BUILDER.comment("How much faster creative sponges run than normal sponges.")
                 .defineInRange("speed_multiplier", LivingSpongeBalanceDefaults.Creative.SPEED_MULTIPLIER, 1, 64);
-        CREATIVE_FORCE_VAST_RADIUS = BUILDER.comment("Whether creative sponges always use the vast radius cap.")
-                .define("force_vast_radius", LivingSpongeBalanceDefaults.Creative.FORCE_VAST_RADIUS);
+        CREATIVE_FORCE_HUGE_RADIUS = BUILDER.comment("Whether creative sponges always use the huge radius cap.")
+                .define("force_huge_radius", LivingSpongeBalanceDefaults.Creative.FORCE_HUGE_RADIUS);
         CREATIVE_IGNORE_ENVIRONMENT_DEATH = BUILDER.comment("Whether creative sponges ignore opposing fluid and fire death.")
                 .define("ignore_environment_death", LivingSpongeBalanceDefaults.Creative.IGNORE_ENVIRONMENT_DEATH);
         CREATIVE_SUPPORTS_WATER = BUILDER.comment("Whether creative sponges can live and spread in water.")
@@ -144,11 +144,11 @@ public final class LivingSpongeConfig {
                 new Radius(
                         RADIUS_STANDARD.get(),
                         RADIUS_EXPANDED.get(),
-                        RADIUS_VAST.get()
+                        RADIUS_HUGE.get()
                 ),
                 new Creative(
                         CREATIVE_SPEED_MULTIPLIER.get(),
-                        CREATIVE_FORCE_VAST_RADIUS.get(),
+                        CREATIVE_FORCE_HUGE_RADIUS.get(),
                         CREATIVE_IGNORE_ENVIRONMENT_DEATH.get(),
                         CREATIVE_SUPPORTS_WATER.get(),
                         CREATIVE_SUPPORTS_LAVA.get()
@@ -181,11 +181,11 @@ public final class LivingSpongeConfig {
                 new Radius(
                         LivingSpongeBalanceDefaults.Radius.STANDARD,
                         LivingSpongeBalanceDefaults.Radius.EXPANDED,
-                        LivingSpongeBalanceDefaults.Radius.VAST
+                        LivingSpongeBalanceDefaults.Radius.HUGE
                 ),
                 new Creative(
                         LivingSpongeBalanceDefaults.Creative.SPEED_MULTIPLIER,
-                        LivingSpongeBalanceDefaults.Creative.FORCE_VAST_RADIUS,
+                        LivingSpongeBalanceDefaults.Creative.FORCE_HUGE_RADIUS,
                         LivingSpongeBalanceDefaults.Creative.IGNORE_ENVIRONMENT_DEATH,
                         LivingSpongeBalanceDefaults.Creative.SUPPORTS_WATER,
                         LivingSpongeBalanceDefaults.Creative.SUPPORTS_LAVA
@@ -230,13 +230,13 @@ public final class LivingSpongeConfig {
     public record Radius(
             int standard,
             int expanded,
-            int vast
+            int huge
     ) {
     }
 
     public record Creative(
             int speedMultiplier,
-            boolean forceVastRadius,
+            boolean forceHugeRadius,
             boolean ignoreEnvironmentDeath,
             boolean supportsWater,
             boolean supportsLava

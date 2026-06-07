@@ -87,7 +87,7 @@ Recommended radius text:
 
 - `Standard (8)`
 - `Expanded (16)`
-- `Vast (256)`
+- `Huge (256)`
 
 ## Tooltip Priorities
 
@@ -179,7 +179,7 @@ Ingredient mapping should remain simple and mnemonic:
 - `Calcite` -> `Solidifying`
 - `Magma Cream` -> `Magma`
 - `Prismarine Crystals` -> `Expanded`
-- `Heart of the Sea` -> `Vast`
+- `Ender Eye` -> `Huge`
 
 This is already a reasonable visual language.
 
@@ -198,7 +198,7 @@ Example conceptual items:
 - `Solidifying Core`
 - `Magma Core`
 - `Expanded Radius Core`
-- `Vast Radius Core`
+- `Huge Radius Core`
 
 Benefits:
 
@@ -266,7 +266,7 @@ Spreads through the body of the fluid.
 Leaves no special byproduct on old age death.
 ```
 
-### Magma Flat Solidifying Vast
+### Magma Flat Solidifying Huge
 
 Display name:
 
@@ -278,7 +278,7 @@ Tooltip:
 Growth Medium: Lava
 Spread: Flat
 Output: Solidifying
-Radius: Vast (256)
+Radius: Huge (256)
 
 Grows in lava. Dies on water contact.
 All old-age deaths leave remains.

@@ -7,7 +7,7 @@ It assumes the current exposed system includes:
 - `Water` and `Magma`
 - `Volume` and `Flat`
 - `Neutral`, `Wall-Forming`, and `Solidifying`
-- `Standard`, `Expanded`, and `Vast`
+- `Standard`, `Expanded`, and `Huge`
 
 ## Test Setup
 
@@ -17,7 +17,7 @@ Recommended environment:
 
 - one controlled water basin with flat surface
 - one controlled lava basin with flat surface
-- enough open space to observe `Expanded` and `Vast` behavior
+- enough open space to observe `Expanded` and `Huge` behavior
 - easy access to both `creative` and `survival`
 
 Recommended workflow:
@@ -61,7 +61,7 @@ Verify conversions:
 Verify upgrades:
 
 - `+ prismarine_crystals` -> `Expanded`
-- `+ heart_of_the_sea` -> `Vast`
+- `+ ender_eye` -> `Huge`
 
 Check that:
 
@@ -124,14 +124,14 @@ Verify cross-medium kill behavior:
 
 ### 7. Radius Caps
 
-Test `Standard`, `Expanded`, and `Vast` for both `Volume` and `Flat`.
+Test `Standard`, `Expanded`, and `Huge` for both `Volume` and `Flat`.
 
 Verify:
 
 - no off-by-one growth beyond the intended cap
 - flat variants reach their corners
 - `Expanded` flat platforms stabilize at the expected footprint
-- `Vast` remains bounded by the configured practical cap
+- `Huge` remains bounded by the configured practical cap
 
 ### 8. Persistence
 
@@ -192,7 +192,7 @@ At minimum, explicitly test these profiles:
 - `Magma + Volume + Neutral + Standard`
 - `Magma + Flat + Solidifying + Standard`
 - `Magma + Flat + Solidifying + Expanded`
-- one `Vast` profile for stress/performance
+- one `Huge` profile for stress/performance
 
 ## Balancing Pass
 
@@ -200,7 +200,7 @@ Do balancing in layers.
 
 ### 1. Start with Standard
 
-Ignore `Expanded` and `Vast` initially.
+Ignore `Expanded` and `Huge` initially.
 
 Judge:
 
@@ -242,7 +242,7 @@ Once `Standard` feels right, test `Expanded`.
 
 Prefer tuning timing and scan pressure before adding special-case behavior.
 
-### 6. Test Vast Last
+### 6. Test Huge Last
 
 Use one colony first.
 
@@ -252,7 +252,7 @@ Watch for:
 - chunk boundary oddities
 - visual clutter
 
-If `Vast` is too heavy, first reduce:
+If `Huge` is too heavy, first reduce:
 
 - scan radius
 - sample count

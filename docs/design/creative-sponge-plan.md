@@ -15,7 +15,7 @@ Target behavior:
   - water contact
   - fire contact
 - creative sponges can operate in both water and lava
-- creative sponges always use `Vast` radius behavior
+- creative sponges always use `Huge` radius behavior
 
 This intentionally drops the earlier immortal-creative idea. The point is fast, predictable creative tooling, not permanent autonomous colonies.
 
@@ -103,12 +103,12 @@ They should still respect:
 
 ### Radius
 
-Creative sponges should always behave as `Vast`.
+Creative sponges should always behave as `Huge`.
 
 Implementation meaning:
 
 - ignore the stored radius trait when `creativeOverrides == true`
-- return the `Vast` cap (`256`) from the resolved profile
+- return the `Huge` cap (`256`) from the resolved profile
 
 ## Item And Registry Plan
 

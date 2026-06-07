@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_living_sponge"
+                            "item":  "livingsponge:huge_living_sponge"
                         },
                         {
-                            "item":  "minecraft:clay"
+                            "item":  "minecraft:magma_cream"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_solidifying_living_sponge",
+                   "item":  "livingsponge:huge_magma_living_sponge",
                    "count":  1
                }
 }

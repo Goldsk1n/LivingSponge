@@ -19,7 +19,7 @@ A sponge instance is composed from four trait slots:
 - `Radius`
   - `Standard`
   - `Expanded`
-  - `Vast`
+  - `Huge`
 
 Canonical profile form:
 
@@ -29,15 +29,15 @@ Examples:
 
 - `Water + Volume + Neutral + Standard`
 - `Water + Flat + Wall-Forming + Expanded`
-- `Magma + Flat + Solidifying + Vast`
+- `Magma + Flat + Solidifying + Huge`
 
 ## Radius Tiers
 
 - `Standard` = `8`
 - `Expanded` = `16`
-- `Vast` = `256`
+- `Huge` = `256`
 
-`Vast` is treated as practically unbounded, but it is still capped in code.
+`Huge` is treated as practically unbounded, but it is still capped in code.
 
 ## Hard Rules
 
@@ -128,7 +128,7 @@ Each valid combination can use any radius tier:
 
 - `Standard`
 - `Expanded`
-- `Vast`
+- `Huge`
 
 ## Player-Facing Identity
 
@@ -186,6 +186,6 @@ Each of those combinations supports:
 
 - `Standard`
 - `Expanded`
-- `Vast`
+- `Huge`
 
 The base `Living Sponge` item family is neutral by default.

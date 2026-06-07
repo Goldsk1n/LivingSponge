@@ -287,7 +287,7 @@ This is much simpler than exploding the block registry for every trait combinati
 Do not texture-code:
 
 - `Flat` vs `Volume` in a strong way
-- `Standard` vs `Expanded` vs `Vast`
+- `Standard` vs `Expanded` vs `Huge`
 
 Reason:
 

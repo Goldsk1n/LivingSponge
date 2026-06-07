@@ -98,14 +98,14 @@ public final class LivingSpongePlacementItem extends BlockItem {
 
     private static Component creativeSummaryLine() {
         final LivingSpongeConfig.Creative creative = LivingSpongeConfig.values().creative();
-        final String radiusSummary = creative.forceVastRadius() ? "vast radius" : "configured radius";
+        final String radiusSummary = creative.forceHugeRadius() ? "huge radius" : "configured radius";
         return Component.literal("Creative: " + creative.speedMultiplier() + "x faster, uses " + radiusSummary + ".")
                 .withStyle(ChatFormatting.DARK_GRAY);
     }
 
     private RadiusTrait creativeRadiusTrait() {
-        if (creativeOverrides && LivingSpongeConfig.values().creative().forceVastRadius()) {
-            return RadiusTrait.VAST;
+        if (creativeOverrides && LivingSpongeConfig.values().creative().forceHugeRadius()) {
+            return RadiusTrait.HUGE;
         }
         return traits.radius();
     }

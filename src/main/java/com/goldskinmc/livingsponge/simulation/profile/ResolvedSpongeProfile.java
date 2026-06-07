@@ -16,8 +16,8 @@ public record ResolvedSpongeProfile(
     }
 
     public int radiusCap(final LivingSpongeConfig.BalanceValues values) {
-        if (creativeOverrides && values.creative().forceVastRadius()) {
-            return RadiusTrait.VAST.radiusCap(values);
+        if (creativeOverrides && values.creative().forceHugeRadius()) {
+            return RadiusTrait.HUGE.radiusCap(values);
         }
         return traits.radius().radiusCap(values);
     }

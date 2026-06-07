@@ -39,7 +39,7 @@ The following behavior must stay the same after optimization:
 - `Volume` spread still requires fluid-filled cells
 - creative rules remain:
   - `4x` faster
-  - radius forced to `Vast`
+  - radius forced to `Huge`
   - valid in both water and lava
   - ignores fire and opposing-fluid death
   - still dies from aging

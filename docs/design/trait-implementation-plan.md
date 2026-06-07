@@ -53,11 +53,11 @@ These assumptions describe the current supported system:
   - `Medium = Water | Magma`
   - `Spread = Volume | Flat`
   - `Output = Neutral | Wall-Forming | Solidifying`
-  - `Radius = Standard | Expanded | Vast`
+  - `Radius = Standard | Expanded | Huge`
 - Radius caps are fixed:
   - `Standard = 8`
   - `Expanded = 16`
-  - `Vast = 256`
+  - `Huge = 256`
 - `Water` dies on lava contact.
 - `Magma` dies on water contact.
 - `Wall-Forming` frontier deaths produce `sponge_remains`.
@@ -133,7 +133,7 @@ Implemented:
 - trait persistence and resolved profiles
 - creative override separation
 - trait-driven radius, medium, spread, and output behavior
-- full exposed trait matrix across `Standard`, `Expanded`, and `Vast`
+- full exposed trait matrix across `Standard`, `Expanded`, and `Huge`
 - tooltip-based variant identity
 - direct recipe-based trait conversions and radius upgrades
 - reduced config surface aligned to the live runtime
@@ -143,7 +143,7 @@ Still left to polish:
 - in-world visual differentiation beyond lifecycle phases
 - texture/visual identity implementation per `docs/design/texture-visual-plan.md`
 - creative-tab and JEI readability tuning as recipe count grows
-- focused stress/performance testing for `Vast` colonies
+- focused stress/performance testing for `Huge` colonies
 - behavior-preserving runtime optimization per `docs/design/performance-optimization-plan.md`
 - config expansion per `docs/design/config-schema-plan.md`
 - gameplay balancing and wording refinement after wider in-game testing
@@ -184,7 +184,7 @@ At minimum test:
 - `Magma + Volume + Neutral + Standard`
 - `Magma + Flat + Solidifying + Standard`
 - `Magma + Flat + Solidifying + Expanded`
-- one `Vast` profile to confirm cap and performance behavior
+- one `Huge` profile to confirm cap and performance behavior
 
 ### Specific Regressions To Watch
 
@@ -193,7 +193,7 @@ At minimum test:
 - incorrect frontier detection under `Flat`
 - incorrect medium kill behavior
 - invalid reproduction into air for volume colonies
-- runaway spread in `Vast` colonies causing heavy tick cost
+- runaway spread in `Huge` colonies causing heavy tick cost
 
 ## Risks
 
@@ -223,7 +223,7 @@ Mitigation:
 
 Risk:
 
-- `Vast` colonies and flat scans become expensive
+- `Huge` colonies and flat scans become expensive
 
 Mitigation:
 

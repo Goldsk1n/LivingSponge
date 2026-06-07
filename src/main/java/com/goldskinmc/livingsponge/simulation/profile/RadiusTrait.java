@@ -5,7 +5,7 @@ import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 public enum RadiusTrait {
     STANDARD,
     EXPANDED,
-    VAST;
+    HUGE;
 
     public int radiusCap() {
         return radiusCap(LivingSpongeConfig.values());
@@ -15,7 +15,7 @@ public enum RadiusTrait {
         return switch (this) {
             case STANDARD -> values.radius().standard();
             case EXPANDED -> values.radius().expanded();
-            case VAST -> values.radius().vast();
+            case HUGE -> values.radius().huge();
         };
     }
 }

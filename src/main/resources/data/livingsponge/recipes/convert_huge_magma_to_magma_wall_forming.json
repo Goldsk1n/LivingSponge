@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:vast_living_sponge"
+                            "item":  "livingsponge:huge_magma_living_sponge"
                         },
                         {
-                            "item":  "minecraft:magma_cream"
+                            "item":  "minecraft:cobblestone_wall"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_magma_living_sponge",
+                   "item":  "livingsponge:huge_magma_wall_forming_living_sponge",
                    "count":  1
                }
 }

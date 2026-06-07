@@ -29,7 +29,7 @@ public final class LivingSpongeBalanceDefaults {
     public static final class Radius {
         public static final int STANDARD = 8;
         public static final int EXPANDED = 16;
-        public static final int VAST = 256;
+        public static final int HUGE = 256;
 
         private Radius() {
         }
@@ -37,7 +37,7 @@ public final class LivingSpongeBalanceDefaults {
 
     public static final class Creative {
         public static final int SPEED_MULTIPLIER = 4;
-        public static final boolean FORCE_VAST_RADIUS = true;
+        public static final boolean FORCE_HUGE_RADIUS = true;
         public static final boolean IGNORE_ENVIRONMENT_DEATH = true;
         public static final boolean SUPPORTS_WATER = true;
         public static final boolean SUPPORTS_LAVA = true;

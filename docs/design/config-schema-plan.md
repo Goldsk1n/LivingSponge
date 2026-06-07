@@ -97,7 +97,7 @@ Explicit tier values.
 [radius]
 standard = 8
 expanded = 16
-vast = 256
+huge = 256
 ```
 
 Why:
@@ -131,7 +131,7 @@ Creative override policy.
 [creative]
 enabled = true
 speed_multiplier = 4
-force_vast_radius = true
+force_huge_radius = true
 ignore_environment_death = true
 supports_water = true
 supports_lava = true
@@ -202,7 +202,7 @@ This maps today’s behavior to the future config keys that should own it.
 
 - `standard = 8`
 - `expanded = 16`
-- `vast = 256`
+- `huge = 256`
   - current source:
     - `RadiusTrait`
 
@@ -229,7 +229,7 @@ This maps today’s behavior to the future config keys that should own it.
 - `speed_multiplier = 4`
   - current source:
     - `ResolvedSpongeProfile.quarterTicks(...)`
-- `force_vast_radius = true`
+- `force_huge_radius = true`
   - current source:
     - `ResolvedSpongeProfile.radiusCap(...)`
 - `ignore_environment_death = true`
@@ -264,11 +264,11 @@ flat_uses_diagonals = false
 [radius]
 standard = 8
 expanded = 16
-vast = 256
+huge = 256
 
 [creative]
 speed_multiplier = 4
-force_vast_radius = true
+force_huge_radius = true
 ignore_environment_death = true
 supports_water = true
 supports_lava = true

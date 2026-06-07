@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:expanded_living_sponge"
+                            "item":  "livingsponge:expanded_magma_flat_living_sponge"
                         },
                         {
                             "item":  "minecraft:ender_eye"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_living_sponge",
+                   "item":  "livingsponge:huge_magma_flat_living_sponge",
                    "count":  1
                }
 }

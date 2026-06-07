@@ -3,14 +3,14 @@
     "category":  "misc",
     "ingredients":  [
                         {
-                            "item":  "livingsponge:expanded_wall_forming_living_sponge"
+                            "item":  "livingsponge:huge_living_sponge"
                         },
                         {
-                            "item":  "minecraft:ender_eye"
+                            "item":  "minecraft:clay"
                         }
                     ],
     "result":  {
-                   "item":  "livingsponge:vast_wall_forming_living_sponge",
+                   "item":  "livingsponge:huge_solidifying_living_sponge",
                    "count":  1
                }
 }
