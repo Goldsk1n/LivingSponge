@@ -58,7 +58,9 @@ public final class LivingSpongeNodeState {
             final LivingSpongeConfig.BalanceValues values
     ) {
         final LivingSpongeNodeState state = createRoot(rootPos, traits, creativeOverrides, values);
-        state.ageTicks = state.resolveProfile().lifecycle(values).youngDurationTicks();
+        if (values.lifecycle().placedSpongesStartMature()) {
+            state.ageTicks = state.resolveProfile().lifecycle(values).youngDurationTicks();
+        }
         return state;
     }
 

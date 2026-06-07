@@ -7,16 +7,19 @@ public record ResolvedSpongeProfile(
         boolean creativeOverrides
 ) {
     public int updateIntervalTicks(final LivingSpongeConfig.BalanceValues values) {
-        return creativeOverrides ? quarterTicks(values.spread().updateIntervalTicks()) : values.spread().updateIntervalTicks();
+        return creativeOverrides ? scaledTicks(values.spread().updateIntervalTicks(), values.creative().speedMultiplier()) : values.spread().updateIntervalTicks();
     }
 
     public int reproductionCooldownTicks(final LivingSpongeConfig.BalanceValues values) {
         final int baseCooldown = values.spread().reproductionCooldownTicks();
-        return creativeOverrides ? quarterTicks(baseCooldown) : baseCooldown;
+        return creativeOverrides ? scaledTicks(baseCooldown, values.creative().speedMultiplier()) : baseCooldown;
     }
 
     public int radiusCap(final LivingSpongeConfig.BalanceValues values) {
-        return creativeOverrides ? RadiusTrait.VAST.radiusCap() : traits.radius().radiusCap();
+        if (creativeOverrides && values.creative().forceVastRadius()) {
+            return RadiusTrait.VAST.radiusCap(values);
+        }
+        return traits.radius().radiusCap(values);
     }
 
     public LivingSpongeConfig.Lifecycle lifecycle(final LivingSpongeConfig.BalanceValues values) {
@@ -26,22 +29,32 @@ public record ResolvedSpongeProfile(
         }
 
         return new LivingSpongeConfig.Lifecycle(
-                quarterTicks(lifecycle.youngDurationTicks()),
-                quarterTicks(lifecycle.matureDurationTicks()),
-                quarterTicks(lifecycle.oldDurationTicks())
+                scaledTicks(lifecycle.youngDurationTicks(), values.creative().speedMultiplier()),
+                scaledTicks(lifecycle.matureDurationTicks(), values.creative().speedMultiplier()),
+                scaledTicks(lifecycle.oldDurationTicks(), values.creative().speedMultiplier()),
+                lifecycle.placedSpongesStartMature()
         );
     }
 
     public boolean usesWaterMedium() {
+        if (creativeOverrides) {
+            return supportsWaterMedium() && !supportsLavaMedium();
+        }
         return traits.medium() == MediumTrait.WATER;
     }
 
     public boolean supportsWaterMedium() {
-        return creativeOverrides || traits.medium() == MediumTrait.WATER;
+        if (creativeOverrides) {
+            return LivingSpongeConfig.values().creative().supportsWater();
+        }
+        return traits.medium() == MediumTrait.WATER;
     }
 
     public boolean supportsLavaMedium() {
-        return creativeOverrides || traits.medium() == MediumTrait.MAGMA;
+        if (creativeOverrides) {
+            return LivingSpongeConfig.values().creative().supportsLava();
+        }
+        return traits.medium() == MediumTrait.MAGMA;
     }
 
     public boolean isFlatSpread() {
@@ -61,10 +74,10 @@ public record ResolvedSpongeProfile(
     }
 
     public boolean ignoresEnvironmentDeath() {
-        return creativeOverrides;
+        return creativeOverrides && LivingSpongeConfig.values().creative().ignoreEnvironmentDeath();
     }
 
-    private static int quarterTicks(final int ticks) {
-        return Math.max(1, ticks / 4);
+    private static int scaledTicks(final int ticks, final int speedMultiplier) {
+        return Math.max(1, ticks / Math.max(1, speedMultiplier));
     }
 }

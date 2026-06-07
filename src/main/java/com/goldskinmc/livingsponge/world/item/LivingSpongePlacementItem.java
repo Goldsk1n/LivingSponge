@@ -1,5 +1,6 @@
 package com.goldskinmc.livingsponge.world.item;
 
+import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.simulation.profile.MediumTrait;
 import com.goldskinmc.livingsponge.simulation.profile.OutputTrait;
 import com.goldskinmc.livingsponge.simulation.profile.RadiusTrait;
@@ -51,14 +52,14 @@ public final class LivingSpongePlacementItem extends BlockItem {
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.medium", mediumLabel(traits.medium(), creativeOverrides)));
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.spread", spreadLabel(traits.spread())));
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.output", outputLabel(traits.output())));
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.radius", radiusLabel(creativeOverrides ? RadiusTrait.VAST : traits.radius())));
+        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.radius", radiusLabel(creativeRadiusTrait(), LivingSpongeConfig.values())));
         tooltipComponents.add(Component.empty());
-        tooltipComponents.add(descriptionLine(mediumSummaryKey(traits.medium(), creativeOverrides)));
+        tooltipComponents.add(mediumSummaryLine(traits.medium(), creativeOverrides));
         tooltipComponents.add(descriptionLine(spreadSummaryKey(traits.spread())));
         tooltipComponents.add(descriptionLine(outputSummaryKey(traits)));
 
         if (creativeOverrides) {
-            tooltipComponents.add(descriptionLine("tooltip.livingsponge.summary.creative"));
+            tooltipComponents.add(creativeSummaryLine());
         }
     }
 
@@ -72,7 +73,17 @@ public final class LivingSpongePlacementItem extends BlockItem {
 
     private static Component mediumLabel(final MediumTrait medium, final boolean creativeOverrides) {
         if (creativeOverrides) {
-            return Component.translatable("tooltip.livingsponge.medium.creative").withStyle(ChatFormatting.AQUA);
+            final LivingSpongeConfig.Creative creative = LivingSpongeConfig.values().creative();
+            if (creative.supportsWater() && creative.supportsLava()) {
+                return Component.translatable("tooltip.livingsponge.medium.creative").withStyle(ChatFormatting.AQUA);
+            }
+            if (creative.supportsWater()) {
+                return Component.translatable("tooltip.livingsponge.medium.water").withStyle(ChatFormatting.AQUA);
+            }
+            if (creative.supportsLava()) {
+                return Component.translatable("tooltip.livingsponge.medium.magma").withStyle(ChatFormatting.AQUA);
+            }
+            return Component.literal("Disabled").withStyle(ChatFormatting.AQUA);
         }
         return Component.translatable("tooltip.livingsponge.medium." + key(medium)).withStyle(ChatFormatting.AQUA);
     }
@@ -85,21 +96,53 @@ public final class LivingSpongePlacementItem extends BlockItem {
         return Component.translatable("tooltip.livingsponge.output." + key(output)).withStyle(ChatFormatting.AQUA);
     }
 
-    private static Component radiusLabel(final RadiusTrait radius) {
+    private static Component creativeSummaryLine() {
+        final LivingSpongeConfig.Creative creative = LivingSpongeConfig.values().creative();
+        final String radiusSummary = creative.forceVastRadius() ? "vast radius" : "configured radius";
+        return Component.literal("Creative: " + creative.speedMultiplier() + "x faster, uses " + radiusSummary + ".")
+                .withStyle(ChatFormatting.DARK_GRAY);
+    }
+
+    private RadiusTrait creativeRadiusTrait() {
+        if (creativeOverrides && LivingSpongeConfig.values().creative().forceVastRadius()) {
+            return RadiusTrait.VAST;
+        }
+        return traits.radius();
+    }
+
+    private static Component radiusLabel(final RadiusTrait radius, final LivingSpongeConfig.BalanceValues values) {
         return Component.translatable(
                 "tooltip.livingsponge.radius." + key(radius),
-                Component.literal(Integer.toString(radius.radiusCap())).withStyle(ChatFormatting.AQUA)
+                Component.literal(Integer.toString(radius.radiusCap(values))).withStyle(ChatFormatting.AQUA)
         ).withStyle(ChatFormatting.AQUA);
     }
 
-    private static String mediumSummaryKey(final MediumTrait medium, final boolean creativeOverrides) {
-        if (creativeOverrides) {
-            return "tooltip.livingsponge.summary.medium.creative";
+    private static Component mediumSummaryLine(final MediumTrait medium, final boolean creativeOverrides) {
+        if (!creativeOverrides) {
+            return descriptionLine(switch (medium) {
+                case WATER -> "tooltip.livingsponge.summary.medium.water";
+                case MAGMA -> "tooltip.livingsponge.summary.medium.magma";
+            });
         }
-        return switch (medium) {
-            case WATER -> "tooltip.livingsponge.summary.medium.water";
-            case MAGMA -> "tooltip.livingsponge.summary.medium.magma";
-        };
+
+        final LivingSpongeConfig.Creative creative = LivingSpongeConfig.values().creative();
+        final String summary;
+        if (creative.supportsWater() && creative.supportsLava()) {
+            summary = creative.ignoreEnvironmentDeath()
+                    ? "Grows in water and lava. Ignores fluid mismatch and fire."
+                    : "Grows in water and lava. Still dies to fire.";
+        } else if (creative.supportsWater()) {
+            summary = creative.ignoreEnvironmentDeath()
+                    ? "Grows in water. Ignores fire and lava mismatch."
+                    : "Grows in water. Dies on lava contact.";
+        } else if (creative.supportsLava()) {
+            summary = creative.ignoreEnvironmentDeath()
+                    ? "Grows in lava. Ignores fire and water mismatch."
+                    : "Grows in lava. Dies on water contact.";
+        } else {
+            summary = "Creative medium support is disabled in config.";
+        }
+        return Component.literal(summary).withStyle(ChatFormatting.DARK_GRAY);
     }
 
     private static String spreadSummaryKey(final SpreadTrait spread) {

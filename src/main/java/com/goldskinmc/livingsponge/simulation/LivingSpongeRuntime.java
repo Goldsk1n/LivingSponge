@@ -26,11 +26,21 @@ import java.util.UUID;
 
 public final class LivingSpongeRuntime {
     private static final LivingSpongeRuntime INSTANCE = new LivingSpongeRuntime();
-    private static final int[][] FLAT_OFFSETS = {
+    private static final int[][] FLAT_CARDINAL_OFFSETS = {
             {1, 0},
             {-1, 0},
             {0, 1},
             {0, -1}
+    };
+    private static final int[][] FLAT_DIAGONAL_OFFSETS = {
+            {1, 0},
+            {-1, 0},
+            {0, 1},
+            {0, -1},
+            {1, 1},
+            {1, -1},
+            {-1, 1},
+            {-1, -1}
     };
 
     private final LivingSpongeSimulationService simulationService = new LivingSpongeSimulationService();
@@ -315,10 +325,13 @@ public final class LivingSpongeRuntime {
             final int radiusCap,
             final long gameTime
     ) {
-        final List<BlockPos> targets = new ArrayList<>(profile.isFlatSpread() ? FLAT_OFFSETS.length : 6);
+        final int[][] flatOffsets = LivingSpongeConfig.values().spread().flatUsesDiagonals()
+                ? FLAT_DIAGONAL_OFFSETS
+                : FLAT_CARDINAL_OFFSETS;
+        final List<BlockPos> targets = new ArrayList<>(profile.isFlatSpread() ? flatOffsets.length : 6);
 
         if (profile.isFlatSpread()) {
-            for (int[] offset : FLAT_OFFSETS) {
+            for (int[] offset : flatOffsets) {
                 final BlockPos target = pos.offset(offset[0], 0, offset[1]);
                 if (isWithinRadius(rootPos, target, radiusCap)
                         && !isTargetBlocked(level, target, gameTime)
@@ -575,6 +588,9 @@ public final class LivingSpongeRuntime {
             final ResolvedSpongeProfile profile
     ) {
         if (profile.ignoresEnvironmentDeath()) {
+            return false;
+        }
+        if (profile.supportsWaterMedium() && profile.supportsLavaMedium()) {
             return false;
         }
 

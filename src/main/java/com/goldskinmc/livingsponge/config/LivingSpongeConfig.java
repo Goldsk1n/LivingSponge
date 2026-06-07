@@ -15,10 +15,22 @@ public final class LivingSpongeConfig {
     private static final ForgeConfigSpec.IntValue SPREAD_MAX_MEDIUM_SAMPLES_PER_UPDATE;
     private static final ForgeConfigSpec.IntValue SPREAD_REPRODUCTION_COOLDOWN_TICKS;
     private static final ForgeConfigSpec.IntValue SPREAD_DEATH_TARGET_COOLDOWN_TICKS;
+    private static final ForgeConfigSpec.BooleanValue SPREAD_FLAT_USES_DIAGONALS;
 
     private static final ForgeConfigSpec.IntValue LIFECYCLE_YOUNG_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
     private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
+    private static final ForgeConfigSpec.BooleanValue LIFECYCLE_PLACED_SPONGES_START_MATURE;
+
+    private static final ForgeConfigSpec.IntValue RADIUS_STANDARD;
+    private static final ForgeConfigSpec.IntValue RADIUS_EXPANDED;
+    private static final ForgeConfigSpec.IntValue RADIUS_VAST;
+
+    private static final ForgeConfigSpec.IntValue CREATIVE_SPEED_MULTIPLIER;
+    private static final ForgeConfigSpec.BooleanValue CREATIVE_FORCE_VAST_RADIUS;
+    private static final ForgeConfigSpec.BooleanValue CREATIVE_IGNORE_ENVIRONMENT_DEATH;
+    private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_WATER;
+    private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_LAVA;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -38,6 +50,8 @@ public final class LivingSpongeConfig {
                 .defineInRange("reproduction_cooldown_ticks", LivingSpongeBalanceDefaults.Spread.REPRODUCTION_COOLDOWN_TICKS, 0, 24000);
         SPREAD_DEATH_TARGET_COOLDOWN_TICKS = BUILDER.comment("How long a sponge death cell stays blocked for reproduction.")
                 .defineInRange("death_target_cooldown_ticks", LivingSpongeBalanceDefaults.Spread.DEATH_TARGET_COOLDOWN_TICKS, 0, Integer.MAX_VALUE);
+        SPREAD_FLAT_USES_DIAGONALS = BUILDER.comment("Whether flat sponges can reproduce diagonally.")
+                .define("flat_uses_diagonals", LivingSpongeBalanceDefaults.Spread.FLAT_USES_DIAGONALS);
         BUILDER.pop();
 
         BUILDER.push("lifecycle");
@@ -47,6 +61,30 @@ public final class LivingSpongeConfig {
                 .defineInRange("mature_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS, 1, Integer.MAX_VALUE);
         LIFECYCLE_OLD_DURATION_TICKS = BUILDER.comment("Old stage duration in ticks before death.")
                 .defineInRange("old_duration_ticks", LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS, 1, Integer.MAX_VALUE);
+        LIFECYCLE_PLACED_SPONGES_START_MATURE = BUILDER.comment("Whether player-placed sponge roots start in the mature phase.")
+                .define("placed_sponges_start_mature", LivingSpongeBalanceDefaults.Lifecycle.PLACED_SPONGES_START_MATURE);
+        BUILDER.pop();
+
+        BUILDER.push("radius");
+        RADIUS_STANDARD = BUILDER.comment("Maximum root distance for standard radius sponges.")
+                .defineInRange("standard", LivingSpongeBalanceDefaults.Radius.STANDARD, 1, Integer.MAX_VALUE);
+        RADIUS_EXPANDED = BUILDER.comment("Maximum root distance for expanded radius sponges.")
+                .defineInRange("expanded", LivingSpongeBalanceDefaults.Radius.EXPANDED, 1, Integer.MAX_VALUE);
+        RADIUS_VAST = BUILDER.comment("Maximum root distance for vast radius sponges.")
+                .defineInRange("vast", LivingSpongeBalanceDefaults.Radius.VAST, 1, Integer.MAX_VALUE);
+        BUILDER.pop();
+
+        BUILDER.push("creative");
+        CREATIVE_SPEED_MULTIPLIER = BUILDER.comment("How much faster creative sponges run than normal sponges.")
+                .defineInRange("speed_multiplier", LivingSpongeBalanceDefaults.Creative.SPEED_MULTIPLIER, 1, 64);
+        CREATIVE_FORCE_VAST_RADIUS = BUILDER.comment("Whether creative sponges always use the vast radius cap.")
+                .define("force_vast_radius", LivingSpongeBalanceDefaults.Creative.FORCE_VAST_RADIUS);
+        CREATIVE_IGNORE_ENVIRONMENT_DEATH = BUILDER.comment("Whether creative sponges ignore opposing fluid and fire death.")
+                .define("ignore_environment_death", LivingSpongeBalanceDefaults.Creative.IGNORE_ENVIRONMENT_DEATH);
+        CREATIVE_SUPPORTS_WATER = BUILDER.comment("Whether creative sponges can live and spread in water.")
+                .define("supports_water", LivingSpongeBalanceDefaults.Creative.SUPPORTS_WATER);
+        CREATIVE_SUPPORTS_LAVA = BUILDER.comment("Whether creative sponges can live and spread in lava.")
+                .define("supports_lava", LivingSpongeBalanceDefaults.Creative.SUPPORTS_LAVA);
         BUILDER.pop();
 
         SPEC = BUILDER.build();
@@ -80,12 +118,26 @@ public final class LivingSpongeConfig {
                         SPREAD_MEDIUM_SCAN_RADIUS.get(),
                         SPREAD_MAX_MEDIUM_SAMPLES_PER_UPDATE.get(),
                         SPREAD_REPRODUCTION_COOLDOWN_TICKS.get(),
-                        SPREAD_DEATH_TARGET_COOLDOWN_TICKS.get()
+                        SPREAD_DEATH_TARGET_COOLDOWN_TICKS.get(),
+                        SPREAD_FLAT_USES_DIAGONALS.get()
                 ),
                 new Lifecycle(
                         LIFECYCLE_YOUNG_DURATION_TICKS.get(),
                         LIFECYCLE_MATURE_DURATION_TICKS.get(),
-                        LIFECYCLE_OLD_DURATION_TICKS.get()
+                        LIFECYCLE_OLD_DURATION_TICKS.get(),
+                        LIFECYCLE_PLACED_SPONGES_START_MATURE.get()
+                ),
+                new Radius(
+                        RADIUS_STANDARD.get(),
+                        RADIUS_EXPANDED.get(),
+                        RADIUS_VAST.get()
+                ),
+                new Creative(
+                        CREATIVE_SPEED_MULTIPLIER.get(),
+                        CREATIVE_FORCE_VAST_RADIUS.get(),
+                        CREATIVE_IGNORE_ENVIRONMENT_DEATH.get(),
+                        CREATIVE_SUPPORTS_WATER.get(),
+                        CREATIVE_SUPPORTS_LAVA.get()
                 )
         );
     }
@@ -97,19 +149,35 @@ public final class LivingSpongeConfig {
                         LivingSpongeBalanceDefaults.Spread.MEDIUM_SCAN_RADIUS,
                         LivingSpongeBalanceDefaults.Spread.MAX_MEDIUM_SAMPLES_PER_UPDATE,
                         LivingSpongeBalanceDefaults.Spread.REPRODUCTION_COOLDOWN_TICKS,
-                        LivingSpongeBalanceDefaults.Spread.DEATH_TARGET_COOLDOWN_TICKS
+                        LivingSpongeBalanceDefaults.Spread.DEATH_TARGET_COOLDOWN_TICKS,
+                        LivingSpongeBalanceDefaults.Spread.FLAT_USES_DIAGONALS
                 ),
                 new Lifecycle(
                         LivingSpongeBalanceDefaults.Lifecycle.YOUNG_DURATION_TICKS,
                         LivingSpongeBalanceDefaults.Lifecycle.MATURE_DURATION_TICKS,
-                        LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS
+                        LivingSpongeBalanceDefaults.Lifecycle.OLD_DURATION_TICKS,
+                        LivingSpongeBalanceDefaults.Lifecycle.PLACED_SPONGES_START_MATURE
+                ),
+                new Radius(
+                        LivingSpongeBalanceDefaults.Radius.STANDARD,
+                        LivingSpongeBalanceDefaults.Radius.EXPANDED,
+                        LivingSpongeBalanceDefaults.Radius.VAST
+                ),
+                new Creative(
+                        LivingSpongeBalanceDefaults.Creative.SPEED_MULTIPLIER,
+                        LivingSpongeBalanceDefaults.Creative.FORCE_VAST_RADIUS,
+                        LivingSpongeBalanceDefaults.Creative.IGNORE_ENVIRONMENT_DEATH,
+                        LivingSpongeBalanceDefaults.Creative.SUPPORTS_WATER,
+                        LivingSpongeBalanceDefaults.Creative.SUPPORTS_LAVA
                 )
         );
     }
 
     public record BalanceValues(
             Spread spread,
-            Lifecycle lifecycle
+            Lifecycle lifecycle,
+            Radius radius,
+            Creative creative
     ) {
     }
 
@@ -118,14 +186,32 @@ public final class LivingSpongeConfig {
             int mediumScanRadius,
             int maxMediumSamplesPerUpdate,
             int reproductionCooldownTicks,
-            int deathTargetCooldownTicks
+            int deathTargetCooldownTicks,
+            boolean flatUsesDiagonals
     ) {
     }
 
     public record Lifecycle(
             int youngDurationTicks,
             int matureDurationTicks,
-            int oldDurationTicks
+            int oldDurationTicks,
+            boolean placedSpongesStartMature
+    ) {
+    }
+
+    public record Radius(
+            int standard,
+            int expanded,
+            int vast
+    ) {
+    }
+
+    public record Creative(
+            int speedMultiplier,
+            boolean forceVastRadius,
+            boolean ignoreEnvironmentDeath,
+            boolean supportsWater,
+            boolean supportsLava
     ) {
     }
 

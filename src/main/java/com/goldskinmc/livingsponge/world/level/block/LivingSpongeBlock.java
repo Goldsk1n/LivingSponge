@@ -2,6 +2,7 @@ package com.goldskinmc.livingsponge.world.level.block;
 
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.content.LivingSpongeItems;
+import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import com.goldskinmc.livingsponge.world.level.block.entity.LivingSpongeBlockEntity;
@@ -69,8 +70,11 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
         final boolean overrides = stack.getItem() instanceof LivingSpongePlacementItem placementItem
                 ? placementItem.creativeOverrides()
                 : creativeOverrides;
+        final LivingSpongeLifecycleStage placedStage = LivingSpongeConfig.values().lifecycle().placedSpongesStartMature()
+                ? LivingSpongeLifecycleStage.MATURE
+                : LivingSpongeLifecycleStage.YOUNG;
         final BlockState placedState = LivingSpongeBlocks.spongeStateFor(
-                LivingSpongeLifecycleStage.MATURE,
+                placedStage,
                 traits,
                 overrides
         );
