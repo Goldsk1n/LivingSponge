@@ -98,9 +98,7 @@ public final class LivingSpongePlacementItem extends BlockItem {
 
     private static Component creativeSummaryLine() {
         final LivingSpongeConfig.Creative creative = LivingSpongeConfig.values().creative();
-        final String radiusSummary = creative.forceHugeRadius() ? "huge radius" : "configured radius";
-        return Component.literal("Creative: " + creative.speedMultiplier() + "x faster, uses " + radiusSummary + ".")
-                .withStyle(ChatFormatting.DARK_GRAY);
+        return Component.literal(creative.speedMultiplier() + "x faster.").withStyle(ChatFormatting.DARK_GRAY);
     }
 
     private RadiusTrait creativeRadiusTrait() {
@@ -128,19 +126,13 @@ public final class LivingSpongePlacementItem extends BlockItem {
         final LivingSpongeConfig.Creative creative = LivingSpongeConfig.values().creative();
         final String summary;
         if (creative.supportsWater() && creative.supportsLava()) {
-            summary = creative.ignoreEnvironmentDeath()
-                    ? "Grows in water and lava. Ignores fluid mismatch and fire."
-                    : "Grows in water and lava. Still dies to fire.";
+            summary = "Water and lava.";
         } else if (creative.supportsWater()) {
-            summary = creative.ignoreEnvironmentDeath()
-                    ? "Grows in water. Ignores fire and lava mismatch."
-                    : "Grows in water. Dies on lava contact.";
+            summary = "Water only.";
         } else if (creative.supportsLava()) {
-            summary = creative.ignoreEnvironmentDeath()
-                    ? "Grows in lava. Ignores fire and water mismatch."
-                    : "Grows in lava. Dies on water contact.";
+            summary = "Lava only.";
         } else {
-            summary = "Creative medium support is disabled in config.";
+            summary = "Disabled.";
         }
         return Component.literal(summary).withStyle(ChatFormatting.DARK_GRAY);
     }

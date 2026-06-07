@@ -62,13 +62,13 @@
   "tooltip.livingsponge.radius.standard": "Standard (%s)",
   "tooltip.livingsponge.radius.expanded": "Expanded (%s)",
   "tooltip.livingsponge.radius.huge": "Huge (%s)",
-  "tooltip.livingsponge.summary.medium.water": "Grows in water. Dies on lava contact.",
-  "tooltip.livingsponge.summary.medium.magma": "Grows in lava. Dies on water contact.",
-  "tooltip.livingsponge.summary.medium.creative": "Grows in water and lava. Ignores fluid mismatch and fire.",
-  "tooltip.livingsponge.summary.spread.volume": "Spreads through the body of the fluid.",
-  "tooltip.livingsponge.summary.spread.flat": "Spreads only across exposed flat fluid layers.",
-  "tooltip.livingsponge.summary.output.neutral": "Leaves no special byproduct on old-age death.",
-  "tooltip.livingsponge.summary.output.wall_forming": "Only frontier old-age deaths leave remains.",
-  "tooltip.livingsponge.summary.output.solidifying": "All old-age deaths leave remains.",
-  "tooltip.livingsponge.summary.creative": "Creative: 4x faster, works in water and lava."
+  "tooltip.livingsponge.summary.medium.water": "Water only.",
+  "tooltip.livingsponge.summary.medium.magma": "Lava only.",
+  "tooltip.livingsponge.summary.medium.creative": "Water and lava.",
+  "tooltip.livingsponge.summary.spread.volume": "Spreads in fluid volume.",
+  "tooltip.livingsponge.summary.spread.flat": "Spreads across exposed flat fluid.",
+  "tooltip.livingsponge.summary.output.neutral": "Leaves nothing on death.",
+  "tooltip.livingsponge.summary.output.wall_forming": "Border deaths leave remains.",
+  "tooltip.livingsponge.summary.output.solidifying": "All deaths leave remains.",
+  "tooltip.livingsponge.summary.creative": "4x faster."
 }
