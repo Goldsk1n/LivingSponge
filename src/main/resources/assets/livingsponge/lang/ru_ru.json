@@ -58,7 +58,7 @@
   "tooltip.livingsponge.spread.flat": "Плоскость",
   "tooltip.livingsponge.output.neutral": "Нейтральный",
   "tooltip.livingsponge.output.wall_forming": "Стенкообразующий",
-  "tooltip.livingsponge.output.solidifying": "Твердіючий",
+  "tooltip.livingsponge.output.solidifying": "Затвердевающий",
   "tooltip.livingsponge.radius.standard": "Обычный (%s)",
   "tooltip.livingsponge.radius.expanded": "Расширенный (%s)",
   "tooltip.livingsponge.radius.huge": "Огромный (%s)",
