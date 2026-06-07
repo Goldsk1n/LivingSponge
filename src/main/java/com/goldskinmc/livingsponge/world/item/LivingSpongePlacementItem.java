@@ -68,7 +68,7 @@ public final class LivingSpongePlacementItem extends BlockItem {
     }
 
     private static Component descriptionLine(final String key) {
-        return Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY);
+        return Component.translatable(key).withStyle(ChatFormatting.GRAY);
     }
 
     private static Component mediumLabel(final MediumTrait medium, final boolean creativeOverrides) {
@@ -134,7 +134,7 @@ public final class LivingSpongePlacementItem extends BlockItem {
         } else {
             summary = "Disabled.";
         }
-        return Component.literal(summary).withStyle(ChatFormatting.DARK_GRAY);
+        return Component.literal(summary).withStyle(ChatFormatting.GRAY);
     }
 
     private static String spreadSummaryKey(final SpreadTrait spread) {
