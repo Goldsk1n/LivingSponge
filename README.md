@@ -2,6 +2,11 @@
 
 Living Sponge is a Minecraft Forge mod that adds self-spreading sponge colonies for water and lava.
 
+## Links
+
+- Modrinth: https://modrinth.com/mod/living-sponge
+- CurseForge: https://www.curseforge.com/minecraft/mc-mods/living-sponge
+
 Each sponge is defined by four trait slots:
 
 - `Growth Medium`: `Water` or `Lava`
@@ -119,4 +124,4 @@ It contains:
 
 ## License
 
-`All Rights Reserved`
+`MIT`
