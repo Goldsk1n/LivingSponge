@@ -1,0 +1,16 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "misc",
+    "ingredients":  [
+                        {
+                            "item":  "livingsponge:magma_living_sponge"
+                        },
+                        {
+                            "item":  "minecraft:cobblestone_wall"
+                        }
+                    ],
+    "result":  {
+                   "id":  "livingsponge:magma_wall_forming_living_sponge",
+                   "count":  1
+               }
+}
