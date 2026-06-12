@@ -1,5 +1,6 @@
 package com.goldskinmc.livingsponge.world.level.block;
 
+import com.mojang.serialization.MapCodec;
 import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
@@ -30,10 +31,12 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
             EnumProperty.create("visual_profile", LivingSpongeVisualProfile.class);
 
     private final boolean creativeOverrides;
+    private final MapCodec<LivingSpongeBlock> codec;
 
     public LivingSpongeBlock(final boolean creativeOverrides, final Properties properties) {
         super(properties);
         this.creativeOverrides = creativeOverrides;
+        this.codec = simpleCodec(codecProperties -> new LivingSpongeBlock(creativeOverrides, codecProperties));
         final LivingSpongeVisualProfile defaultProfile = creativeOverrides
                 ? LivingSpongeVisualProfile.CREATIVE_NEUTRAL
                 : LivingSpongeVisualProfile.WATER_NEUTRAL;
@@ -42,6 +45,11 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
 
     public boolean creativeOverrides() {
         return creativeOverrides;
+    }
+
+    @Override
+    protected MapCodec<LivingSpongeBlock> codec() {
+        return codec;
     }
 
     @Override

@@ -2,17 +2,18 @@ package com.goldskinmc.livingsponge.content;
 
 import com.goldskinmc.livingsponge.LivingSpongeMod;
 import com.goldskinmc.livingsponge.world.level.block.entity.LivingSpongeBlockEntity;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public final class LivingSpongeBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
-            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, LivingSpongeMod.MOD_ID);
+            DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, LivingSpongeMod.MOD_ID);
 
-    public static final RegistryObject<BlockEntityType<LivingSpongeBlockEntity>> LIVING_SPONGE =
+    public static final Supplier<BlockEntityType<LivingSpongeBlockEntity>> LIVING_SPONGE =
             BLOCK_ENTITY_TYPES.register(
                     "living_sponge",
                     () -> BlockEntityType.Builder.of(

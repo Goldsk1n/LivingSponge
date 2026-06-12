@@ -7,6 +7,7 @@ import com.goldskinmc.livingsponge.simulation.LivingSpongeNodeState;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeRuntime;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -74,16 +75,16 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(final CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(final CompoundTag tag, final HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (nodeState != null) {
             tag.put("LivingSpongeState", nodeState.save());
         }
     }
 
     @Override
-    public void load(final CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(final CompoundTag tag, final HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("LivingSpongeState")) {
             nodeState = LivingSpongeNodeState.load(tag.getCompound("LivingSpongeState"));
         } else {

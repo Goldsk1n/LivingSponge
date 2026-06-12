@@ -1,5 +1,5 @@
 {
-  "forge:conditions": [
+  "neoforge:conditions": [
     {
       "type": "livingsponge:config_flag",
       "flag": "enable_vanilla_sponge_recipe"

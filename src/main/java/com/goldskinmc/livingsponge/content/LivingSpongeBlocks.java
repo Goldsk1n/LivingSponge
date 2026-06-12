@@ -7,24 +7,21 @@ import com.goldskinmc.livingsponge.world.level.block.LivingSpongeBlock;
 import com.goldskinmc.livingsponge.world.level.block.LivingSpongeVisualProfile;
 import com.goldskinmc.livingsponge.world.level.block.SpongeRemainsBlock;
 import com.goldskinmc.livingsponge.world.level.block.SpongeRemainsStyle;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
 public final class LivingSpongeBlocks {
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, LivingSpongeMod.MOD_ID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LivingSpongeMod.MOD_ID);
 
-    public static final RegistryObject<Block> LIVING_SPONGE = register(
+    public static final Supplier<Block> LIVING_SPONGE = register(
             "living_sponge",
             () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)
@@ -33,7 +30,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> MATURE_LIVING_SPONGE = register(
+    public static final Supplier<Block> MATURE_LIVING_SPONGE = register(
             "mature_living_sponge",
             () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GREEN)
@@ -42,7 +39,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> OLD_LIVING_SPONGE = register(
+    public static final Supplier<Block> OLD_LIVING_SPONGE = register(
             "old_living_sponge",
             () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
@@ -51,7 +48,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> CREATIVE_LIVING_SPONGE = register(
+    public static final Supplier<Block> CREATIVE_LIVING_SPONGE = register(
             "creative_living_sponge",
             () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)
@@ -60,7 +57,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> CREATIVE_MATURE_LIVING_SPONGE = register(
+    public static final Supplier<Block> CREATIVE_MATURE_LIVING_SPONGE = register(
             "creative_mature_living_sponge",
             () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GREEN)
@@ -69,7 +66,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> CREATIVE_OLD_LIVING_SPONGE = register(
+    public static final Supplier<Block> CREATIVE_OLD_LIVING_SPONGE = register(
             "creative_old_living_sponge",
             () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
@@ -78,7 +75,7 @@ public final class LivingSpongeBlocks {
                     .noOcclusion())
     );
 
-    public static final RegistryObject<Block> SPONGE_REMAINS = registerWithItem(
+    public static final Supplier<Block> SPONGE_REMAINS = registerWithItem(
             "sponge_remains",
             () -> new SpongeRemainsBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
@@ -127,13 +124,13 @@ public final class LivingSpongeBlocks {
                 .setValue(SpongeRemainsBlock.STYLE, wallFormingStyle ? SpongeRemainsStyle.WALL_FORMING : SpongeRemainsStyle.DEFAULT);
     }
 
-    private static RegistryObject<Block> register(final String name, final Supplier<? extends Block> blockSupplier) {
+    private static DeferredBlock<Block> register(final String name, final Supplier<? extends Block> blockSupplier) {
         return BLOCKS.register(name, blockSupplier);
     }
 
-    private static RegistryObject<Block> registerWithItem(final String name, final Supplier<? extends Block> blockSupplier) {
-        final RegistryObject<Block> registered = register(name, blockSupplier);
-        LivingSpongeItems.ITEMS.register(name, () -> new BlockItem(registered.get(), new Item.Properties()));
+    private static DeferredBlock<Block> registerWithItem(final String name, final Supplier<? extends Block> blockSupplier) {
+        final DeferredBlock<Block> registered = register(name, blockSupplier);
+        LivingSpongeItems.ITEMS.registerSimpleBlockItem(name, registered);
         return registered;
     }
 }
