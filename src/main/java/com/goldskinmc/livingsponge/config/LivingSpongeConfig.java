@@ -1,42 +1,42 @@
 package com.goldskinmc.livingsponge.config;
 
 import com.goldskinmc.livingsponge.LivingSpongeMod;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-@Mod.EventBusSubscriber(modid = LivingSpongeMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LivingSpongeMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public final class LivingSpongeConfig {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.IntValue SPREAD_UPDATE_INTERVAL_TICKS;
-    private static final ForgeConfigSpec.IntValue SPREAD_MEDIUM_SCAN_RADIUS;
-    private static final ForgeConfigSpec.IntValue SPREAD_MAX_MEDIUM_SAMPLES_PER_UPDATE;
-    private static final ForgeConfigSpec.IntValue SPREAD_REPRODUCTION_COOLDOWN_TICKS;
-    private static final ForgeConfigSpec.IntValue SPREAD_DEATH_TARGET_COOLDOWN_TICKS;
-    private static final ForgeConfigSpec.BooleanValue SPREAD_FLAT_USES_DIAGONALS;
+    private static final ModConfigSpec.IntValue SPREAD_UPDATE_INTERVAL_TICKS;
+    private static final ModConfigSpec.IntValue SPREAD_MEDIUM_SCAN_RADIUS;
+    private static final ModConfigSpec.IntValue SPREAD_MAX_MEDIUM_SAMPLES_PER_UPDATE;
+    private static final ModConfigSpec.IntValue SPREAD_REPRODUCTION_COOLDOWN_TICKS;
+    private static final ModConfigSpec.IntValue SPREAD_DEATH_TARGET_COOLDOWN_TICKS;
+    private static final ModConfigSpec.BooleanValue SPREAD_FLAT_USES_DIAGONALS;
 
-    private static final ForgeConfigSpec.IntValue LIFECYCLE_YOUNG_DURATION_TICKS;
-    private static final ForgeConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
-    private static final ForgeConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
-    private static final ForgeConfigSpec.BooleanValue LIFECYCLE_PLACED_SPONGES_START_MATURE;
+    private static final ModConfigSpec.IntValue LIFECYCLE_YOUNG_DURATION_TICKS;
+    private static final ModConfigSpec.IntValue LIFECYCLE_MATURE_DURATION_TICKS;
+    private static final ModConfigSpec.IntValue LIFECYCLE_OLD_DURATION_TICKS;
+    private static final ModConfigSpec.BooleanValue LIFECYCLE_PLACED_SPONGES_START_MATURE;
 
-    private static final ForgeConfigSpec.IntValue RADIUS_STANDARD;
-    private static final ForgeConfigSpec.IntValue RADIUS_EXPANDED;
-    private static final ForgeConfigSpec.IntValue RADIUS_HUGE;
+    private static final ModConfigSpec.IntValue RADIUS_STANDARD;
+    private static final ModConfigSpec.IntValue RADIUS_EXPANDED;
+    private static final ModConfigSpec.IntValue RADIUS_HUGE;
 
-    private static final ForgeConfigSpec.IntValue CREATIVE_SPEED_MULTIPLIER;
-    private static final ForgeConfigSpec.BooleanValue CREATIVE_FORCE_HUGE_RADIUS;
-    private static final ForgeConfigSpec.BooleanValue CREATIVE_IGNORE_ENVIRONMENT_DEATH;
-    private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_WATER;
-    private static final ForgeConfigSpec.BooleanValue CREATIVE_SUPPORTS_LAVA;
+    private static final ModConfigSpec.IntValue CREATIVE_SPEED_MULTIPLIER;
+    private static final ModConfigSpec.BooleanValue CREATIVE_FORCE_HUGE_RADIUS;
+    private static final ModConfigSpec.BooleanValue CREATIVE_IGNORE_ENVIRONMENT_DEATH;
+    private static final ModConfigSpec.BooleanValue CREATIVE_SUPPORTS_WATER;
+    private static final ModConfigSpec.BooleanValue CREATIVE_SUPPORTS_LAVA;
 
-    private static final ForgeConfigSpec.IntValue OUTPUT_WALL_FORMING_SHELL_THICKNESS;
+    private static final ModConfigSpec.IntValue OUTPUT_WALL_FORMING_SHELL_THICKNESS;
 
-    private static final ForgeConfigSpec.BooleanValue RECIPES_ENABLE_VANILLA_SPONGE_RECIPE;
+    private static final ModConfigSpec.BooleanValue RECIPES_ENABLE_VANILLA_SPONGE_RECIPE;
 
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 
     private static volatile BalanceValues values = defaults();
 

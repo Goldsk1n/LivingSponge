@@ -1,18 +1,18 @@
 package com.goldskinmc.livingsponge.simulation;
 
 import com.goldskinmc.livingsponge.LivingSpongeMod;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-@Mod.EventBusSubscriber(modid = LivingSpongeMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = LivingSpongeMod.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public final class LivingSpongeServerEvents {
     private LivingSpongeServerEvents() {
     }
 
     @SubscribeEvent
-    public static void onServerTick(final TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.getServer() != null) {
+    public static void onServerTick(final ServerTickEvent.Post event) {
+        if (event.getServer() != null) {
             LivingSpongeRuntime.instance().tickServer(event.getServer());
         }
     }

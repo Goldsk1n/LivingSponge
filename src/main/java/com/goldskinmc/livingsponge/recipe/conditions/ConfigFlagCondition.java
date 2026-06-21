@@ -1,19 +1,29 @@
 package com.goldskinmc.livingsponge.recipe.conditions;
 
-import com.google.gson.JsonObject;
 import com.goldskinmc.livingsponge.LivingSpongeMod;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public record ConfigFlagCondition(String flag) implements ICondition {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(LivingSpongeMod.MOD_ID, "config_flag");
+    public static final MapCodec<ConfigFlagCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("flag").forGetter(ConfigFlagCondition::flag)
+    ).apply(instance, ConfigFlagCondition::new));
 
-    @Override
-    public ResourceLocation getID() {
-        return ID;
+    private static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS =
+            DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, LivingSpongeMod.MOD_ID);
+
+    static {
+        CONDITION_CODECS.register("config_flag", () -> CODEC);
+    }
+
+    public static void register(final IEventBus modEventBus) {
+        CONDITION_CODECS.register(modEventBus);
     }
 
     @Override
@@ -21,25 +31,8 @@ public record ConfigFlagCondition(String flag) implements ICondition {
         return LivingSpongeConfig.configFlag(flag);
     }
 
-    public static final class Serializer implements IConditionSerializer<ConfigFlagCondition> {
-        public static final Serializer INSTANCE = new Serializer();
-
-        private Serializer() {
-        }
-
-        @Override
-        public void write(final JsonObject json, final ConfigFlagCondition value) {
-            json.addProperty("flag", value.flag());
-        }
-
-        @Override
-        public ConfigFlagCondition read(final JsonObject json) {
-            return new ConfigFlagCondition(GsonHelper.getAsString(json, "flag"));
-        }
-
-        @Override
-        public ResourceLocation getID() {
-            return ID;
-        }
+    @Override
+    public MapCodec<? extends ICondition> codec() {
+        return CODEC;
     }
 }

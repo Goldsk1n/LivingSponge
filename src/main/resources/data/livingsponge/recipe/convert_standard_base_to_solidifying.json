@@ -1,0 +1,16 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "misc",
+    "ingredients":  [
+                        {
+                            "item":  "livingsponge:living_sponge"
+                        },
+                        {
+                            "item":  "minecraft:clay"
+                        }
+                    ],
+    "result":  {
+                   "id":  "livingsponge:solidifying_living_sponge",
+                   "count":  1
+               }
+}

@@ -1,6 +1,8 @@
 package com.goldskinmc.livingsponge.world.item;
 
+import com.goldskinmc.livingsponge.content.LivingSpongeBlocks;
 import com.goldskinmc.livingsponge.config.LivingSpongeConfig;
+import com.goldskinmc.livingsponge.simulation.LivingSpongeLifecycleStage;
 import com.goldskinmc.livingsponge.simulation.profile.MediumTrait;
 import com.goldskinmc.livingsponge.simulation.profile.OutputTrait;
 import com.goldskinmc.livingsponge.simulation.profile.RadiusTrait;
@@ -9,11 +11,12 @@ import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
@@ -41,13 +44,21 @@ public final class LivingSpongePlacementItem extends BlockItem {
     }
 
     @Override
+    protected BlockState getPlacementState(final BlockPlaceContext context) {
+        final LivingSpongeLifecycleStage placedStage = LivingSpongeConfig.values().lifecycle().placedSpongesStartMature()
+                ? LivingSpongeLifecycleStage.MATURE
+                : LivingSpongeLifecycleStage.YOUNG;
+        return LivingSpongeBlocks.spongeStateFor(placedStage, traits, creativeOverrides);
+    }
+
+    @Override
     public void appendHoverText(
             final ItemStack stack,
-            @Nullable final Level level,
+            final Item.TooltipContext tooltipContext,
             final List<Component> tooltipComponents,
             final TooltipFlag isAdvanced
     ) {
-        super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
+        super.appendHoverText(stack, tooltipContext, tooltipComponents, isAdvanced);
 
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.medium", mediumLabel(traits.medium(), creativeOverrides)));
         tooltipComponents.add(traitLine("tooltip.livingsponge.traits.spread", spreadLabel(traits.spread())));
