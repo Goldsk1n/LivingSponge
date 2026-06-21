@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "type":  "minecraft:model",
+                  "model":  "livingsponge:item/flat_living_sponge"
+              }
+}

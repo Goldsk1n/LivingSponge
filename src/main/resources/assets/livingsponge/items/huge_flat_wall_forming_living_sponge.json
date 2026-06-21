@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "type":  "minecraft:model",
+                  "model":  "livingsponge:item/huge_flat_wall_forming_living_sponge"
+              }
+}

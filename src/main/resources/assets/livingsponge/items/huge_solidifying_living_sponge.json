@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "type":  "minecraft:model",
+                  "model":  "livingsponge:item/huge_solidifying_living_sponge"
+              }
+}

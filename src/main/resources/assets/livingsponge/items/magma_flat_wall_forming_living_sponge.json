@@ -1,0 +1,6 @@
+{
+    "model":  {
+                  "type":  "minecraft:model",
+                  "model":  "livingsponge:item/magma_flat_wall_forming_living_sponge"
+              }
+}
