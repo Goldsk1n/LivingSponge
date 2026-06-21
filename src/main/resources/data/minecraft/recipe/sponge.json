@@ -8,15 +8,9 @@
     "type":  "minecraft:crafting_shapeless",
     "category":  "misc",
     "ingredients":  [
-                        {
-                            "tag":  "minecraft:wool"
-                        },
-                        {
-                            "item":  "minecraft:kelp"
-                        },
-                        {
-                            "item":  "minecraft:seagrass"
-                        }
+                        "#minecraft:wool",
+                        "minecraft:kelp",
+                        "minecraft:seagrass"
                     ],
     "result":  {
                    "id":  "minecraft:sponge",

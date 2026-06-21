@@ -2,12 +2,8 @@
     "type":  "minecraft:crafting_shapeless",
     "category":  "misc",
     "ingredients":  [
-                        {
-                            "item":  "livingsponge:expanded_living_sponge"
-                        },
-                        {
-                            "item":  "minecraft:lily_pad"
-                        }
+                        "livingsponge:expanded_living_sponge",
+                        "minecraft:lily_pad"
                     ],
     "result":  {
                    "id":  "livingsponge:expanded_flat_living_sponge",

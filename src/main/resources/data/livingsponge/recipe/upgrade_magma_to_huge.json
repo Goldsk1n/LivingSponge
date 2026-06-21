@@ -2,12 +2,8 @@
     "type":  "minecraft:crafting_shapeless",
     "category":  "misc",
     "ingredients":  [
-                        {
-                            "item":  "livingsponge:expanded_magma_living_sponge"
-                        },
-                        {
-                            "item":  "minecraft:ender_eye"
-                        }
+                        "livingsponge:expanded_magma_living_sponge",
+                        "minecraft:ender_eye"
                     ],
     "result":  {
                    "id":  "livingsponge:huge_magma_living_sponge",

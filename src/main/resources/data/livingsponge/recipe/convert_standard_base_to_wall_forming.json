@@ -2,12 +2,8 @@
     "type":  "minecraft:crafting_shapeless",
     "category":  "misc",
     "ingredients":  [
-                        {
-                            "item":  "livingsponge:living_sponge"
-                        },
-                        {
-                            "item":  "minecraft:cobblestone_wall"
-                        }
+                        "livingsponge:living_sponge",
+                        "minecraft:cobblestone_wall"
                     ],
     "result":  {
                    "id":  "livingsponge:wall_forming_living_sponge",

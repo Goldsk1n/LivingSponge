@@ -2,12 +2,8 @@
     "type":  "minecraft:crafting_shapeless",
     "category":  "misc",
     "ingredients":  [
-                        {
-                            "item":  "minecraft:sponge"
-                        },
-                        {
-                            "item":  "minecraft:magma_cream"
-                        }
+                        "minecraft:sponge",
+                        "minecraft:magma_cream"
                     ],
     "result":  {
                    "id":  "livingsponge:magma_living_sponge",

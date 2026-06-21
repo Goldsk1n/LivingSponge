@@ -2,12 +2,8 @@
     "type":  "minecraft:crafting_shapeless",
     "category":  "misc",
     "ingredients":  [
-                        {
-                            "item":  "livingsponge:magma_volume_solidifying_living_sponge"
-                        },
-                        {
-                            "item":  "minecraft:ender_pearl"
-                        }
+                        "livingsponge:magma_volume_solidifying_living_sponge",
+                        "minecraft:ender_pearl"
                     ],
     "result":  {
                    "id":  "livingsponge:expanded_magma_volume_solidifying_living_sponge",
