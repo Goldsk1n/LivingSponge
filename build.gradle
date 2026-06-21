@@ -43,15 +43,10 @@ base {
     archivesName = "${mod_id}-neoforge-${minecraft_version}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     runs {
         client {
@@ -71,7 +66,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
@@ -93,8 +88,7 @@ configurations {
 }
 
 dependencies {
-    localRuntime 'mezz.jei:jei-1.21.1-neoforge:19.27.0.340'
-    localRuntime 'maven.modrinth:the-one-probe:1.21_neo-12.0.8'
+    localRuntime 'mezz.jei:jei-26.1.2-neoforge:29.6.2.38'
 }
 
 def generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

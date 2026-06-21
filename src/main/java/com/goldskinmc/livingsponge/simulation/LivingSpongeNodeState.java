@@ -85,20 +85,20 @@ public final class LivingSpongeNodeState {
         }
 
         final LivingSpongeNodeState state = new LivingSpongeNodeState(
-                tag.getUUID("ColonyId"),
-                BlockPos.of(tag.getLong("RootPos")),
-                tag.getInt("Generation"),
-                SpongeTraits.load(tag.getCompound("Traits")),
-                tag.getBoolean("CreativeOverrides"),
-                tag.getInt("ReproductionCooldownTicks")
+                parseUuid(tag.getStringOr("ColonyId", "")),
+                BlockPos.of(tag.getLongOr("RootPos", BlockPos.ZERO.asLong())),
+                tag.getIntOr("Generation", 0),
+                SpongeTraits.load(tag.getCompoundOrEmpty("Traits")),
+                tag.getBooleanOr("CreativeOverrides", false),
+                tag.getIntOr("ReproductionCooldownTicks", 0)
         );
-        state.ageTicks = tag.getInt("AgeTicks");
+        state.ageTicks = tag.getIntOr("AgeTicks", 0);
         return state;
     }
 
     public CompoundTag save() {
         final CompoundTag tag = new CompoundTag();
-        tag.putUUID("ColonyId", colonyId);
+        tag.putString("ColonyId", colonyId.toString());
         tag.putLong("RootPos", rootPos);
         tag.putInt("Generation", generation);
         tag.put("Traits", traits.save());
@@ -154,5 +154,13 @@ public final class LivingSpongeNodeState {
 
     public LivingSpongeLifecycleStage stage(final LivingSpongeConfig.BalanceValues values) {
         return LivingSpongeLifecycleStage.fromAgeTicks(ageTicks, resolveProfile().lifecycle(values));
+    }
+
+    private static UUID parseUuid(final String value) {
+        try {
+            return UUID.fromString(value);
+        } catch (IllegalArgumentException ignored) {
+            return UUID.randomUUID();
+        }
     }
 }

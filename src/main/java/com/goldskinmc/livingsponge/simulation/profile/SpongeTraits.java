@@ -41,10 +41,10 @@ public record SpongeTraits(
 
     public static SpongeTraits load(final CompoundTag tag) {
         return new SpongeTraits(
-                parseEnum(tag.getString(MEDIUM_KEY), MediumTrait.WATER, MediumTrait.class),
-                parseEnum(tag.getString(SPREAD_KEY), SpreadTrait.VOLUME, SpreadTrait.class),
-                parseEnum(tag.getString(OUTPUT_KEY), OutputTrait.NEUTRAL, OutputTrait.class),
-                parseEnum(tag.getString(RADIUS_KEY), RadiusTrait.STANDARD, RadiusTrait.class)
+                parseEnum(tag.getStringOr(MEDIUM_KEY, ""), MediumTrait.WATER, MediumTrait.class),
+                parseEnum(tag.getStringOr(SPREAD_KEY, ""), SpreadTrait.VOLUME, SpreadTrait.class),
+                parseEnum(tag.getStringOr(OUTPUT_KEY, ""), OutputTrait.NEUTRAL, OutputTrait.class),
+                parseEnum(tag.getStringOr(RADIUS_KEY, ""), RadiusTrait.STANDARD, RadiusTrait.class)
         );
     }
 

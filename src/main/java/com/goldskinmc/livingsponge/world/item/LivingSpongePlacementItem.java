@@ -14,11 +14,13 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public final class LivingSpongePlacementItem extends BlockItem {
     private final SpongeTraits traits;
@@ -55,22 +57,23 @@ public final class LivingSpongePlacementItem extends BlockItem {
     public void appendHoverText(
             final ItemStack stack,
             final Item.TooltipContext tooltipContext,
-            final List<Component> tooltipComponents,
+            final TooltipDisplay tooltipDisplay,
+            final Consumer<Component> tooltipAdder,
             final TooltipFlag isAdvanced
     ) {
-        super.appendHoverText(stack, tooltipContext, tooltipComponents, isAdvanced);
+        super.appendHoverText(stack, tooltipContext, tooltipDisplay, tooltipAdder, isAdvanced);
 
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.medium", mediumLabel(traits.medium(), creativeOverrides)));
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.spread", spreadLabel(traits.spread())));
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.output", outputLabel(traits.output())));
-        tooltipComponents.add(traitLine("tooltip.livingsponge.traits.radius", radiusLabel(creativeRadiusTrait(), LivingSpongeConfig.values())));
-        tooltipComponents.add(Component.empty());
-        tooltipComponents.add(mediumSummaryLine(traits.medium(), creativeOverrides));
-        tooltipComponents.add(descriptionLine(spreadSummaryKey(traits.spread())));
-        tooltipComponents.add(descriptionLine(outputSummaryKey(traits)));
+        tooltipAdder.accept(traitLine("tooltip.livingsponge.traits.medium", mediumLabel(traits.medium(), creativeOverrides)));
+        tooltipAdder.accept(traitLine("tooltip.livingsponge.traits.spread", spreadLabel(traits.spread())));
+        tooltipAdder.accept(traitLine("tooltip.livingsponge.traits.output", outputLabel(traits.output())));
+        tooltipAdder.accept(traitLine("tooltip.livingsponge.traits.radius", radiusLabel(creativeRadiusTrait(), LivingSpongeConfig.values())));
+        tooltipAdder.accept(Component.empty());
+        tooltipAdder.accept(mediumSummaryLine(traits.medium(), creativeOverrides));
+        tooltipAdder.accept(descriptionLine(spreadSummaryKey(traits.spread())));
+        tooltipAdder.accept(descriptionLine(outputSummaryKey(traits)));
 
         if (creativeOverrides) {
-            tooltipComponents.add(creativeSummaryLine());
+            tooltipAdder.accept(creativeSummaryLine());
         }
     }
 

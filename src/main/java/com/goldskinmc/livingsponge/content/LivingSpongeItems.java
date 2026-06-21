@@ -174,11 +174,11 @@ public final class LivingSpongeItems {
             final SpongeTraits traits,
             final boolean creativeOverrides
     ) {
-        final Supplier<Item> item = ITEMS.register(
+        final Supplier<Item> item = ITEMS.registerItem(
                 name,
-                () -> new LivingSpongePlacementItem(
+                properties -> new LivingSpongePlacementItem(
                         creativeOverrides ? LivingSpongeBlocks.CREATIVE_MATURE_LIVING_SPONGE.get() : LivingSpongeBlocks.MATURE_LIVING_SPONGE.get(),
-                        new Item.Properties(),
+                        properties,
                         traits,
                         creativeOverrides
                 )

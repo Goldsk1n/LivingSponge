@@ -7,10 +7,11 @@ import com.goldskinmc.livingsponge.simulation.LivingSpongeNodeState;
 import com.goldskinmc.livingsponge.simulation.LivingSpongeRuntime;
 import com.goldskinmc.livingsponge.simulation.profile.SpongeTraits;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.state.BlockState;
 
 public final class LivingSpongeBlockEntity extends BlockEntity {
@@ -53,6 +54,12 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
     }
 
     @Override
+    public void preRemoveSideEffects(final BlockPos pos, final BlockState state) {
+        beforeBlockRemoved();
+        super.preRemoveSideEffects(pos, state);
+    }
+
+    @Override
     public void onLoad() {
         super.onLoad();
         if (!(level instanceof ServerLevel serverLevel)) {
@@ -75,20 +82,18 @@ public final class LivingSpongeBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(final CompoundTag tag, final HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(final ValueOutput output) {
+        super.saveAdditional(output);
         if (nodeState != null) {
-            tag.put("LivingSpongeState", nodeState.save());
+            output.store("LivingSpongeState", CompoundTag.CODEC, nodeState.save());
         }
     }
 
     @Override
-    protected void loadAdditional(final CompoundTag tag, final HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains("LivingSpongeState")) {
-            nodeState = LivingSpongeNodeState.load(tag.getCompound("LivingSpongeState"));
-        } else {
-            nodeState = null;
-        }
+    protected void loadAdditional(final ValueInput input) {
+        super.loadAdditional(input);
+        nodeState = input.read("LivingSpongeState", CompoundTag.CODEC)
+                .map(LivingSpongeNodeState::load)
+                .orElse(null);
     }
 }

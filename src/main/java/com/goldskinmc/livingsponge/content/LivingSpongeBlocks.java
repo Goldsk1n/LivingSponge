@@ -23,64 +23,71 @@ public final class LivingSpongeBlocks {
 
     public static final Supplier<Block> LIVING_SPONGE = register(
             "living_sponge",
-            () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
+            properties -> new LivingSpongeBlock(false, properties),
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
-                    .noOcclusion())
+                    .noOcclusion()
     );
 
     public static final Supplier<Block> MATURE_LIVING_SPONGE = register(
             "mature_living_sponge",
-            () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
+            properties -> new LivingSpongeBlock(false, properties),
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GREEN)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
-                    .noOcclusion())
+                    .noOcclusion()
     );
 
     public static final Supplier<Block> OLD_LIVING_SPONGE = register(
             "old_living_sponge",
-            () -> new LivingSpongeBlock(false, BlockBehaviour.Properties.of()
+            properties -> new LivingSpongeBlock(false, properties),
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
-                    .noOcclusion())
+                    .noOcclusion()
     );
 
     public static final Supplier<Block> CREATIVE_LIVING_SPONGE = register(
             "creative_living_sponge",
-            () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
+            properties -> new LivingSpongeBlock(true, properties),
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
-                    .noOcclusion())
+                    .noOcclusion()
     );
 
     public static final Supplier<Block> CREATIVE_MATURE_LIVING_SPONGE = register(
             "creative_mature_living_sponge",
-            () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
+            properties -> new LivingSpongeBlock(true, properties),
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GREEN)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
-                    .noOcclusion())
+                    .noOcclusion()
     );
 
     public static final Supplier<Block> CREATIVE_OLD_LIVING_SPONGE = register(
             "creative_old_living_sponge",
-            () -> new LivingSpongeBlock(true, BlockBehaviour.Properties.of()
+            properties -> new LivingSpongeBlock(true, properties),
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .strength(0.6F)
                     .sound(SoundType.SLIME_BLOCK)
-                    .noOcclusion())
+                    .noOcclusion()
     );
 
     public static final Supplier<Block> SPONGE_REMAINS = registerWithItem(
             "sponge_remains",
-            () -> new SpongeRemainsBlock(BlockBehaviour.Properties.of()
+            SpongeRemainsBlock::new,
+            () -> BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .strength(0.4F)
-                    .sound(SoundType.DEEPSLATE))
+                    .sound(SoundType.DEEPSLATE)
     );
 
     private LivingSpongeBlocks() {
@@ -124,12 +131,20 @@ public final class LivingSpongeBlocks {
                 .setValue(SpongeRemainsBlock.STYLE, wallFormingStyle ? SpongeRemainsStyle.WALL_FORMING : SpongeRemainsStyle.DEFAULT);
     }
 
-    private static DeferredBlock<Block> register(final String name, final Supplier<? extends Block> blockSupplier) {
-        return BLOCKS.register(name, blockSupplier);
+    private static DeferredBlock<Block> register(
+            final String name,
+            final java.util.function.Function<BlockBehaviour.Properties, ? extends Block> factory,
+            final Supplier<BlockBehaviour.Properties> properties
+    ) {
+        return BLOCKS.registerBlock(name, factory, properties);
     }
 
-    private static DeferredBlock<Block> registerWithItem(final String name, final Supplier<? extends Block> blockSupplier) {
-        final DeferredBlock<Block> registered = register(name, blockSupplier);
+    private static DeferredBlock<Block> registerWithItem(
+            final String name,
+            final java.util.function.Function<BlockBehaviour.Properties, ? extends Block> factory,
+            final Supplier<BlockBehaviour.Properties> properties
+    ) {
+        final DeferredBlock<Block> registered = register(name, factory, properties);
         LivingSpongeItems.ITEMS.registerSimpleBlockItem(name, registered);
         return registered;
     }

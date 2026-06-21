@@ -17,10 +17,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,28 +95,17 @@ public final class LivingSpongeBlock extends BaseEntityBlock implements EntityBl
     }
 
     @Override
-    public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState newState, final boolean isMoving) {
-        if (!state.is(newState.getBlock()) && !LivingSpongeBlocks.isLivingSponge(newState.getBlock())) {
-            final BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof LivingSpongeBlockEntity livingSpongeBlockEntity) {
-                livingSpongeBlockEntity.beforeBlockRemoved();
-            }
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
     public @Nullable BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
         return new LivingSpongeBlockEntity(pos, state);
     }
 
     @Override
-    public List<ItemStack> getDrops(final BlockState state, final LootParams.Builder params) {
+    protected List<ItemStack> getDrops(final BlockState state, final LootParams.Builder params) {
         return List.of();
     }
 
     @Override
-    public boolean propagatesSkylightDown(final BlockState state, final BlockGetter reader, final BlockPos pos) {
+    protected boolean propagatesSkylightDown(final BlockState state) {
         return true;
     }
 
