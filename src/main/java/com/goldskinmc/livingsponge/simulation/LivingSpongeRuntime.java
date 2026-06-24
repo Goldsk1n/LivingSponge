@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -97,13 +96,15 @@ public final class LivingSpongeRuntime {
         final List<PendingChild> pendingChildren = new ArrayList<>();
         final long gameTime = level.getGameTime();
 
-        final Iterator<Map.Entry<BlockPos, LivingSpongeNodeState>> iterator = levelNodes.entrySet().iterator();
-        while (iterator.hasNext()) {
-            final Map.Entry<BlockPos, LivingSpongeNodeState> entry = iterator.next();
+        final List<Map.Entry<BlockPos, LivingSpongeNodeState>> nodeEntries = new ArrayList<>(levelNodes.entrySet());
+        for (Map.Entry<BlockPos, LivingSpongeNodeState> entry : nodeEntries) {
             final BlockPos pos = entry.getKey();
             final LivingSpongeNodeState state = entry.getValue();
+            if (levelNodes.get(pos) != state) {
+                continue;
+            }
             if (!isManagedLivingSponge(level, pos)) {
-                iterator.remove();
+                levelNodes.remove(pos, state);
                 continue;
             }
 
@@ -129,7 +130,7 @@ public final class LivingSpongeRuntime {
             );
 
             if (result.shouldDie()) {
-                iterator.remove();
+                levelNodes.remove(pos, state);
                 if ((profile.isNeutralOutput() || profile.isWallFormingOutput())
                         && result.deathReason() == LivingSpongeDeathReason.AGING) {
                     blockTargetUntil(level, pos, gameTime + values.spread().deathTargetCooldownTicks());
@@ -523,11 +524,15 @@ public final class LivingSpongeRuntime {
             return;
         }
 
-        final Iterator<Map.Entry<BlockPos, Long>> iterator = blockedTargets.entrySet().iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().getValue() <= gameTime) {
-                iterator.remove();
+        final List<BlockPos> expiredTargets = new ArrayList<>();
+        for (Map.Entry<BlockPos, Long> entry : blockedTargets.entrySet()) {
+            if (entry.getValue() <= gameTime) {
+                expiredTargets.add(entry.getKey());
             }
+        }
+
+        for (BlockPos expiredTarget : expiredTargets) {
+            blockedTargets.remove(expiredTarget);
         }
 
         if (blockedTargets.isEmpty()) {
